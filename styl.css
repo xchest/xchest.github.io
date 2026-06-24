@@ -180,6 +180,10 @@ h1, h2, h3, .serif {
    GALERIE
    ============================================================ */
 .gallery { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+.gallery--four { grid-template-columns: repeat(4,1fr); }
+.gallery__cap { position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; padding: 16px 16px 14px; color: #fff; font-family: 'Cinzel', serif; font-size: .92rem; letter-spacing: .08em; text-transform: uppercase; background: linear-gradient(transparent, rgba(13,13,15,.88)); }
+.gallery--four .gallery__item::after { content: ""; background: rgba(13,13,15,0); transition: .3s; }
+.gallery--four .gallery__item:hover::after { background: rgba(194,154,100,.14); }
 .gallery__item { position: relative; aspect-ratio: 4/3; overflow: hidden; cursor: pointer; border-radius: var(--radius); }
 .gallery__item img { width: 100%; height: 100%; object-fit: cover; transition: .5s; }
 .gallery__item:hover img { transform: scale(1.07); }

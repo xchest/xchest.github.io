@@ -1,0 +1,7 @@
+# 301 přesměrování ze starých base44 URL na nové čisté /sluzby/...
+# (funguje na Netlify i Cloudflare Pages)
+/services/Nahrobky          /sluzby/nahrobky/          301
+/services/RenovaceHrobu     /sluzby/renovace-hrobu/    301
+/services/StavebniCinnost   /sluzby/stavebni-cinnost/  301
+/services/ProObce           /sluzby/pro-obce/          301
+/services/*                 /sluzby/                   301

@@ -1,3 +1,5 @@
-﻿LAUNCH.md
-README.md
-
+.netlify/
+*-PC_Ales*
+*.bak*
+_claude/
+*.lv.json

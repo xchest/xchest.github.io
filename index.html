@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; script-src 'self'; connect-src 'self'; base-uri 'self'; form-action 'self' mailto:">
   <title>Kamenictví Procházka — náhrobky, renovace hrobů a kamenické práce | Kolín, Český Brod</title>
   <meta name="description" content="Rodinné kamenictví od roku 1929. Výroba náhrobků, renovace hrobů, kamenické stavební práce a služby pro obce. Vzorkovny Kolín a Český Brod. Nezávazná poptávka.">
   <link rel="canonical" href="https://kamenictviprochazka.cz/">
@@ -27,7 +28,7 @@
     "description": "Rodinné kamenictví od roku 1929 — náhrobky, renovace hrobů, kamenické stavební práce a služby pro obce.",
     "url": "https://kamenictviprochazka.cz/",
     "logo": "https://kamenictviprochazka.cz/obrazky/pouzelogokamenictviprochazka.png",
-    "image": "https://kamenictviprochazka.cz/obrazky/nhrobky1-kamenictvi-prochazka.jpeg",
+    "image": "https://kamenictviprochazka.cz/obrazky/Hrobka-1-kamenictvi-prochazka.jpg",
     "telephone": "+420602108793",
     "email": "pomniky@kamenictviprochazka.cz",
     "foundingDate": "1929",
@@ -47,66 +48,181 @@
     ]
   }
   </script>
-
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/styl.css">
 </head>
 <body>
 
-<!-- ===================== NAVIGACE ===================== -->
 <nav class="nav" aria-label="Hlavní navigace">
   <a class="nav__brand" href="/" aria-label="Kamenictví Procházka — domů">
     <img src="/obrazky/logo-kamenictvi-prochazka-bl-web.png" alt="Kamenictví Procházka">
   </a>
   <div class="nav__links" id="menu">
-    <a href="#o-nas">O nás</a>
-    <a href="#sluzby">Služby</a>
-    <a href="#galerie">Galerie</a>
-    <a href="#reference">Reference</a>
-    <a href="#kontakt">Kontakt</a>
-    <a class="btn btn--gold nav__cta" href="tel:+420602108793">Zavolat</a>
+    <a href="/realizace/">Realizace</a>
+    <a href="/#sluzby">Služby</a>
+    <a href="/navrhar/">Návrhář</a>
+    <a href="/#o-nas">O nás</a>
+    <a href="/#kontakt">Kontakt</a>
+    <a class="btn nav__cta nav__tel" href="tel:+420602108793">602 108 793</a>
   </div>
   <button class="nav__toggle" aria-label="Otevřít menu" aria-expanded="false" aria-controls="menu">
     <span></span><span></span><span></span>
   </button>
 </nav>
 
-<!-- ===================== HERO ===================== -->
-<header class="hero">
-  <div class="hero__bg"><img src="/obrazky/kamenictviprochzkabackground.jpg" alt="Historická fotografie rodiny kameníků – náhrobek Jan Novák, 1855–1935"></div>
+<header class="hero hero--kamenici">
+  <div class="hero__bg"><video class="hero__video" muted autoplay playsinline preload="auto" poster="/obrazky/hero-kamenici.webp" aria-hidden="true"><source src="/obrazky/hero-kamenici.mp4" type="video/mp4"></video></div>
+  <button class="hero__pause" type="button" aria-label="Pozastavit video" hidden><span aria-hidden="true"></span></button>
   <div class="hero__inner">
     <p class="hero__eyebrow">Rodinné kamenictví od roku 1929</p>
-    <h1>Kamenictví <span>Procházka</span></h1>
-    <p class="hero__claim">Poctivé řemeslo, které vydrží generace. Náhrobky, renovace i kompletní kamenické práce.</p>
+    <h1>Kámen, který <em>vydrží</em> generace.</h1>
+    <p class="hero__claim">Náhrobky, renovace hrobů i kompletní kamenické práce. Kolín, Český Brod a okolí.</p>
     <div class="hero__actions">
-      <a class="btn btn--gold" href="tel:+420602108793">Zavolat</a>
-      <a class="btn btn--outline" href="#kontakt">Nezávazná poptávka</a>
+      <a class="btn btn--gold" href="#kontakt">Nezávazná poptávka</a>
+      <a class="btn btn--outline" href="/navrhar/">Návrhář hrobu</a>
     </div>
-    <p class="hero__meta">Kolín, Český Brod a okolí &nbsp;•&nbsp; Naše vzorkovna — Kolín, Havlíčkova 170</p>
   </div>
 </header>
 
-<!-- ===================== BADGE ŘÁDEK ===================== -->
-<section class="badges">
+<div class="container">
+  <div class="strip">
+    <div><b>1929</b><span>rok založení rodinné firmy</span></div>
+    <div><b>2</b><span>vzorkové prodejny — Český Brod a Kolín</span></div>
+    <div><b>5+</b><span>velkých pražských realizací</span></div>
+    <div><b>1</b><span>vlastní dílna, kde desky vyrábíme</span></div>
+  </div>
+</div>
+
+<section class="section" id="sluzby">
   <div class="container">
-    <div class="badge"><div class="ico"><span>✦</span></div><p>Tradice od roku 1929</p></div>
-    <div class="badge"><div class="ico"><span>⌂</span></div><p>Rodinná firma</p></div>
-    <div class="badge"><div class="ico"><span>♦</span></div><p>Osobní přístup</p></div>
-    <div class="badge"><div class="ico"><span>◈</span></div><p>Český Brod + Kolín</p></div>
+    <div class="split">
+      <p class="label">Služby</p>
+      <div>
+        <h2>Co umíme</h2>
+        <p>Od nového náhrobku přes obnovu staré hrobky až po kamennou kuchyni nebo schodiště. Zaměříme, vyrobíme a namontujeme.</p>
+      </div>
+    </div>
+    <ul class="svc">
+      <li><a href="/sluzby/nahrobky/">
+        <span class="svc__n">01</span>
+        <h3>Náhrobky</h3>
+        <p>Návrhy, výroba a realizace hrobů. Přípisy, ryté portréty a fotky, pískování a obnova písma, hřbitovní doplňky.</p>
+        <div class="svc__th"><img src="/obrazky/nahrobek-seda-kryci-deska-kamenictvi-prochazka-1600.webp" srcset="/obrazky/nahrobek-seda-kryci-deska-kamenictvi-prochazka-800.webp 800w, /obrazky/nahrobek-seda-kryci-deska-kamenictvi-prochazka-1600.webp 1600w" sizes="(max-width: 900px) 100vw, 220px" alt="Šedý náhrobek s krycí deskou" loading="lazy"></div>
+      </a></li>
+      <li><a href="/sluzby/renovace-hrobu/">
+        <span class="svc__n">02</span>
+        <h3>Renovace hrobů</h3>
+        <p>Čištění, opravy, rovnání propadlých rámů i kompletní rekonstrukce hrobky.</p>
+        <div class="svc__th"><img src="/obrazky/renovace-hrobky-olsany-po-2025-zelen-kamenictvi-prochazka-1600.webp" srcset="/obrazky/renovace-hrobky-olsany-po-2025-zelen-kamenictvi-prochazka-800.webp 800w, /obrazky/renovace-hrobky-olsany-po-2025-zelen-kamenictvi-prochazka-1600.webp 1600w" sizes="(max-width: 900px) 100vw, 220px" alt="Hrobka po renovaci" loading="lazy"></div>
+      </a></li>
+      <li><a href="/sluzby/interier/">
+        <span class="svc__n">03</span>
+        <h3>Kámen v interiéru</h3>
+        <p>Kuchyňské desky a ostrůvky, koupelny, podlahy a teraco, schodiště, krby i nábytek.</p>
+        <div class="svc__th"><img src="/obrazky/interier-kuchyn-port-laurent-deska-1600.webp" srcset="/obrazky/interier-kuchyn-port-laurent-deska-800.webp 800w, /obrazky/interier-kuchyn-port-laurent-deska-1600.webp 1600w" sizes="(max-width: 900px) 100vw, 220px" alt="Kuchyňská pracovní deska z kamene Port Laurent" loading="lazy"></div>
+      </a></li>
+      <li><a href="/sluzby/stavebni-cinnost/">
+        <span class="svc__n">04</span>
+        <h3>Stavební činnost</h3>
+        <p>Obklady, dlažby, schody a parapety, terasy, zídky a fasády. Renovace a impregnace kamene.</p>
+        <div class="svc__th"><img src="/obrazky/realizace-divadlo-spirala-dlazba-1600.webp" srcset="/obrazky/realizace-divadlo-spirala-dlazba-800.webp 800w, /obrazky/realizace-divadlo-spirala-dlazba-1600.webp 1600w" sizes="(max-width: 900px) 100vw, 220px" alt="Kamenná dlažba" loading="lazy"></div>
+      </a></li>
+      <li><a href="/sluzby/pamatniky/">
+        <span class="svc__n">05</span>
+        <h3>Památníky</h3>
+        <p>Obnova válečných pomníků a pamětních desek — čištění, doplnění písma, zpevnění.</p>
+        <div class="svc__th"><img src="/obrazky/pamatnik-kounice-po-obelisk-kamenictvi-prochazka-1600.webp" srcset="/obrazky/pamatnik-kounice-po-obelisk-kamenictvi-prochazka-800.webp 800w, /obrazky/pamatnik-kounice-po-obelisk-kamenictvi-prochazka-1600.webp 1600w" sizes="(max-width: 900px) 100vw, 220px" alt="Obelisk památníku po obnově" loading="lazy"></div>
+      </a></li>
+      <li><a href="/sluzby/pro-obce/">
+        <span class="svc__n">06</span>
+        <h3>Pro obce</h3>
+        <p>Obecní památníky, hrobky a pamětní desky. Pomůžeme i s podklady k dotaci.</p>
+        <div class="svc__th"><img src="/obrazky/pamtnk-kamenictvi-prochazka-1600.webp" srcset="/obrazky/pamtnk-kamenictvi-prochazka-800.webp 800w, /obrazky/pamtnk-kamenictvi-prochazka-1600.webp 1600w" sizes="(max-width: 900px) 100vw, 220px" alt="Válečný pomník se sochou" loading="lazy"></div>
+      </a></li>
+    </ul>
   </div>
 </section>
 
-<!-- ===================== O NÁS ===================== -->
-<section class="section section--dark about" id="o-nas">
+<section class="full">
+  <img src="/obrazky/pamatnik-kounice-po-celek-kamenictvi-prochazka-1600.webp" srcset="/obrazky/pamatnik-kounice-po-celek-kamenictvi-prochazka-800.webp 800w, /obrazky/pamatnik-kounice-po-celek-kamenictvi-prochazka-1600.webp 1600w" sizes="100vw" alt="Památník v Kounicích po obnově" loading="lazy">
+  <div class="full__cap">
+    <p class="label">Realizace</p>
+    <h3>Obnova památníku v Kounicích</h3>
+    <p>Stav po dokončení obnovy.</p>
+    <a href="/realizace/#pamatniky">Před a po v galerii →</a>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="split">
+      <p class="label">Realizace</p>
+      <div><h2>Z naší práce</h2></div>
+    </div>
+    <div class="cols">
+      <a href="/realizace/#stavby"><figure>
+        <div class="im"><img src="/obrazky/realizace-andaz-praha-1600.webp" srcset="/obrazky/realizace-andaz-praha-800.webp 800w, /obrazky/realizace-andaz-praha-1600.webp 1600w" sizes="(max-width: 900px) 100vw, 33vw" alt="Kamenné prvky v hotelu Andaz Prague" loading="lazy"></div>
+        <figcaption>Andaz Prague <span>Stavba</span></figcaption>
+      </figure></a>
+      <a href="/realizace/#nahrobky"><figure>
+        <div class="im"><img src="/obrazky/nahrobek-brectan-kamenictvi-prochazka-1600.webp" srcset="/obrazky/nahrobek-brectan-kamenictvi-prochazka-800.webp 800w, /obrazky/nahrobek-brectan-kamenictvi-prochazka-1600.webp 1600w" sizes="(max-width: 900px) 100vw, 33vw" alt="Náhrobek obrostlý břečťanem" loading="lazy"></div>
+        <figcaption>Náhrobek <span>Náhrobky</span></figcaption>
+      </figure></a>
+      <a href="/realizace/#stavby"><figure>
+        <div class="im"><img src="/obrazky/Rekonstrukce-metro-eskomoravsk-1600.webp" srcset="/obrazky/Rekonstrukce-metro-eskomoravsk-800.webp 800w, /obrazky/Rekonstrukce-metro-eskomoravsk-1600.webp 1600w" sizes="(max-width: 900px) 100vw, 33vw" alt="Kamenné obklady ve stanici metra Českomoravská" loading="lazy"></div>
+        <figcaption>Metro Českomoravská <span>Stavba</span></figcaption>
+      </figure></a>
+    </div>
+    <div class="more"><a href="/realizace/">Celá galerie →</a></div>
+  </div>
+</section>
+
+<section class="section" id="promeny">
+  <div class="container">
+    <div class="split">
+      <p class="label">Proměny</p>
+      <div>
+        <h2>Před a po</h2>
+        <p>Hrobka na Olšanech v roce 2022 a po renovaci v roce 2025.</p>
+      </div>
+    </div>
+    <div class="ba">
+  <img class="ba__before" src="/obrazky/renovace-hrobky-olsany-pred-zarovnano-1600.webp" srcset="/obrazky/renovace-hrobky-olsany-pred-zarovnano-800.webp 800w, /obrazky/renovace-hrobky-olsany-pred-zarovnano-1600.webp 1600w" sizes="100vw" alt="Hrobka na Olšanech před renovací, 2022" loading="lazy">
+  <img class="ba__after" src="/obrazky/renovace-hrobky-olsany-po-zarovnano-1600.webp" srcset="/obrazky/renovace-hrobky-olsany-po-zarovnano-800.webp 800w, /obrazky/renovace-hrobky-olsany-po-zarovnano-1600.webp 1600w" sizes="100vw" alt="Hrobka na Olšanech po renovaci, 2025" loading="lazy">
+  <span class="ba__label ba__label--pred">2022</span><span class="ba__label ba__label--po">2025</span>
+  <div class="ba__handle"></div>
+  <input type="range" min="0" max="100" value="50" aria-label="Porovnání před a po renovaci">
+</div>
+    <div class="more"><a href="/realizace/#promeny">Další proměny →</a></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="split">
+      <p class="label">Postup</p>
+      <div>
+        <h2>Jak to probíhá</h2>
+        <p>Zaměříme na místě, desky vyrobíme v naší dílně a hotové dílo osadíme.</p>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="step__num"><b>01</b></div><h3>Kontakt</h3><p>Zavolejte nebo napište. Domluvíme schůzku na místě nebo ve vzorkovně.</p></div>
+      <div class="step"><div class="step__num"><b>02</b></div><h3>Konzultace</h3><p>Zaměříme, poradíme s materiálem a probereme vaše představy.</p></div>
+      <div class="step"><div class="step__num"><b>03</b></div><h3>Návrh</h3><p>Připravíme návrh a nezávaznou cenovou nabídku.</p></div>
+      <div class="step"><div class="step__num"><b>04</b></div><h3>Realizace</h3><p>Desky vyrobíme v naší dílně a hotové dílo osadíme.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section about" id="o-nas">
   <div class="container">
     <div class="about__grid">
-      <div class="about__media">
-        <img src="/obrazky/WhatsAppImage2026-06-15at1007597.jpeg" alt="Realizace kamenických prací na hřbitově">
-      </div>
+      <div class="about__media"><img src="/obrazky/z-dilny-vyroba-1600.webp" srcset="/obrazky/z-dilny-vyroba-800.webp 800w, /obrazky/z-dilny-vyroba-1600.webp 1600w" sizes="(max-width: 900px) 100vw, 50vw" alt="Kamenická dílna" loading="lazy"></div>
       <div>
-        <p class="eyebrow"><span class="line"></span> O nás</p>
+        <p class="label">O nás</p>
         <h2>Tradice, na kterou se můžete spolehnout</h2>
         <p>Kamenictví Procházka je rodinná firma s tradicí sahající až do roku 1929. Po generace se věnujeme kamenickému řemeslu s důrazem na kvalitu, detail a osobní přístup.</p>
         <p>Každá zakázka je pro nás důležitá – víme, že naše práce má trvalou hodnotu. Pomůžeme vám s výběrem, návrhem i realizací přesně podle vašich představ.</p>
@@ -121,123 +237,20 @@
   </div>
 </section>
 
-<!-- ===================== SLUŽBY ===================== -->
-<section class="section section--cream" id="sluzby">
+<section class="cta-big">
   <div class="container">
-    <p class="eyebrow"><span class="dot"></span> Co nabízíme</p>
-    <h2 class="section-title">Naše služby</h2>
-    <div class="services__grid">
-
-      <article class="card">
-        <div class="card__img"><img src="/obrazky/nhrobky1-kamenictvi-prochazka.jpeg" alt="Náhrobky na míru"></div>
-        <div class="card__body">
-          <h3>Náhrobky</h3><div class="rule"></div>
-          <p>Návrhy, výroba a realizace hrobů. Provádíme také přípisy, ryté portréty a fotky, pískování a obnovu písma. Dodáme veškeré hřbitovní doplňky – vázy, lucerny, krycí desky a další.</p>
-          <a class="card__link" href="/sluzby/nahrobky/">Více informací →</a>
-        </div>
-      </article>
-
-      <article class="card">
-        <div class="card__img"><img src="/obrazky/renovace-hrobky-kamenictvi-prochazka.jpeg" alt="Renovace hrobů"></div>
-        <div class="card__body">
-          <h3>Renovace hrobů</h3><div class="rule"></div>
-          <p>Obnova starších hrobů, čištění, opravy i kompletní rekonstrukce. Sekání, pískování a obnova písma.</p>
-          <a class="card__link" href="/sluzby/renovace-hrobu/">Více informací →</a>
-        </div>
-      </article>
-
-      <article class="card">
-        <div class="card__img"><img src="/obrazky/realizace-divadlo-spirala.jpg" alt="Stavební činnost – Divadlo Nová Spirála"></div>
-        <div class="card__body">
-          <h3>Stavební činnost</h3><div class="rule"></div>
-          <p>Provádíme kamenické stavební práce – od menších oprav po větší realizace. Zajistíme vše od přípravy až po finální provedení.</p>
-          <a class="card__link" href="/sluzby/stavebni-cinnost/">Více informací →</a>
-        </div>
-      </article>
-
-      <article class="card">
-        <div class="card__img"><img src="/obrazky/pamtnk-kamenictvi-prochazka.jpeg" alt="Služby pro obce — památníky a hrobky"></div>
-        <div class="card__body">
-          <h3>Pro obce</h3><div class="rule"></div>
-          <p>Renovace památníků padlých včetně konzultací a zařízení dotací. Renovace hrobek, likvidace hrobů, výstavba obecních hrobek.</p>
-          <a class="card__link" href="/sluzby/pro-obce/">Více informací →</a>
-        </div>
-      </article>
-
-    </div>
-    <div class="services__cta"><a class="btn btn--ghost-dark" href="#kontakt">Nezávazně se zeptat</a></div>
-  </div>
-</section>
-
-<!-- ===================== PROCES ===================== -->
-<section class="section section--dark2">
-  <div class="container">
-    <p class="eyebrow"><span class="dot"></span> Postup</p>
-    <h2 class="section-title">Jak probíhá spolupráce</h2>
-    <div class="steps">
-      <div class="step"><div class="step__num"><b>1</b></div><h3>Kontakt</h3><p>Zavoláte nebo napíšete. Domluvíme si další postup.</p></div>
-      <div class="step"><div class="step__num"><b>2</b></div><h3>Konzultace</h3><p>Probereme vaše představy a doporučíme nejlepší řešení.</p></div>
-      <div class="step"><div class="step__num"><b>3</b></div><h3>Návrh</h3><p>Připravíme konkrétní návrh a cenovou nabídku.</p></div>
-      <div class="step"><div class="step__num"><b>4</b></div><h3>Realizace</h3><p>Zakázku vyrobíme a odborně nainstalujeme.</p></div>
+    <h2>Přijďte se podívat na kámen <em>do vzorkovny.</em></h2>
+    <div class="row">
+      <div><span>Telefon</span><a href="tel:+420602108793">602 108 793</a></div>
+      <div><span>Český Brod</span><b>Pod Velkým vrchem 1241</b></div>
+      <div><span>Kolín</span><a href="https://maps.google.com/?q=Havl%C3%AD%C4%8Dkova+170+Kol%C3%ADn" target="_blank" rel="noopener">Havlíčkova 170</a></div>
     </div>
   </div>
 </section>
 
-<!-- ===================== GALERIE ===================== -->
-<section class="section section--dark" id="galerie">
-  <div class="container">
-    <p class="eyebrow"><span class="dot"></span> Reference v kameni</p>
-    <h2 class="section-title">Ukázky naší práce</h2>
-    <p class="section-sub">Podívejte se na realizace, které jsme vytvořili pro naše zákazníky. Kliknutím obrázek zvětšíte.</p>
-    <div class="gallery gallery--four">
-      <a class="gallery__item" href="/sluzby/nahrobky/"><img src="/obrazky/Urnovhrob-kamenictvi-prochazka.jpg" alt="Náhrobky" loading="lazy"><span class="gallery__cap">Náhrobky</span></a>
-      <a class="gallery__item" href="/sluzby/renovace-hrobu/"><img src="/obrazky/renovace-hrobky-kamenictvi-prochazka.jpeg" alt="Renovace hrobů" loading="lazy"><span class="gallery__cap">Renovace hrobů</span></a>
-      <a class="gallery__item" href="/sluzby/stavebni-cinnost/"><img src="/obrazky/realizace-divadlo-spirala.jpg" alt="Stavební činnost" loading="lazy"><span class="gallery__cap">Stavební činnost</span></a>
-      <a class="gallery__item" href="/sluzby/pro-obce/"><img src="/obrazky/pamtnk-kamenictvi-prochazka.jpeg" alt="Pro obce" loading="lazy"><span class="gallery__cap">Pro obce</span></a>
-    </div>
-  </div>
-</section>
-
-<!-- ===================== VZORKOVNA ===================== -->
-<section class="section section--dark2 showroom">
-  <div class="container">
-    <div class="showroom__grid">
-      <div>
-        <span class="tag">Novinka</span>
-        <h2>Navštivte naši <span>vzorkovnu v Kolíně</span></h2>
-        <p>Nově jsme pro vás otevřeli vzorkovnu v Kolíně, kde si můžete prohlédnout naše náhrobky a kamenické práce na vlastní oči.</p>
-        <p>Rádi vám poradíme s výběrem a ukážeme dostupné materiály i provedení.</p>
-        <div class="showroom__addr">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21s-7-6.3-7-11a7 7 0 0114 0c0 4.7-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
-          <strong>Havlíčkova 170, Kolín</strong>
-        </div>
-        <div class="showroom__actions">
-          <a class="btn btn--gold" href="https://maps.google.com/?q=Havl%C3%AD%C4%8Dkova+170+Kol%C3%ADn" target="_blank" rel="noopener">Zobrazit na mapě</a>
-          <a class="btn btn--outline" href="tel:+420602108793">Zavolat</a>
-        </div>
-      </div>
-      <div class="showroom__media"><img src="/obrazky/mapa.png" alt="Mapa — vzorkovna Havlíčkova 170, Kolín"></div>
-    </div>
-  </div>
-</section>
-
-<!-- ===================== REFERENCE ===================== -->
-<section class="section section--dark" id="reference">
-  <div class="container">
-    <p class="eyebrow"><span class="dot"></span> Co říkají zákazníci</p>
-    <h2 class="section-title">Reference</h2>
-    <div class="refs">
-      <figure class="ref"><div class="ref__stars">★★★★★</div><p>„Velmi profesionální přístup a krásná práce. Doporučuji."</p><cite>Jana K.</cite></figure>
-      <figure class="ref"><div class="ref__stars">★★★★★</div><p>„Skvělá komunikace a kvalitní provedení renovace hrobu."</p><cite>Petr M.</cite></figure>
-      <figure class="ref"><div class="ref__stars">★★★★★</div><p>„Ochotní, rychlí a precizní. Jsme moc spokojeni."</p><cite>Marie L.</cite></figure>
-    </div>
-  </div>
-</section>
-
-<!-- ===================== KONTAKT ===================== -->
 <section class="section section--dark2 contact" id="kontakt">
   <div class="container">
-    <p class="eyebrow"><span class="dot"></span> Spojte se s námi</p>
+    <p class="label">Spojte se s námi</p>
     <h2 class="section-title">Kontaktujte nás</h2>
     <p class="section-sub">Rádi vám poradíme a připravíme nezávaznou nabídku.</p>
     <div class="contact__grid">
@@ -268,8 +281,10 @@
 
       <div>
         <h3 class="block">Napište nám</h3>
-        <!-- Pro reálné odesílání nastav data-endpoint (Formspree / Netlify). Bez něj formulář otevře e-mailový klient. Viz README. -->
-        <form class="form" id="poptavka" novalidate>
+        <!-- Odesílání: data-endpoint="https://…" (Formspree/FormSubmit — GitHub Pages) nebo data-netlify="true" (Netlify). Bez nich mailto fallback. Honeypot bot-field. Viz README. -->
+        <form class="form" id="poptavka" name="poptavka" method="POST" data-netlify="true" netlify-honeypot="bot-field" novalidate>
+          <input type="hidden" name="form-name" value="poptavka">
+          <p class="hp" aria-hidden="true"><label>Nevyplňujte <input type="text" name="bot-field" tabindex="-1" autocomplete="off"></label></p>
           <div class="field">
             <label for="jmeno">Vaše jméno *</label>
             <input type="text" id="jmeno" name="jmeno" placeholder="Jméno a příjmení" autocomplete="name">
@@ -291,6 +306,7 @@
           <p class="form__error" role="alert"></p>
           <p class="form__success" role="status"></p>
           <button class="btn btn--gold" type="submit">Odeslat poptávku</button>
+          <p class="form__note">Údaje použijeme jen k vyřízení vaší poptávky. Více v <a href="/ochrana-osobnich-udaju/">ochraně osobních údajů</a>.</p>
         </form>
       </div>
 
@@ -298,19 +314,23 @@
   </div>
 </section>
 
-<!-- ===================== PATIČKA ===================== -->
 <footer class="footer">
   <div class="container">
-    <img class="footer__mark" src="/obrazky/pouze_logo_kamenictvi_prochazka.png" alt="">
-    <p class="footer__name">Rodinné kamenictví Procházka od roku 1929</p>
-    <div class="footer__divider"></div>
-    <nav class="footer__nav" aria-label="Patička">
-      <a href="#o-nas">O nás</a><a href="#sluzby">Služby</a><a href="#galerie">Galerie</a>
-      <a href="#reference">Reference</a><a href="#kontakt">Kontakt</a>
-    </nav>
-    <p class="footer__copy">© <span data-year>2026</span> Kamenictví Procházka. Všechna práva vyhrazena.</p>
+    <div class="footer__top">
+      <div>
+        <img class="footer__mark" src="/obrazky/pouze_logo_kamenictvi_prochazka.png" alt="">
+        <p class="footer__name">Kamenictví Procházka</p>
+      </div>
+      <nav class="footer__nav" aria-label="Patička">
+        <a href="/realizace/">Realizace</a><a href="/#sluzby">Služby</a><a href="/navrhar/">Návrhář</a><a href="/#o-nas">O nás</a><a href="/#kontakt">Kontakt</a><a href="/ochrana-osobnich-udaju/">Ochrana osobních údajů</a>
+      </nav>
+    </div>
+    <p class="footer__legal">Náhrobky a renovace hrobů: Aleš Procházka, IČO 74660900 &nbsp;·&nbsp; Stavební činnost: Kamenictví Procházka s.r.o., IČO 03062554, C 227109 vedená u Městského soudu v Praze</p>
+    <p class="footer__copy">© <span data-year>2026</span> Kamenictví Procházka &nbsp;·&nbsp; <a href="tel:+420602108793">602 108 793</a> &nbsp;·&nbsp; <a href="mailto:pomniky@kamenictviprochazka.cz">pomniky@kamenictviprochazka.cz</a></p>
   </div>
 </footer>
+
+<div class="mbar" aria-label="Rychlý kontakt"><a class="mbar__call" href="tel:+420602108793">Zavolat</a><a class="mbar__form" href="/#kontakt">Poptávka</a></div>
 
 <script src="/skript.js"></script>
 </body>

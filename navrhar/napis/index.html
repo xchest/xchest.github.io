@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; script-src 'self'; connect-src 'self'; base-uri 'self'; form-action 'self' mailto:">
+  <title>Generátor nápisu na náhrobek — Kamenictví Procházka</title>
+  <meta name="description" content="Vyzkoušejte si online, jak bude vypadat nápis na náhrobku. Zvolte kámen, písmo, techniku písma i epitaf a návrh pošlete k nezávazné poptávce.">
+  <link rel="canonical" href="https://kamenictviprochazka.cz/navrhar/napis/">
+  <link rel="icon" type="image/png" href="/obrazky/pouze_logo_kamenictvi_prochazka.png">
+  <meta property="og:title" content="Generátor nápisu na náhrobek — Kamenictví Procházka">
+  <meta property="og:description" content="Online náhled nápisu na náhrobní desce: kámen, písmo, zlacení, epitaf.">
+  <meta property="og:url" content="https://kamenictviprochazka.cz/navrhar/napis/">
+  <meta property="og:image" content="https://kamenictviprochazka.cz/obrazky/pouzelogokamenictviprochazka.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@1,500&family=Marcellus&family=Sorts+Mill+Goudy&family=Jost:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styl.css">
+  <link rel="stylesheet" href="/navrhar/navrhar.css">
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Domů", "item": "https://kamenictviprochazka.cz/"}, {"@type": "ListItem", "position": 2, "name": "Návrhář", "item": "https://kamenictviprochazka.cz/navrhar/"}, {"@type": "ListItem", "position": 3, "name": "Nápis", "item": "https://kamenictviprochazka.cz/navrhar/napis/"}]}</script>
+</head>
+<body>
+<nav class="nav scrolled" aria-label="Hlavní navigace">
+  <a class="nav__brand" href="/" aria-label="Kamenictví Procházka — domů">
+    <img src="/obrazky/logo-kamenictvi-prochazka-bl-web.png" alt="Kamenictví Procházka">
+  </a>
+  <div class="nav__links" id="menu">
+    <a href="/realizace/">Realizace</a>
+    <a href="/#sluzby">Služby</a>
+    <a href="/navrhar/" aria-current="page">Návrhář</a>
+    <a href="/#o-nas">O nás</a>
+    <a href="/#kontakt">Kontakt</a>
+    <a class="btn nav__cta nav__tel" href="tel:+420602108793">602 108 793</a>
+  </div>
+  <button class="nav__toggle" aria-label="Otevřít menu" aria-expanded="false" aria-controls="menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<section class="subhero">
+  <div class="container">
+    <p class="breadcrumb"><a href="/">Domů</a> / <a href="/navrhar/">Návrhář</a> / Nápis</p>
+    <h1>Generátor nápisu</h1>
+  </div>
+</section>
+
+<main class="tool">
+  <div class="container">
+    <p class="tool__intro">Napište jména a data, vyberte kámen, písmo a techniku provedení. Náhled je orientační — přesné rozvržení písma, velikost liter a cenu vám připravíme v nezávazné nabídce.</p>
+
+    <div class="tool__grid">
+      <form class="panel" id="napisForm" autocomplete="off">
+        <fieldset>
+          <legend>Text nápisu</legend>
+          <div class="ctl-row">
+            <label class="ctl"><span>Záhlaví</span>
+              <input type="text" id="n-titul" maxlength="30" placeholder="např. Rodina">
+            </label>
+            <label class="ctl"><span>Příjmení rodiny</span>
+              <input type="text" id="n-rodina" maxlength="30" placeholder="např. Novákova">
+            </label>
+          </div>
+          <div id="osoby"></div>
+          <button type="button" class="btn btn--outline btn--small" id="pridatOsobu">+ Přidat osobu</button>
+          <label class="ctl" style="margin-top:12px"><span>Dolní řádek (nepovinné)</span>
+            <input type="text" id="n-dolni" maxlength="40" placeholder="např. z Českého Brodu">
+          </label>
+          <p class="hint">Obvyklá rodinná deska: RODINA / NOVÁKOVA / Z ČESKÉHO BRODU. Jména a data osob můžete doplnit, nebo nechat místo na pozdější přípis.</p>
+        </fieldset>
+
+        <fieldset>
+          <legend>Epitaf</legend>
+          <label class="ctl"><span>Rychlá volba</span>
+            <select id="n-epitafPreset">
+              <option value="">— bez epitafu —</option>
+              <option>Odpočívejte v pokoji</option>
+              <option>Kdo žije v srdcích, neumírá</option>
+              <option>Láska nekončí</option>
+              <option>Navždy v našich srdcích</option>
+              <option>Spi sladce</option>
+              <option value="vlastni">Vlastní text…</option>
+            </select>
+          </label>
+          <label class="ctl" id="epitafVlastni" hidden><span>Vlastní epitaf</span>
+            <input type="text" id="n-epitaf" maxlength="70">
+          </label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Písmo</legend>
+          <div class="chips" role="radiogroup" aria-label="Písmo">
+            <div class="chip"><input type="radio" name="font" id="f1" value="gloucester" checked><label for="f1"><span class="fontdemo" style="font-family:'Gloucester MT Pro','Gloucester MT Pro Bold ExtCond','Gloucester MT Extra Condensed','Sorts Mill Goudy',serif">Aa</span>Gloucester</label></div>
+            <div class="chip"><input type="radio" name="font" id="f2" value="futura"><label for="f2"><span class="fontdemo" style="font-family:'Futura Md BT','Futura BT',Futura,Jost,sans-serif;font-weight:500">Aa</span>Futura (bezpatkové)</label></div>
+            <div class="chip"><input type="radio" name="font" id="f3" value="friz"><label for="f3"><span class="fontdemo" style="font-family:'Friz Quadrata Itc T EE','Friz Quadrata',Marcellus,serif">Aa</span>Friz Quadrata</label></div>
+            <div class="chip"><input type="radio" name="font" id="f4" value="corsiva"><label for="f4"><span class="fontdemo" style="font-family:'Monotype Corsiva','Cormorant Garamond',serif;font-style:italic">Aa</span>Monotype Corsiva</label></div>
+          </div>
+          <p class="hint">Písma, kterými nápisy skutečně sázíme. Nemáte-li je v počítači, náhled použije nejbližší volné písmo — nápis na kameni vysázíme v originále.</p>
+          <label class="ctl-check" style="margin-top:12px"><input type="checkbox" id="n-verzalky" checked> Velkými písmeny (verzálky)</label>
+          <label class="ctl" style="margin-top:8px"><span>Výška písma hlavního řádku: <output id="o-vyska">40</output> mm</span>
+            <input type="range" id="n-vyska" min="25" max="90" step="1" value="40">
+          </label>
+          <div class="sizeinfo" id="vyskaInfo" aria-live="polite"></div>
+          <p class="hint" style="margin-bottom:12px">Z naší výroby: jména obvykle 40–50 mm, data 25–30 mm, RODINA kolem 45–50 mm, dolní řádek „Z …“ kolem 30 mm. Na rodinné desce volte písmo tak, aby pod nápisem zůstalo místo na přípis dalších jmen <em>stejnou velikostí</em> — menší přípis na stejné desce nevypadá dobře.</p>
+          <label class="ctl"><span>Zarovnání</span>
+            <select id="n-zarovnani">
+              <option value="center">Na střed</option>
+              <option value="left">Vlevo</option>
+            </select>
+          </label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Provedení písma</legend>
+          <div class="chips">
+            <div class="chip"><input type="radio" name="technika" id="t1" value="zlato" checked><label for="t1"><span class="swatch" style="background:linear-gradient(135deg,#8a6a2c,#f3d98c,#a07a32)"></span>Pískované, zlacené</label></div>
+            <div class="chip"><input type="radio" name="technika" id="t2" value="stribro"><label for="t2"><span class="swatch" style="background:linear-gradient(135deg,#7d8186,#eef0f2,#8c9095)"></span>Pískované, stříbřené</label></div>
+            <div class="chip"><input type="radio" name="technika" id="t3" value="bila"><label for="t3"><span class="swatch" style="background:#e9e7e2"></span>Pískované, bílá barva</label></div>
+            <div class="chip"><input type="radio" name="technika" id="t4" value="hloubene"><label for="t4"><span class="swatch" style="background:#2b2b2b"></span>Pískované bez barvy</label></div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Kámen desky</legend>
+          <div class="chips" id="kameny"></div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Deska</legend>
+          <div class="ctl-row">
+            <label class="ctl"><span>Šířka (cm)</span>
+              <input type="number" id="n-deskaS" min="30" max="200" step="1" inputmode="numeric">
+            </label>
+            <label class="ctl"><span>Výška (cm)</span>
+              <input type="number" id="n-deskaV" min="30" max="200" step="1" inputmode="numeric">
+            </label>
+          </div>
+          <div class="chips chips--small" id="deskyTyp">
+            <button type="button" class="btn btn--outline btn--small" data-s="55" data-v="75">55 × 75</button>
+            <button type="button" class="btn btn--outline btn--small" data-s="70" data-v="90">70 × 90</button>
+            <button type="button" class="btn btn--outline btn--small" data-s="100" data-v="100">100 × 100</button>
+          </div>
+          <p class="hint" id="deskaHint">Nejčastější rozměry nápisových desek z naší výroby. Rozměr se propojí s konfigurátorem pomníku.</p>
+          <div class="ctl-row">
+            <label class="ctl"><span>Tvar desky</span>
+              <select id="n-tvar">
+                <option value="obdelnik">Obdélník</option>
+                <option value="oblouk">Oblouk</option>
+                <option value="vlna">Vlna</option>
+              </select>
+            </label>
+          </div>
+        </fieldset>
+      </form>
+
+      <div class="stage">
+        <div class="stage__frame">
+          <canvas id="napisCanvas" width="1200" height="1500" role="img" aria-label="Náhled nápisu na náhrobní desce"></canvas>
+        </div>
+        <div class="stage__actions">
+          <button type="button" class="btn btn--gold" id="poslatPoptavku">Poslat v poptávce</button>
+          <a class="btn btn--outline" href="/navrhar/pomnik/" id="doPomniku">Použít na pomníku</a>
+          <button type="button" class="btn btn--outline" id="stahnout">Stáhnout obrázek</button>
+        </div>
+        <p class="stage__note"><strong>Orientační náhled.</strong> Struktura kamene je ilustrační, skutečná deska má vlastní kresbu. Nápis zůstává jen ve vašem prohlížeči — nikam se neodesílá, dokud sami nepošlete poptávku.</p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__top">
+      <div>
+        <img class="footer__mark" src="/obrazky/pouze_logo_kamenictvi_prochazka.png" alt="">
+        <p class="footer__name">Kamenictví Procházka</p>
+      </div>
+      <nav class="footer__nav" aria-label="Patička">
+        <a href="/realizace/">Realizace</a><a href="/#sluzby">Služby</a><a href="/navrhar/">Návrhář</a><a href="/#o-nas">O nás</a><a href="/#kontakt">Kontakt</a><a href="/ochrana-osobnich-udaju/">Ochrana osobních údajů</a>
+      </nav>
+    </div>
+    <p class="footer__legal">Náhrobky a renovace hrobů: Aleš Procházka, IČO 74660900 &nbsp;·&nbsp; Stavební činnost: Kamenictví Procházka s.r.o., IČO 03062554, C 227109 vedená u Městského soudu v Praze</p>
+    <p class="footer__copy">© <span data-year>2026</span> Kamenictví Procházka &nbsp;·&nbsp; <a href="tel:+420602108793">602 108 793</a> &nbsp;·&nbsp; <a href="mailto:pomniky@kamenictviprochazka.cz">pomniky@kamenictviprochazka.cz</a></p>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="/skript.js"></script>
+<script src="/navrhar/spolecne.js"></script>
+<script src="/navrhar/pismo.js"></script>
+<script src="/navrhar/napis.js"></script>
+<div class="mbar" aria-label="Rychlý kontakt"><a class="mbar__call" href="tel:+420602108793">Zavolat</a><a class="mbar__form" href="/#kontakt">Poptávka</a></div>
+</body>
+</html>

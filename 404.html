@@ -3,22 +3,31 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; script-src 'self'; connect-src 'self'; base-uri 'self'; form-action 'self' mailto:">
   <title>Stránka nenalezena (404) — Kamenictví Procházka</title>
   <meta name="robots" content="noindex">
   <link rel="icon" type="image/png" href="/obrazky/pouze_logo_kamenictvi_prochazka.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/styl.css">
 </head>
 <body>
 <nav class="nav scrolled" aria-label="Hlavní navigace">
-  <a class="nav__brand" href="/" aria-label="Kamenictví Procházka — domů"><img src="/obrazky/logo-kamenictvi-prochazka-bl-web.png" alt="Kamenictví Procházka"></a>
+  <a class="nav__brand" href="/" aria-label="Kamenictví Procházka — domů">
+    <img src="/obrazky/logo-kamenictvi-prochazka-bl-web.png" alt="Kamenictví Procházka">
+  </a>
   <div class="nav__links" id="menu">
-    <a href="/#o-nas">O nás</a><a href="/#sluzby">Služby</a><a href="/#galerie">Galerie</a>
-    <a href="/#reference">Reference</a><a href="/#kontakt">Kontakt</a>
-    <a class="btn btn--gold nav__cta" href="tel:+420602108793">Zavolat</a>
+    <a href="/realizace/">Realizace</a>
+    <a href="/#sluzby">Služby</a>
+    <a href="/navrhar/">Návrhář</a>
+    <a href="/#o-nas">O nás</a>
+    <a href="/#kontakt">Kontakt</a>
+    <a class="btn nav__cta nav__tel" href="tel:+420602108793">602 108 793</a>
   </div>
-  <button class="nav__toggle" aria-label="Otevřít menu" aria-expanded="false" aria-controls="menu"><span></span><span></span><span></span></button>
+  <button class="nav__toggle" aria-label="Otevřít menu" aria-expanded="false" aria-controls="menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
 <main class="error-page">
@@ -29,6 +38,23 @@
   </div>
 </main>
 
+<footer class="footer">
+  <div class="container">
+    <div class="footer__top">
+      <div>
+        <img class="footer__mark" src="/obrazky/pouze_logo_kamenictvi_prochazka.png" alt="">
+        <p class="footer__name">Kamenictví Procházka</p>
+      </div>
+      <nav class="footer__nav" aria-label="Patička">
+        <a href="/realizace/">Realizace</a><a href="/#sluzby">Služby</a><a href="/navrhar/">Návrhář</a><a href="/#o-nas">O nás</a><a href="/#kontakt">Kontakt</a><a href="/ochrana-osobnich-udaju/">Ochrana osobních údajů</a>
+      </nav>
+    </div>
+    <p class="footer__legal">Náhrobky a renovace hrobů: Aleš Procházka, IČO 74660900 &nbsp;·&nbsp; Stavební činnost: Kamenictví Procházka s.r.o., IČO 03062554, C 227109 vedená u Městského soudu v Praze</p>
+    <p class="footer__copy">© <span data-year>2026</span> Kamenictví Procházka &nbsp;·&nbsp; <a href="tel:+420602108793">602 108 793</a> &nbsp;·&nbsp; <a href="mailto:pomniky@kamenictviprochazka.cz">pomniky@kamenictviprochazka.cz</a></p>
+  </div>
+</footer>
+
 <script src="/skript.js"></script>
+<div class="mbar" aria-label="Rychlý kontakt"><a class="mbar__call" href="tel:+420602108793">Zavolat</a><a class="mbar__form" href="/#kontakt">Poptávka</a></div>
 </body>
 </html>

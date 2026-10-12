@@ -1,0 +1,109 @@
+/* ============================================================
+   Online návrhář — generátor nápisu + konfigurátor hrobu
+   Navazuje na design systém /styl.css (barvy, tlačítka, typografie).
+   ============================================================ */
+
+[hidden] { display: none !important; }
+.tool { padding: 40px 0 96px; background: var(--bg); }
+.tool__grid { display: grid; grid-template-columns: minmax(300px, 400px) 1fr; gap: 40px; align-items: start; }
+.tool__intro { max-width: 760px; margin: 0 auto 40px; text-align: center; color: var(--text-muted); }
+
+/* --- Panel ovládání --- */
+.panel { background: var(--bg-2); border: 1px solid var(--line); border-radius: var(--radius); padding: 8px 0; }
+.panel fieldset { border: 0; padding: 18px 22px; border-bottom: 1px solid rgba(194,154,100,.14); }
+.panel fieldset:last-child { border-bottom: 0; }
+.panel legend { font-family: 'Manrope', sans-serif; font-weight: 600; color: var(--gold); font-size: .72rem; letter-spacing: .18em; text-transform: uppercase; padding: 0; margin-bottom: 12px; float: left; width: 100%; }
+.panel legend + * { clear: both; }
+.ctl { display: block; margin-bottom: 12px; }
+.ctl:last-child { margin-bottom: 0; }
+.ctl > span, .ctl__lbl { display: block; font-size: .68rem; letter-spacing: .14em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
+.ctl input[type="text"], .ctl input[type="number"], .ctl select, .ctl textarea {
+  width: 100%; background: var(--bg-3); border: 1px solid rgba(194,154,100,.22); color: var(--text);
+  padding: 10px 12px; font: inherit; font-size: .92rem; border-radius: var(--radius);
+}
+.ctl input:focus, .ctl select:focus, .ctl textarea:focus { outline: none; border-color: var(--gold); }
+.ctl input[type="range"] { width: 100%; accent-color: var(--gold); }
+.ctl-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.ctl-row--3 { grid-template-columns: 2fr 1fr 1fr; }
+.ctl-check { display: flex; align-items: center; gap: 10px; font-size: .9rem; margin: 6px 0; cursor: pointer; }
+.ctl-check input { accent-color: var(--gold); width: 16px; height: 16px; }
+.hint { font-size: .78rem; color: var(--text-muted); margin-top: 6px; }
+
+/* Výběr pomocí dlaždic (tvar, kámen, písmo) */
+.chips { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.chips--2 { grid-template-columns: repeat(2, 1fr); }
+.chip { position: relative; }
+.chip input { position: absolute; opacity: 0; pointer-events: none; }
+.chip label {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+  min-height: 64px; padding: 8px 6px; text-align: center; cursor: pointer;
+  background: var(--bg-3); border: 1px solid rgba(194,154,100,.18); border-radius: var(--radius);
+  font-size: .72rem; letter-spacing: .04em; color: var(--text); transition: .2s;
+}
+.chip label:hover { border-color: var(--gold); }
+.chip input:checked + label { border-color: var(--gold); background: rgba(194,154,100,.12); box-shadow: inset 0 0 0 1px var(--gold); }
+.chip input:focus-visible + label { outline: 2px solid var(--gold-2); outline-offset: 2px; }
+.chip svg { width: 34px; height: 34px; }
+.chip .swatch { width: 100%; height: 26px; border-radius: 2px; border: 1px solid rgba(255,255,255,.08); }
+.chip .fontdemo { font-size: 1.15rem; line-height: 1; color: var(--gold-2); letter-spacing: 0; }
+
+/* Osoby v nápisu */
+.person { border: 1px dashed rgba(194,154,100,.22); padding: 10px; margin-bottom: 10px; border-radius: var(--radius); position: relative; }
+.person__rm { position: absolute; top: 4px; right: 6px; background: none; border: 0; color: var(--text-muted); font-size: 1.2rem; cursor: pointer; line-height: 1; }
+.person__rm:hover { color: #e07a6e; }
+.btn--small { padding: 9px 16px; font-size: .68rem; letter-spacing: .14em; }
+
+/* --- Náhled --- */
+.stage { position: sticky; top: 90px; }
+.stage__frame {
+  background: radial-gradient(ellipse at 50% 35%, #2a2824 0%, #141416 70%);
+  border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow);
+}
+.stage canvas, .stage svg.drawing { display: block; width: 100%; height: auto; }
+.stage__tabs { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+.stage__tabs button {
+  background: transparent; border: 1px solid rgba(194,154,100,.3); color: var(--text-muted); padding: 7px 14px;
+  font: inherit; font-size: .7rem; letter-spacing: .14em; text-transform: uppercase; cursor: pointer; border-radius: var(--radius);
+}
+.stage__tabs button[aria-selected="true"] { background: var(--gold); color: #1a1712; border-color: var(--gold); }
+.stage__actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+.stage__note { font-size: .78rem; color: var(--text-muted); margin-top: 14px; }
+.stage__note strong { color: var(--text); font-weight: 500; }
+
+.summary { margin-top: 18px; background: var(--bg-2); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 22px; }
+.summary h3 { font-size: .9rem; color: var(--gold); letter-spacing: .14em; text-transform: uppercase; margin-bottom: 10px; }
+.summary dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 18px; font-size: .88rem; }
+.summary dt { color: var(--text-muted); }
+.summary dd { color: var(--text); }
+
+.toast { position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%) translateY(20px); opacity: 0; background: var(--gold); color: #1a1712; padding: 12px 22px; border-radius: var(--radius); font-size: .85rem; transition: .3s; z-index: 300; pointer-events: none; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* --- Rozcestník návrháře + sekce na úvodní stránce --- */
+.tools__grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px; }
+.toolcard { display: flex; flex-direction: column; background: var(--bg-2); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; transition: .3s; }
+.toolcard:hover { transform: translateY(-4px); border-color: var(--gold); box-shadow: var(--shadow); }
+.toolcard__art { aspect-ratio: 16/9; display: grid; place-items: center; background: radial-gradient(ellipse at 50% 40%, #2a2824, #0f0f11 75%); }
+.toolcard__art svg { width: 70%; height: 80%; }
+.toolcard__body { padding: 24px 26px 28px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+.toolcard h2, .toolcard h3 { font-size: 1.1rem; text-transform: uppercase; }
+.toolcard p { color: var(--text-muted); font-size: .92rem; }
+.toolcard .card__link { margin-top: auto; }
+
+@media (max-width: 900px) {
+  .tool__grid { grid-template-columns: 1fr; }
+  .stage { position: static; order: -1; }
+  .tools__grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 420px) {
+  .chips { grid-template-columns: repeat(2, 1fr); }
+  .stage__frame { padding: 12px; }
+}
+
+.chips--small { grid-template-columns: repeat(3, 1fr); margin-top: 8px; }
+.chips--small .btn { padding: 8px 6px; letter-spacing: .06em; }
+.sizeinfo { font-size: .8rem; margin-top: 4px; padding: 8px 10px; border-radius: var(--radius); border: 1px solid rgba(194,154,100,.25); color: var(--text-muted); }
+.sizeinfo:empty { display: none; }
+.sizeinfo b { color: var(--text, #eee); }
+.sizeinfo.is-warn { border-color: rgba(224,122,110,.6); color: #f0b2a9; }
+.sizeinfo.is-ok { border-color: rgba(140,190,130,.45); }

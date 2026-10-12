@@ -1,4 +1,2 @@
 User-agent: *
-Allow: /
-
-Sitemap: https://kamenictviprochazka.cz/sitemap.xml
+Disallow: /

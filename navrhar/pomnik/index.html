@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; script-src 'self'; connect-src 'self'; base-uri 'self'; form-action 'self' mailto:">
+  <title>Konfigurátor hrobu a pomníku — Kamenictví Procházka</title>
+  <meta name="description" content="Navrhněte si online urnový hrob, jednohrob nebo dvojhrob: tvar pomníku, kámen, krycí desku, výplň i doplňky. Čelní pohled a půdorys s rozměry, návrh pošlete k nezávazné nabídce.">
+  <link rel="canonical" href="https://kamenictviprochazka.cz/navrhar/pomnik/">
+  <link rel="icon" type="image/png" href="/obrazky/pouze_logo_kamenictvi_prochazka.png">
+  <meta property="og:title" content="Konfigurátor hrobu a pomníku — Kamenictví Procházka">
+  <meta property="og:description" content="Online návrh hrobu: typ, tvar pomníku, kámen, krycí deska, doplňky. Čelní pohled i půdorys.">
+  <meta property="og:url" content="https://kamenictviprochazka.cz/navrhar/pomnik/">
+  <meta property="og:image" content="https://kamenictviprochazka.cz/obrazky/pouzelogokamenictviprochazka.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@1,500&family=Marcellus&family=Sorts+Mill+Goudy&family=Jost:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styl.css">
+  <link rel="stylesheet" href="/navrhar/navrhar.css">
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Domů", "item": "https://kamenictviprochazka.cz/"}, {"@type": "ListItem", "position": 2, "name": "Návrhář", "item": "https://kamenictviprochazka.cz/navrhar/"}, {"@type": "ListItem", "position": 3, "name": "Hrob a pomník", "item": "https://kamenictviprochazka.cz/navrhar/pomnik/"}]}</script>
+</head>
+<body>
+<nav class="nav scrolled" aria-label="Hlavní navigace">
+  <a class="nav__brand" href="/" aria-label="Kamenictví Procházka — domů">
+    <img src="/obrazky/logo-kamenictvi-prochazka-bl-web.png" alt="Kamenictví Procházka">
+  </a>
+  <div class="nav__links" id="menu">
+    <a href="/realizace/">Realizace</a>
+    <a href="/#sluzby">Služby</a>
+    <a href="/navrhar/" aria-current="page">Návrhář</a>
+    <a href="/#o-nas">O nás</a>
+    <a href="/#kontakt">Kontakt</a>
+    <a class="btn nav__cta nav__tel" href="tel:+420602108793">602 108 793</a>
+  </div>
+  <button class="nav__toggle" aria-label="Otevřít menu" aria-expanded="false" aria-controls="menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<section class="subhero">
+  <div class="container">
+    <p class="breadcrumb"><a href="/">Domů</a> / <a href="/navrhar/">Návrhář</a> / Hrob a pomník</p>
+    <h1>Konfigurátor hrobu</h1>
+  </div>
+</section>
+
+<main class="tool">
+  <div class="container">
+    <p class="tool__intro">Poskládejte si hrob podle sebe — typ, tvar pomníku, kámen, krycí desku, výplň a doplňky. Rozměry jsou orientační; skutečné rozměry se řídí hrobovým místem a řádem hřbitova a upřesníme je při zaměření.</p>
+
+    <div class="tool__grid">
+      <form class="panel" id="pomnikForm" autocomplete="off">
+        <fieldset>
+          <legend>Typ hrobu</legend>
+          <div class="chips" role="radiogroup" aria-label="Typ hrobu">
+            <div class="chip"><input type="radio" name="typ" id="ty1" value="urna"><label for="ty1"><svg viewBox="0 0 40 40" aria-hidden="true"><rect x="10" y="10" width="20" height="24" fill="none" stroke="currentColor" stroke-width="2"/><rect x="12" y="6" width="16" height="6" fill="currentColor"/></svg>Urnový</label></div>
+            <div class="chip"><input type="radio" name="typ" id="ty2" value="jednohrob"><label for="ty2"><svg viewBox="0 0 40 40" aria-hidden="true"><rect x="12" y="6" width="16" height="30" fill="none" stroke="currentColor" stroke-width="2"/><rect x="13" y="3" width="14" height="5" fill="currentColor"/></svg>Jednohrob</label></div>
+            <div class="chip"><input type="radio" name="typ" id="ty3" value="dvojhrob"><label for="ty3"><svg viewBox="0 0 40 40" aria-hidden="true"><rect x="5" y="6" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2"/><rect x="7" y="3" width="26" height="5" fill="currentColor"/></svg>Dvojhrob</label></div>
+          </div>
+          <div class="ctl-row" style="margin-top:12px">
+            <label class="ctl"><span>Šířka (cm)</span><input type="number" id="p-sirka" min="50" max="300" step="5"></label>
+            <label class="ctl"><span>Délka (cm)</span><input type="number" id="p-delka" min="60" max="300" step="5"></label>
+          </div>
+          <p class="hint">Vnější rozměr rámu. Předvyplněno orientačně podle typu.</p>
+        </fieldset>
+
+        <fieldset>
+          <legend>Tvar pomníku</legend>
+          <div class="chips" id="tvary" role="radiogroup" aria-label="Tvar pomníku"></div>
+          <div class="ctl-row" style="margin-top:12px">
+            <label class="ctl"><span>Výška <output id="o-stelaV"></output> cm</span><input type="range" id="p-stelaV" min="40" max="140" step="5"></label>
+            <label class="ctl"><span>Šířka <output id="o-stelaS"></output> cm</span><input type="range" id="p-stelaS" min="30" max="200" step="5"></label>
+          </div>
+          <label class="ctl"><span>Sokl pod pomníkem</span>
+            <select id="p-sokl">
+              <option value="25">Sokl 25 cm</option>
+              <option value="15">Nízký sokl 15 cm</option>
+              <option value="0">Bez soklu</option>
+            </select>
+          </label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Krycí deska a výplň</legend>
+          <label class="ctl"><span>Krycí deska</span>
+            <select id="p-deska">
+              <option value="cela">Celá — kryje celý hrob</option>
+              <option value="polovina">Polovina — vpředu výplň</option>
+              <option value="delena">Dělená — dva díly</option>
+              <option value="bez">Bez desky — celá výplň</option>
+            </select>
+          </label>
+          <label class="ctl"><span>Výplň (kde není deska)</span>
+            <select id="p-vypln">
+              <option value="kacirek">Bílý kačírek</option>
+              <option value="sterk">Černý štěrk</option>
+              <option value="zahon">Záhon / květiny</option>
+            </select>
+          </label>
+          <label class="ctl-check"><input type="checkbox" id="p-chodnik"> Obvodový chodník (vpředu a po stranách)</label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Kámen</legend>
+          <div class="chips" id="kameny"></div>
+          <label class="ctl" style="margin-top:12px"><span>Provedení písma</span>
+            <select id="p-technika">
+              <option value="zlato">Pískované, zlacené</option>
+              <option value="stribro">Pískované, stříbřené</option>
+              <option value="bila">Pískované, bílá barva</option>
+              <option value="hloubene">Pískované bez barvy</option>
+            </select>
+          </label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Doplňky</legend>
+          <label class="ctl-check"><input type="checkbox" id="p-vaza"> Váza</label>
+          <label class="ctl-check"><input type="checkbox" id="p-lucerna"> Lucerna (svítilna)</label>
+          <label class="ctl-check"><input type="checkbox" id="p-foto"> Fotokeramika (ovál)</label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Nápis</legend>
+          <label class="ctl"><span>Jméno</span><input type="text" id="p-jmeno" maxlength="40"></label>
+          <div class="ctl-row">
+            <label class="ctl"><span>Narozen/a</span><input type="text" id="p-nar" maxlength="12" inputmode="numeric"></label>
+            <label class="ctl"><span>Zemřel/a</span><input type="text" id="p-zem" maxlength="12" inputmode="numeric"></label>
+          </div>
+          <p class="hint" id="napisInfo">Více osob, rozenou, epitaf a písmo nastavíte v <a href="/navrhar/napis/" style="color:var(--gold)">generátoru nápisu</a> — návrh se sem přenese.</p>
+        </fieldset>
+      </form>
+
+      <div class="stage">
+        <div class="stage__tabs" role="tablist" aria-label="Pohled">
+          <button type="button" role="tab" aria-selected="true" data-pohled="celo">Čelní pohled</button>
+          <button type="button" role="tab" aria-selected="false" data-pohled="pudorys">Půdorys</button>
+        </div>
+        <div class="stage__frame">
+          <svg class="drawing" id="pomnikSvg" viewBox="0 0 1000 800" role="img" aria-label="Náhled hrobu"></svg>
+        </div>
+        <div class="stage__actions">
+          <button type="button" class="btn btn--gold" id="poslatPoptavku">Poslat v poptávce</button>
+          <button type="button" class="btn btn--outline" id="stahnout">Stáhnout obrázek</button>
+          <a class="btn btn--outline" href="/navrhar/napis/">Upravit nápis</a>
+        </div>
+        <div class="summary">
+          <h3>Shrnutí návrhu</h3>
+          <dl id="souhrn"></dl>
+        </div>
+        <p class="stage__note"><strong>Orientační náhled, ne výrobní výkres.</strong> Kresba kamene je ilustrační. Přesnou skladbu, rozměry podle hrobového místa a cenu připravíme v nezávazné nabídce.</p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__top">
+      <div>
+        <img class="footer__mark" src="/obrazky/pouze_logo_kamenictvi_prochazka.png" alt="">
+        <p class="footer__name">Kamenictví Procházka</p>
+      </div>
+      <nav class="footer__nav" aria-label="Patička">
+        <a href="/realizace/">Realizace</a><a href="/#sluzby">Služby</a><a href="/navrhar/">Návrhář</a><a href="/#o-nas">O nás</a><a href="/#kontakt">Kontakt</a><a href="/ochrana-osobnich-udaju/">Ochrana osobních údajů</a>
+      </nav>
+    </div>
+    <p class="footer__legal">Náhrobky a renovace hrobů: Aleš Procházka, IČO 74660900 &nbsp;·&nbsp; Stavební činnost: Kamenictví Procházka s.r.o., IČO 03062554, C 227109 vedená u Městského soudu v Praze</p>
+    <p class="footer__copy">© <span data-year>2026</span> Kamenictví Procházka &nbsp;·&nbsp; <a href="tel:+420602108793">602 108 793</a> &nbsp;·&nbsp; <a href="mailto:pomniky@kamenictviprochazka.cz">pomniky@kamenictviprochazka.cz</a></p>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="/skript.js"></script>
+<script src="/navrhar/spolecne.js"></script>
+<script src="/navrhar/pismo.js"></script>
+<script src="/navrhar/pomnik.js"></script>
+<div class="mbar" aria-label="Rychlý kontakt"><a class="mbar__call" href="tel:+420602108793">Zavolat</a><a class="mbar__form" href="/#kontakt">Poptávka</a></div>
+</body>
+</html>

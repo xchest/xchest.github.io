@@ -369,3 +369,13 @@
   document.addEventListener("visibilitychange",function(){if(document.hidden)v.pause();else play();});
   play();
 })();
+
+// panely s videem (Stavby): hraji jen na obrazovce, jinak stoji (data se stahuji az pri priblizeni)
+(function(){
+  var vs=document.querySelectorAll(".panel__video");
+  if(!vs.length||!("IntersectionObserver" in window))return;
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){var v=e.target;
+    if(e.isIntersecting&&!document.hidden){var p=v.play();if(p&&p.catch)p.catch(function(){});}else v.pause();});},{rootMargin:"200px 0px"});
+  vs.forEach(function(v){io.observe(v);});
+  document.addEventListener("visibilitychange",function(){if(document.hidden)vs.forEach(function(v){v.pause();});});
+})();

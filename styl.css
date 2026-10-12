@@ -553,7 +553,7 @@ html:has(body.snap) { scroll-snap-type: y mandatory; scroll-padding-top: 0; }
 .fx-kulicka .fx b { left: 4%; top: 6%; width: 14%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #f2eee6, #8d867a 70%); box-shadow: 0 3px 6px rgba(0,0,0,.5); }
 .fx-kulicka:hover .fx b, .fx-kulicka:focus-visible .fx b, .fx-kulicka.is-on .fx b { animation: fx-kulicka 1.6s linear forwards; }
 @keyframes fx-kulicka { 0% { opacity: 1; transform: translate(0, 0) rotate(0); } 15% { transform: translate(60%, -40%) rotate(90deg); } 25% { transform: translate(120%, 80%) rotate(180deg); } 40% { transform: translate(180%, 40%) rotate(270deg); } 50% { transform: translate(240%, 160%) rotate(360deg); } 65% { transform: translate(300%, 120%) rotate(450deg); } 75% { transform: translate(360%, 240%) rotate(540deg); } 90% { transform: translate(420%, 210%) rotate(600deg); } 100% { opacity: 1; transform: translate(480%, 300%) rotate(680deg); } }
-@media (prefers-reduced-motion: reduce) { .stavby-refs li, .stavby-refs img { transition: none; } .stavby-refs .fx { display: none; } }
+/* efekty karet spousti sam navstevnik najetim, proto bezi i pri vypnutych animacich ve Windows (AP 12. 10.) */
 /* Postava kamenika pri scrollu (postava.js, 12. 10. 2026) */
 .postava { position: fixed; right: max(16px, 3vw); bottom: 0; height: calc(min(64vh, 580px) * var(--vyska, 1)); aspect-ratio: var(--pomer, .6); z-index: 40; pointer-events: none; visibility: hidden; }
 .postava.is-ven, .postava.is-dopad { visibility: visible; }

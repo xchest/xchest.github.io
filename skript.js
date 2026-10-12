@@ -411,7 +411,7 @@
 })();
 /* Stavby: karta se nakloni za mysi (12. 10. 2026) */
 (function(){
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || !window.matchMedia("(hover: hover)").matches) return;
+  if (!window.matchMedia("(hover: hover)").matches) return;
   document.querySelectorAll(".stavby-refs li").forEach(function(li){
     li.addEventListener("mousemove", function(e){
       var r = li.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;

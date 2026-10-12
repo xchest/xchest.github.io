@@ -353,6 +353,21 @@
       };
       range.addEventListener('input', function () { ruka = performance.now(); });
       range.addEventListener('pointerdown', function () { ruka = performance.now(); });
+      // karta s data-ba ve stejne sekci: najeti/fokus/klepnuti ukaze jeji dvojici ve slideru (AP 12. 10.)
+      var sek = ba.closest('section');
+      if (sek) sek.querySelectorAll('[data-ba]').forEach(function (k) {
+        var d = JSON.parse(k.dataset.ba), n = -1;
+        var jdi = function () {
+          if (n < 0) {
+            n = pary.push(d) - 1; [d[0], d[1]].forEach(function (s) { var i = new Image(); i.src = s; });
+            var el = document.createElement('button'); el.type = 'button'; el.textContent = d[2]; el.setAttribute('aria-pressed', 'false');
+            el.addEventListener('click', function () { ruka = performance.now(); ukaz(n); });
+            ovl.insertBefore(el, pb); tecky.push(el);
+          }
+          ruka = performance.now() - 4500; ukaz(n); // jezdec se rozjede do 1,5 s
+        };
+        k.addEventListener('mouseenter', jdi); k.addEventListener('focus', jdi); k.addEventListener('click', jdi);
+      });
       if ('IntersectionObserver' in window) {
         new IntersectionObserver(function (en) { videt = en[0].isIntersecting; }, { threshold: 0.3 }).observe(ba);
       } else videt = true;

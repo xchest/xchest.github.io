@@ -4,7 +4,7 @@
   var POSTAVY = {
     nahrobky: { src: "/obrazky/postava-hroby.webp", w: 663, h: 900, vyska: 0.8 },
     interier: { src: "/obrazky/postava-interier.webp", w: 514, h: 900 },
-    stavby: { src: "/obrazky/postava-stavby.webp", w: 532, h: 900, flip: true, helma: { x: 0.23, y: 0.04 } },
+    stavby: { src: "/obrazky/postava-stavby.webp", w: 532, h: 900, flip: true, helma: { x: 0.21, y: 0.03 } },
     obce: { src: "/obrazky/postava-obce.webp", w: 489, h: 900 }
   };
   var ids = Object.keys(POSTAVY).filter(function(id){ return document.getElementById(id); });

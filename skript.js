@@ -409,3 +409,14 @@
     li.addEventListener("click",function(){var on=li.classList.contains("is-on");document.querySelectorAll(".stavby-refs li.is-on").forEach(function(x){x.classList.remove("is-on");});if(!on)li.classList.add("is-on");});
   });
 })();
+/* Stavby: karta se nakloni za mysi (12. 10. 2026) */
+(function(){
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || !window.matchMedia("(hover: hover)").matches) return;
+  document.querySelectorAll(".stavby-refs li").forEach(function(li){
+    li.addEventListener("mousemove", function(e){
+      var r = li.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+      li.classList.add("is-tilt"); li.style.setProperty("--ry", (x * 18).toFixed(1) + "deg"); li.style.setProperty("--rx", (-y * 14).toFixed(1) + "deg");
+    });
+    li.addEventListener("mouseleave", function(){ li.classList.remove("is-tilt"); li.style.removeProperty("--rx"); li.style.removeProperty("--ry"); });
+  });
+})();

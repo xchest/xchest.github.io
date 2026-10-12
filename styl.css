@@ -511,3 +511,61 @@ html:has(body.snap) { scroll-snap-type: y mandatory; scroll-padding-top: 0; }
   .mosaic { height: 46vh; gap: 8px; }
 }
 @media (prefers-reduced-motion: reduce) { html:has(body.snap) { scroll-snap-type: y proximity; } }
+
+/* Obce: slider pred/po (12. 10. 2026) — sdileny .ba, jen pomer 4:3 */
+.ba.ba--4x3 { aspect-ratio: 4 / 3; max-width: 980px; max-height: min(66vh, 735px); margin-bottom: 0; }
+.ba-pary { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 22px 0 24px; }
+.ba-pary figure { margin: 0; }
+.ba-pary figure > div { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+.ba-pary img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; }
+.ba-pary figcaption { font-size: 13px; color: var(--mute); margin-top: 6px; }
+@media (max-width: 700px) { .ba-pary { grid-template-columns: 1fr; } }
+
+/* Stavby: pas referenci, budova se pri najeti vysune (12. 10. 2026) */
+.stavby-refs { list-style: none; display: flex; gap: 14px; margin: 4px -24px 10px; padding: 22px 24px 24px; scroll-padding-left: 24px; overflow-x: auto; scroll-snap-type: x mandatory; }
+.stavby-refs li { position: relative; flex: 0 0 clamp(150px, 18vw, 220px); aspect-ratio: 4 / 3; scroll-snap-align: start; transition: transform .35s cubic-bezier(.2,.8,.2,1.2), box-shadow .35s; z-index: 0; }
+.stavby-refs img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.stavby-refs span { position: absolute; left: 0; right: 0; bottom: 0; padding: 18px 8px 6px; font-size: 12px; color: #fff; background: linear-gradient(transparent, rgba(0,0,0,.65)); }
+.stavby-refs li:hover, .stavby-refs li:focus-within, .stavby-refs li.is-on { transform: scale(1.12) translateY(-4px); box-shadow: 0 18px 40px rgba(0,0,0,.55); z-index: 2; }
+@media (prefers-reduced-motion: reduce) { .stavby-refs li { transition: none; } }
+/* Postava kamenika pri scrollu (postava.js, 12. 10. 2026) */
+.postava { position: fixed; right: max(16px, 3vw); bottom: 0; height: calc(min(64vh, 580px) * var(--vyska, 1)); aspect-ratio: var(--pomer, .6); z-index: 40; pointer-events: none; visibility: hidden; }
+.postava.is-ven, .postava.is-dopad { visibility: visible; }
+.postava__telo { height: 100%; transform-origin: 50% 100%; filter: drop-shadow(0 14px 18px rgba(0,0,0,.45)); }
+.postava__telo img { height: 100%; width: auto; display: block; }
+.postava__telo.is-flip img { transform: scaleX(-1); }
+.postava__helma { position: absolute; left: calc(var(--hx, .5) * 100%); top: calc(var(--hy, 0) * 100%); width: 24%; height: auto; transform: translate(-50%, -32%); opacity: 0; }
+.postava.is-ven .postava__telo { animation: postava-skok .26s cubic-bezier(.5,0,.9,.4) forwards; }
+.postava.is-nahore .postava__telo { transform: translateY(-120vh); }
+.postava.is-dopad .postava__telo { animation: postava-pad .9s linear forwards; }
+.postava.s-helmou .postava__helma { animation: postava-helma .9s linear forwards; }
+@keyframes postava-skok {
+  0% { transform: none; }
+  30% { transform: translateY(3%) scale(1.03, .93); }
+  100% { transform: translateY(-120vh) scale(.96, 1.06); }
+}
+@keyframes postava-pad {
+  0% { transform: translateY(-120vh) scale(.96, 1.08); filter: blur(3px) drop-shadow(0 14px 18px rgba(0,0,0,.45)); animation-timing-function: cubic-bezier(.55,0,1,.6); }
+  55% { transform: translateY(0) scale(.98, 1.04); filter: blur(0) drop-shadow(0 14px 18px rgba(0,0,0,.45)); animation-timing-function: ease-out; }
+  64% { transform: translateY(0) scale(1.05, .9); }
+  78% { transform: translateY(-1.5%) scale(.99, 1.02); }
+  100% { transform: none; }
+}
+@keyframes postava-helma {
+  0% { transform: translate(-50%, -32%) translateY(-130vh) rotate(-200deg); opacity: 1; filter: blur(5px); animation-timing-function: cubic-bezier(.4,0,.9,.6); }
+  42% { transform: translate(-50%, -32%) translateY(-12vh) rotate(-20deg); opacity: 1; filter: blur(1px); }
+  56% { transform: translate(-50%, -32%) rotate(0); opacity: 1; filter: none; }
+  66% { opacity: 0; }
+  100% { transform: translate(-50%, -32%); opacity: 0; }
+}
+@media (max-width: 700px) { .postava { height: calc(min(34vh, 260px) * var(--vyska, 1)); right: 8px; } }
+@media (prefers-reduced-motion: reduce) {
+  .postava .postava__telo, .postava .postava__helma { animation: none !important; transform: none; }
+  .postava__helma { display: none; }
+  .postava { transition: opacity .3s; opacity: 0; }
+  .postava.is-dopad { opacity: 1; }
+}
+@media (min-width: 1000px) {
+  #stavby .stavby-refs { margin-right: min(26vw, 340px); }
+  #obce .ba, #obce .ba-pary { margin-left: 0; margin-right: min(26vw, 340px); } /* postava stoji vpravo vedle slideru */
+}

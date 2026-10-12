@@ -402,3 +402,10 @@
     scrollTo({top:y,behavior:"smooth"});
   },{passive:false});
 })();
+
+/* Stavby: klepnuti na referenci na dotyku (12. 10. 2026) */
+(function(){
+  document.querySelectorAll(".stavby-refs li").forEach(function(li){
+    li.addEventListener("click",function(){var on=li.classList.contains("is-on");document.querySelectorAll(".stavby-refs li.is-on").forEach(function(x){x.classList.remove("is-on");});if(!on)li.classList.add("is-on");});
+  });
+})();

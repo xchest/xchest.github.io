@@ -51,7 +51,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/styl.css?v=1012">
+  <link rel="stylesheet" href="/styl.css?v=1012f">
 </head>
 <body class="snap">
 
@@ -128,6 +128,7 @@
     <p class="label">03 — Stavební činnost</p>
     <h2>Kámen ve velkých stavbách</h2>
     <p>Schodiště s drážkami, dlažby, chodníky, obklady a kamenné zdivo. Pro hotely, divadla, školy i veřejný prostor.</p>
+    <ul class="stavby-refs"><li><img src="/obrazky/Rekonstrukce-metro-eskomoravsk-800.webp" alt="Stanice metra" loading="lazy" width="800" height="600"><span>Stanice metra</span></li><li><img src="/obrazky/realizace-divadlo-spirala-800.webp" alt="Divadlo" loading="lazy" width="800" height="600"><span>Divadlo</span></li><li><img src="/obrazky/realizace-nr7-namesti-republiky-800.webp" alt="Kancelářská budova" loading="lazy" width="800" height="600"><span>Kancelářská budova</span></li><li><img src="/obrazky/realizace-andaz-praha-800.webp" alt="Hotel" loading="lazy" width="800" height="600"><span>Hotel</span></li><li><img src="/obrazky/realizace-allure-schodiste-800.webp" alt="Schodiště" loading="lazy" width="800" height="600"><span>Schodiště</span></li></ul>
     <div class="hero__actions"><a class="btn btn--gold" href="/sluzby/stavebni-cinnost/">Stavební činnost</a></div>
   </div>
 </section>
@@ -136,11 +137,20 @@
   <div class="container">
     <div class="panel__head">
       <p class="label">04 — Pro obce</p>
-      <h2>Válečné památníky, pamětní desky a dotace</h2>
-      <p>Žádost o dotaci za vás sepíšeme <strong>zdarma</strong>. Úspěšnost našich žádostí je <strong>100 %</strong>.</p>
+      <h2>Obnova válečných památníků a pamětních desek</h2>
+      <p>Čištění, opravy a nové části z kamene. Žádost o dotaci vám sepíšeme <strong>zdarma</strong>.</p>
     </div>
-    <figure class="film film--wide"><video class="panel__video" muted loop playsinline preload="metadata" poster="/obrazky/obce-promena-poster.webp?v=1012e" aria-hidden="true"><source src="/obrazky/obce-promena.mp4?v=1012e" type="video/mp4"></video></figure>
-    <ol class="steps"><li><b>1</b>Sepíšeme žádost o dotaci</li><li><b>2</b>Dotace přidělena</li><li><b>3</b>Památník obnovíme</li></ol>
+    <div class="ba ba--4x3">
+      <img class="ba__before" src="/obrazky/pamatnik-promena-pred.webp" alt="Památník před obnovou" loading="lazy" width="1400" height="1050">
+      <img class="ba__after" src="/obrazky/pamatnik-promena-po.webp" alt="Památník po obnově" loading="lazy" width="1400" height="1050">
+      <span class="ba__label ba__label--pred">Před</span><span class="ba__label ba__label--po">Po</span>
+      <div class="ba__handle"></div>
+      <input type="range" min="0" max="100" value="50" aria-label="Porovnání památníku před a po obnově">
+    </div>
+    <div class="ba-pary">
+      <figure><div><img src="/obrazky/pamatnik-schody-pred.webp" alt="Rozjeté schody památníku" loading="lazy" width="800" height="600"><img src="/obrazky/pamatnik-schody-po.webp" alt="Schody po opravě" loading="lazy" width="800" height="600"></div><figcaption>Schody památníku — před a po opravě</figcaption></figure>
+      <figure><div><img src="/obrazky/pamatnik-kriz-pred.webp" alt="Kříž před obnovou" loading="lazy" width="800" height="600"><img src="/obrazky/pamatnik-kriz-po.webp" alt="Kříž po obnově" loading="lazy" width="800" height="600"></div><figcaption>Pískovcový kříž — před a po obnově</figcaption></figure>
+    </div>
     <div class="hero__actions"><a class="btn btn--gold" href="/sluzby/pro-obce/">Pro obce</a></div>
   </div>
 </section>
@@ -262,6 +272,7 @@
 
 <div class="mbar" aria-label="Rychlý kontakt"><a class="mbar__call" href="tel:+420602108793">Zavolat</a><a class="mbar__form" href="/#kontakt">Poptávka</a></div>
 
-<script src="/skript.js?v=1012"></script>
+<script src="/skript.js?v=1012f"></script>
+<script src="/postava.js?v=1012f" defer></script>
 </body>
 </html>

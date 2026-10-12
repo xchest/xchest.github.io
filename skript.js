@@ -379,3 +379,26 @@
   vs.forEach(function(v){io.observe(v);});
   document.addEventListener("visibilitychange",function(){if(document.hidden)vs.forEach(function(v){v.pause();});});
 })();
+
+// uvodni stranka: jedno otoceni koleckem = cela dalsi stranka (AP 12. 10. 2026); dotyk nechava nativni snap
+(function(){
+  if(!document.body.classList.contains("snap")||matchMedia("(pointer: coarse)").matches)return;
+  var ps=[].slice.call(document.querySelectorAll(".panel")),until=0,last=0,jumped=false;
+  if(ps.length<2)return;
+  function cur(){var y=scrollY+4,i=0;ps.forEach(function(p,k){if(p.offsetTop<=y)i=k;});return i;}
+  addEventListener("wheel",function(e){
+    if(e.ctrlKey||Math.abs(e.deltaY)<Math.abs(e.deltaX))return;
+    var now=Date.now(),busy=now<until||(jumped&&now-last<220);last=now;if(!busy)jumped=false;
+    if(busy){e.preventDefault();return;}             // dobeh setrvacnosti touchpadu = zadny dalsi skok
+    var vh=innerHeight,i=cur(),p=ps[i],d=e.deltaY>0?1:-1,top=p.offsetTop,bot=top+p.offsetHeight;
+    var tall=p.offsetHeight>vh*1.25;                  // jen opravdu dlouhy panel se posouva uvnitr
+    if(tall&&d>0&&scrollY+vh<bot-4)return;         // vysoky panel: nejdriv nativne dojet na konec
+    if(tall&&d<0&&scrollY>top+4)return;
+    var j=i+d;
+    if(j<0||j>=ps.length)return;                     // za poslednim panelem (paticka) nativne
+    e.preventDefault();
+    var q=ps[j],y=(d<0&&q.offsetHeight>vh*1.25)?q.offsetTop+q.offsetHeight-vh:q.offsetTop;
+    until=now+850;jumped=true;
+    scrollTo({top:y,behavior:"smooth"});
+  },{passive:false});
+})();

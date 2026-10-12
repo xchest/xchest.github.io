@@ -51,7 +51,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/styl.css">
+  <link rel="stylesheet" href="/styl.css?v=1012">
 </head>
 <body class="snap">
 
@@ -108,15 +108,12 @@
         <a class="btn btn--outline" href="/navrhar/">Návrhář hrobu</a>
       </div>
     </div>
-    <div class="panel__media panel__media--two">
-      <figure><img src="/obrazky/nahrobek-seda-kryci-deska-kamenictvi-prochazka-1600.webp" srcset="/obrazky/nahrobek-seda-kryci-deska-kamenictvi-prochazka-800.webp 800w, /obrazky/nahrobek-seda-kryci-deska-kamenictvi-prochazka-1600.webp 1600w" sizes="(max-width: 900px) 50vw, 25vw" alt="Nový náhrobek se šedou krycí deskou" loading="lazy"><figcaption>Nový náhrobek</figcaption></figure>
-      <figure><img src="/obrazky/renovace-hrobky-olsany-po-2025-zelen-kamenictvi-prochazka-1600.webp" srcset="/obrazky/renovace-hrobky-olsany-po-2025-zelen-kamenictvi-prochazka-800.webp 800w, /obrazky/renovace-hrobky-olsany-po-2025-zelen-kamenictvi-prochazka-1600.webp 1600w" sizes="(max-width: 900px) 50vw, 25vw" alt="Hrobka po renovaci" loading="lazy"><figcaption>Po renovaci</figcaption></figure>
-    </div>
+    <figure class="panel__media film"><video class="panel__video" muted loop playsinline preload="metadata" poster="/obrazky/nahrobky-promena-poster.webp" aria-hidden="true"><source src="/obrazky/nahrobky-promena.mp4" type="video/mp4"></video></figure>
   </div>
 </section>
 
 <section class="panel panel--photo" id="interier">
-  <div class="panel__bg"><img src="/obrazky/interier-kuchyn-port-laurent-celek-1600.webp" srcset="/obrazky/interier-kuchyn-port-laurent-celek-800.webp 800w, /obrazky/interier-kuchyn-port-laurent-celek-1600.webp 1600w" sizes="100vw" alt="Kuchyň s kamennou deskou Port Laurent" loading="lazy"></div>
+  <div class="panel__bg"><video class="panel__video" muted loop playsinline preload="metadata" poster="/obrazky/interier-promena-poster.webp" aria-hidden="true"><source src="/obrazky/interier-promena.mp4" type="video/mp4"></video></div>
   <div class="container panel__inner">
     <p class="label">02 — Kámen v interiéru</p>
     <h2>Kuchyně, koupelny, krby a schodiště</h2>
@@ -140,13 +137,10 @@
     <div class="panel__head">
       <p class="label">04 — Pro obce</p>
       <h2>Válečné památníky, pamětní desky a dotace</h2>
-      <p>Památník obnovíme a pomůžeme s přípravou projektu i podkladů k dotaci.</p>
+      <p>Žádost o dotaci za vás sepíšeme <strong>zdarma</strong>. Úspěšnost našich žádostí je <strong>100 %</strong>.</p>
     </div>
-    <ol class="trio">
-      <li><figure><img src="/obrazky/pamatnik-kounice-pred-zarovnano-1600.webp" srcset="/obrazky/pamatnik-kounice-pred-zarovnano-800.webp 800w, /obrazky/pamatnik-kounice-pred-zarovnano-1600.webp 1600w" sizes="(max-width: 900px) 100vw, 30vw" alt="Památník před obnovou" loading="lazy"></figure><span class="trio__n">1</span><b>Před</b><span>Prohlídka a návrh obnovy</span></li>
-      <li><figure class="trio__doc"><img src="/obrazky/dotace-pamatnik-zacerneno-800.webp" srcset="/obrazky/dotace-pamatnik-zacerneno-800.webp 800w, /obrazky/dotace-pamatnik-zacerneno-1600.webp 1600w" sizes="(max-width: 900px) 100vw, 30vw" alt="Investiční záměr k dotaci, údaje obce začerněny" loading="lazy"></figure><span class="trio__n">2</span><b>Dotace</b><span>Projekt a podklady k žádosti</span></li>
-      <li><figure><img src="/obrazky/pamatnik-kounice-po-zarovnano-1600.webp" srcset="/obrazky/pamatnik-kounice-po-zarovnano-800.webp 800w, /obrazky/pamatnik-kounice-po-zarovnano-1600.webp 1600w" sizes="(max-width: 900px) 100vw, 30vw" alt="Památník po obnově" loading="lazy"></figure><span class="trio__n">3</span><b>Po</b><span>Obnovený památník</span></li>
-    </ol>
+    <figure class="film film--wide"><video class="panel__video" muted loop playsinline preload="metadata" poster="/obrazky/obce-promena-poster.webp" aria-hidden="true"><source src="/obrazky/obce-promena.mp4" type="video/mp4"></video></figure>
+    <ol class="steps"><li><b>1</b>Sepíšeme žádost o dotaci</li><li><b>2</b>Dotace přidělena</li><li><b>3</b>Památník obnovíme</li></ol>
     <div class="hero__actions"><a class="btn btn--gold" href="/sluzby/pro-obce/">Pro obce</a></div>
   </div>
 </section>
@@ -268,6 +262,6 @@
 
 <div class="mbar" aria-label="Rychlý kontakt"><a class="mbar__call" href="tel:+420602108793">Zavolat</a><a class="mbar__form" href="/#kontakt">Poptávka</a></div>
 
-<script src="/skript.js"></script>
+<script src="/skript.js?v=1012"></script>
 </body>
 </html>

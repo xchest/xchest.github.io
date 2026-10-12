@@ -581,7 +581,7 @@ html:has(body.snap) { scroll-snap-type: y mandatory; scroll-padding-top: 0; }
   .postava.is-dopad { opacity: 1; }
 }
 @media (min-width: 1000px) {
-  #stavby .stavby-refs { margin-right: min(26vw, 340px); }
+  .stavby-refs { margin-right: min(26vw, 340px); }
   #obce .ba, #obce .ba-pary { margin-left: 0; margin-right: min(26vw, 340px); } /* postava stoji vpravo vedle slideru */
 }
 /* Stavby: Spirala v cervankach (12. 10. 2026), slabsi zatemneni at obloha zustane barevna */

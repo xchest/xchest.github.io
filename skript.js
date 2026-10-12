@@ -314,6 +314,52 @@
     range.addEventListener('input', function () { stopped = true; ba.classList.remove('ba--anim'); set(range.value); });
     range.addEventListener('pointerdown', function () { stopped = true; });
 
+    // Pamatniky: jezdec se sam pomalu prevaluje a dvojice se stridaji (AP 12. 10.) -
+    // bezi i pri vypnutych animacich ve Windows; pauza tlacitkem (WCAG 2.2.2), saha-li navstevnik, chvili pocka
+    if (ba.dataset.pary) {
+      var pary = JSON.parse(ba.dataset.pary), idx = 0, pauza = false, ruka = 0, videt = false, t0 = null;
+      var pred = ba.querySelector('.ba__before'), po = ba.querySelector('.ba__after'), cap = ba.querySelector('.ba__cap');
+      pary.forEach(function (p) { [p[0], p[1]].forEach(function (s) { var i = new Image(); i.src = s; }); });
+      var ovl = document.createElement('div'); ovl.className = 'ba-btns';
+      var tecky = pary.map(function (p, i) {
+        var el = document.createElement('button'); el.type = 'button'; el.textContent = p[2];
+        el.setAttribute('aria-pressed', i ? 'false' : 'true');
+        el.addEventListener('click', function () { ruka = performance.now(); ukaz(i); });
+        ovl.appendChild(el); return el;
+      });
+      var pb = document.createElement('button'); pb.type = 'button'; pb.textContent = 'Zastavit';
+      pb.addEventListener('click', function () { pauza = !pauza; pb.textContent = pauza ? 'Spustit' : 'Zastavit'; t0 = null; });
+      ovl.appendChild(pb);
+      ba.parentNode.insertBefore(ovl, ba.nextSibling);
+      var ukaz = function (i) {
+        if (i === idx) return;
+        ba.classList.add('is-swap');
+        setTimeout(function () {
+          idx = i; pred.src = pary[i][0]; po.src = pary[i][1]; cap.textContent = pary[i][2];
+          pred.alt = pary[i][2] + ' před obnovou'; po.alt = pary[i][2] + ' po obnově';
+          tecky.forEach(function (t, j) { t.setAttribute('aria-pressed', j === i ? 'true' : 'false'); });
+          ba.classList.remove('is-swap'); t0 = null;
+        }, 450);
+      };
+      var perioda = 7000, kol = 2;
+      var tik = function (ts) {
+        requestAnimationFrame(tik);
+        if (pauza || !videt || ba.classList.contains('is-swap') || ts - ruka < 6000) { t0 = null; return; }
+        if (t0 === null) t0 = ts; // sin(0) = jezdec uprostred, navazuje plynule
+        var p = (ts - t0) / perioda;
+        if (p >= kol) { ukaz((idx + 1) % pary.length); return; }
+        var v = 50 - 38 * Math.sin(p * 2 * Math.PI);
+        set(v); range.value = v;
+      };
+      range.addEventListener('input', function () { ruka = performance.now(); });
+      range.addEventListener('pointerdown', function () { ruka = performance.now(); });
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function (en) { videt = en[0].isIntersecting; }, { threshold: 0.3 }).observe(ba);
+      } else videt = true;
+      requestAnimationFrame(tik);
+      return;
+    }
+
     // Tlačítka „jen před / půl / jen po" — na mobilu se jezdcem hůř trefuje.
     var btns = document.createElement('div');
     btns.className = 'ba-btns';
@@ -409,13 +455,36 @@
     li.addEventListener("click",function(){var on=li.classList.contains("is-on");document.querySelectorAll(".stavby-refs li.is-on").forEach(function(x){x.classList.remove("is-on");});if(!on)li.classList.add("is-on");});
   });
 })();
-/* Stavby: karta se nakloni za mysi (12. 10. 2026) */
+/* Stavby: pri najeti/fokusu/tapnuti se prolinaji 4-5 fotek z te stavby (AP 12. 10. 2026) */
+(function(){
+  document.querySelectorAll(".stavby-refs li").forEach(function(li){
+    var obal = li.querySelector("img"), seznam = [obal], tecky = null, i = 0, casovac = null, nacteno = false;
+    var g = li.dataset.g ? JSON.parse(li.dataset.g) : [];
+    function nacti(){
+      if (nacteno) return; nacteno = true;
+      g.forEach(function(src){ var im = document.createElement("img"); im.className = "g"; im.alt = ""; im.decoding = "async"; im.src = src; li.insertBefore(im, li.querySelector("span")); seznam.push(im); });
+      if (seznam.length > 1) { tecky = document.createElement("div"); tecky.className = "tecky"; tecky.setAttribute("aria-hidden", "true"); seznam.forEach(function(){ tecky.appendChild(document.createElement("i")); }); li.appendChild(tecky); }
+    }
+    function ukaz(n){
+      seznam.forEach(function(im, k){ im.classList.remove("is-bylo"); if (k === i && k !== n) im.classList.add("is-bylo"); im.classList.toggle("is-vidim", k === n); });
+      if (tecky) [].forEach.call(tecky.children, function(t, k){ t.classList.toggle("is-vidim", k === n); });
+      i = n;
+    }
+    function start(){ nacti(); if (casovac) return; seznam[0].style.animation = "none"; void seznam[0].offsetWidth; seznam[0].style.animation = ""; i = 0; ukaz(0); if (seznam.length > 1) casovac = setInterval(function(){ ukaz((i + 1) % seznam.length); }, 2600); }
+    function stop(){ clearInterval(casovac); casovac = null; seznam.forEach(function(im){ im.classList.remove("is-vidim", "is-bylo"); }); if (tecky) [].forEach.call(tecky.children, function(t){ t.classList.remove("is-vidim"); }); i = 0; }
+    li.addEventListener("mouseenter", start); li.addEventListener("focus", start);
+    li.addEventListener("mouseleave", function(){ if (!li.classList.contains("is-on")) stop(); });
+    li.addEventListener("blur", function(){ if (!li.matches(":hover") && !li.classList.contains("is-on")) stop(); });
+    new MutationObserver(function(){ if (li.classList.contains("is-on")) start(); else if (!li.matches(":hover")) stop(); }).observe(li, { attributes: true, attributeFilter: ["class"] });
+  });
+})();
+/* Stavby: karta se jemne nakloni za mysi (12. 10. 2026) */
 (function(){
   if (!window.matchMedia("(hover: hover)").matches) return;
   document.querySelectorAll(".stavby-refs li").forEach(function(li){
     li.addEventListener("mousemove", function(e){
       var r = li.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
-      li.classList.add("is-tilt"); li.style.setProperty("--ry", (x * 18).toFixed(1) + "deg"); li.style.setProperty("--rx", (-y * 14).toFixed(1) + "deg");
+      li.classList.add("is-tilt"); li.style.setProperty("--ry", (x * 8).toFixed(1) + "deg"); li.style.setProperty("--rx", (-y * 6).toFixed(1) + "deg");
     });
     li.addEventListener("mouseleave", function(){ li.classList.remove("is-tilt"); li.style.removeProperty("--rx"); li.style.removeProperty("--ry"); });
   });

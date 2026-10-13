@@ -521,8 +521,8 @@
       aktivni = li; vrstva.classList.remove("is-video"); vid.pause();
       img.src = li.dataset.bg;
       sek.classList.add("is-ref");
-      /* karta s porovnanim pred/po ukazuje slider, video pod nim by nebylo videt (AP 13. 10.) */
-      if (li.dataset.ba || !li.dataset.vid) { vid.removeAttribute("src"); vid.load(); return; }
+      /* bez videa jen fotka; posuvniky pred/po zruseny - pred a po ukazuje video (AP 13. 10.) */
+      if (!li.dataset.vid) { vid.removeAttribute("src"); vid.load(); return; }
       vid.poster = li.dataset.poster; vid.src = li.dataset.vid;
       if (!klid) { var p = vid.play(); if (p) p.catch(function(){}); }
     }

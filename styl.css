@@ -582,13 +582,12 @@ html:has(body.snap) { scroll-snap-type: y mandatory; scroll-padding-top: 0; }
 }
 @media (min-width: 1000px) {
   .stavby-refs { margin-right: min(26vw, 340px); }
-  #obce .ba, #obce .ba-pary { margin-left: 0; margin-right: min(26vw, 340px); } /* postava stoji vpravo vedle slideru */
 }
-/* Stavby: Spirala v cervankach (12. 10. 2026), slabsi zatemneni at obloha zustane barevna */
+/* Jednotny model referencnich sekci (13. 10. 2026, AP "udelej konzistenci"): vsechny 4 jako Stavby - ostre pozadi, slabsi zatemneni, karty bez posuvniku */
 #stavby .panel__bg img { object-position: 60% 40%; }
-#stavby .panel__bg::after { background: linear-gradient(90deg, rgba(20,20,20,.62), rgba(20,20,20,.18) 50%, rgba(20,20,20,0) 70%), linear-gradient(180deg, rgba(0,0,0,0) 65%, rgba(20,20,20,.85)); }
-#stavby .panel__inner h2, #stavby .panel__inner > p { text-shadow: 0 2px 14px rgba(0,0,0,.7); }
-.ba.ba--hrob { aspect-ratio: 1 / 1; max-height: min(50vh, 480px); margin: 24px auto 0; }
+#nahrobky .panel__bg::after, #interier .panel__bg::after, #stavby .panel__bg::after, #obce .panel__bg::after { background: linear-gradient(90deg, rgba(20,20,20,.62), rgba(20,20,20,.18) 50%, rgba(20,20,20,0) 70%), linear-gradient(180deg, rgba(0,0,0,0) 65%, rgba(20,20,20,.85)); }
+#nahrobky .panel__bg img, #interier .panel__bg img, #obce .panel__bg img { filter: none; }
+.panel--photo .panel__inner h2, .panel--photo .panel__inner > p { text-shadow: 0 2px 14px rgba(0,0,0,.7); }
 /* Reference: pozadi sekce podle karty - fotka, pak kratke video (AP 13. 10. 2026) */
 .panel > .container { position: relative; z-index: 2; }
 .ref-bg { position: absolute; inset: 0; z-index: 1; overflow: hidden; opacity: 0; transition: opacity .7s ease; pointer-events: none; background: #141414; }

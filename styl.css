@@ -513,7 +513,7 @@ html:has(body.snap) { scroll-snap-type: y mandatory; scroll-padding-top: 0; }
 @media (prefers-reduced-motion: reduce) { html:has(body.snap) { scroll-snap-type: y proximity; } }
 
 /* Obce: slider pred/po (12. 10. 2026) — sdileny .ba, jen pomer 4:3 */
-.ba.ba--4x3 { aspect-ratio: 4 / 3; max-width: 980px; max-height: min(66vh, 735px); margin-bottom: 0; }
+.ba.ba--4x3 { aspect-ratio: 4 / 3; max-width: 980px; max-height: min(54vh, 600px); margin-bottom: 0; }
 .ba--auto img, .ba--auto .ba__cap { transition: opacity .45s ease; }
 .ba--auto.is-swap img, .ba--auto.is-swap .ba__cap { opacity: 0; }
 .ba--auto { background: #141414; }
@@ -527,7 +527,7 @@ html:has(body.snap) { scroll-snap-type: y mandatory; scroll-padding-top: 0; }
 
 /* Stavby: pas referenci; karta se pri najeti/tapnuti plynule rozevre a prolinaji se fotky z te stavby (AP 12. 10. 2026) */
 .stavby-refs { list-style: none; display: flex; gap: 14px; margin: 4px -24px 10px; padding: 22px 24px 24px; scroll-padding-left: 24px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.28) transparent; }
-.stavby-refs li { position: relative; flex: 0 0 clamp(150px, 18vw, 220px); aspect-ratio: auto; height: clamp(112px, 13.5vw, 165px); scroll-snap-align: start; overflow: hidden; outline: none; background: #141414; transform: perspective(700px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: flex-basis .7s cubic-bezier(.22,.8,.24,1), transform .35s ease, box-shadow .5s; z-index: 0; cursor: pointer; }
+.stavby-refs li { position: relative; flex: 1 1 0; min-width: 140px; aspect-ratio: auto; height: clamp(112px, 13.5vw, 165px); scroll-snap-align: start; overflow: hidden; outline: none; background: #141414; transform: perspective(700px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: flex-grow .7s cubic-bezier(.22,.8,.24,1), transform .35s ease, box-shadow .5s; z-index: 0; cursor: pointer; }
 .stavby-refs img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; transition: opacity 1.1s ease, transform 1.2s ease, filter .6s; }
 .stavby-refs img.g { opacity: 0; }
 .stavby-refs img.is-bylo { opacity: 1; z-index: 1; }
@@ -535,9 +535,9 @@ html:has(body.snap) { scroll-snap-type: y mandatory; scroll-padding-top: 0; }
 @keyframes stavby-kb { from { transform: scale(1.02) translate(0, 0); } to { transform: scale(1.14) translate(-2%, -1.5%); } }
 .stavby-refs li:not(.is-on):not(:hover):not(:focus-visible) img { filter: saturate(.85) brightness(.92); }
 .stavby-refs span { position: absolute; left: 0; right: 0; bottom: 0; padding: 22px 10px 8px; font-size: 12px; line-height: 1.25; color: #fff; background: linear-gradient(transparent, rgba(0,0,0,.72)); z-index: 3; transition: font-size .5s, padding .5s; }
-.stavby-refs li:hover, .stavby-refs li:focus-visible, .stavby-refs li.is-on { flex-basis: clamp(260px, 34vw, 420px); box-shadow: 0 18px 40px rgba(0,0,0,.5); z-index: 3; }
+.stavby-refs li:hover, .stavby-refs li:focus-visible, .stavby-refs li.is-on { flex-grow: 2.2; box-shadow: 0 18px 40px rgba(0,0,0,.5); z-index: 3; }
 .stavby-refs li:hover span, .stavby-refs li:focus-visible span, .stavby-refs li.is-on span { font-size: 15px; padding: 28px 14px 10px; }
-.stavby-refs li.is-tilt { transition: flex-basis .7s cubic-bezier(.22,.8,.24,1), transform .08s linear, box-shadow .5s; }
+.stavby-refs li.is-tilt { transition: flex-grow .7s cubic-bezier(.22,.8,.24,1), transform .08s linear, box-shadow .5s; }
 .stavby-refs .tecky { position: absolute; top: 10px; right: 10px; z-index: 3; display: flex; gap: 5px; opacity: 0; transition: opacity .4s; }
 .stavby-refs .tecky i { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.45); transition: background .4s, transform .4s; }
 .stavby-refs .tecky i.is-vidim { background: #fff; transform: scale(1.3); }
@@ -588,7 +588,7 @@ html:has(body.snap) { scroll-snap-type: y mandatory; scroll-padding-top: 0; }
 #stavby .panel__bg img { object-position: 60% 40%; }
 #stavby .panel__bg::after { background: linear-gradient(90deg, rgba(20,20,20,.62), rgba(20,20,20,.18) 50%, rgba(20,20,20,0) 70%), linear-gradient(180deg, rgba(0,0,0,0) 65%, rgba(20,20,20,.85)); }
 #stavby .panel__inner h2, #stavby .panel__inner > p { text-shadow: 0 2px 14px rgba(0,0,0,.7); }
-.ba.ba--hrob { max-height: min(48vh, 460px); margin: 24px auto 0; }
+.ba.ba--hrob { aspect-ratio: 1 / 1; max-height: min(50vh, 480px); margin: 24px auto 0; }
 /* Reference: pozadi sekce podle karty - fotka, pak kratke video (AP 13. 10. 2026) */
 .panel > .container { position: relative; z-index: 2; }
 .ref-bg { position: absolute; inset: 0; z-index: 1; overflow: hidden; opacity: 0; transition: opacity .7s ease; pointer-events: none; background: #141414; }
@@ -600,7 +600,4 @@ section.is-ref > .ref-bg { opacity: 1; }
 .stavby-refs .ref-cred { position: absolute; top: 6px; left: 8px; z-index: 4; font-size: 10px; line-height: 1.3; color: rgba(255,255,255,.85); text-decoration: none; background: rgba(0,0,0,.5); padding: 2px 6px; }
 .stavby-refs .ref-cred:hover { text-decoration: underline; }
 /* Interier: pozadi = tataz upravena realizace jako karta, jen v prave casti a s mekkym prechodem, ne pres celou sekci (AP 13. 10. 2026) */
-#interier .ref-bg { left: 34%; -webkit-mask-image: linear-gradient(90deg, transparent, #000 32%); mask-image: linear-gradient(90deg, transparent, #000 32%); background: transparent; }
-#interier .ref-bg::after { background: linear-gradient(180deg, rgba(20,20,20,.25), rgba(20,20,20,0) 30%, rgba(20,20,20,0) 60%, rgba(20,20,20,.9)); }
-@media (max-width: 760px) { #interier .ref-bg { left: 0; -webkit-mask-image: none; mask-image: none; } #interier .ref-bg::after { background: rgba(20,20,20,.7); } }
 @media (prefers-reduced-motion: reduce) { .ref-bg, .ref-bg video { transition: none; } }

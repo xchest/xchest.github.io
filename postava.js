@@ -5,9 +5,22 @@
     nahrobky: { src: "/obrazky/postava-hroby.webp", w: 597, h: 900, vyska: 0.8 },
     interier: { src: "/obrazky/postava-interier.webp", w: 425, h: 900 },
     stavby: { src: "/obrazky/postava-stavby.webp", w: 454, h: 900, flip: true, helma: { x: 0.21, y: 0.03 } },
-    obce: { src: "/obrazky/postava-obce.webp", w: 409, h: 900 },
-    "o-nas": { src: "/obrazky/postava-tradice.webp", w: 278, h: 900 }
+    obce: { src: "/obrazky/postava-obce.webp", w: 409, h: 900,
+      skici: ["/obrazky/postava-obce-tgm.webp", "/obrazky/postava-obce-valecny.webp", "/obrazky/postava-obce-hrobka.webp", "/obrazky/postava-obce-kriz.webp"] }
   };
+  /* Tradice: globalni postava odejde, do sceny schodu dopadne Ales na sve puvodni misto (13. 10. 2026) */
+  var scena = document.querySelector(".about__scena");
+  if (scena && "IntersectionObserver" in window) {
+    var dopadl = false;
+    new IntersectionObserver(function(zaznamy, o){
+      if (dopadl || !zaznamy[0].isIntersecting) return;
+      dopadl = true; o.disconnect();
+      setTimeout(function(){
+        scena.classList.add("is-dopad");
+        setTimeout(function(){ scena.classList.replace("is-dopad", "is-stoji"); }, 950);
+      }, 300);
+    }, { threshold: 0.45 }).observe(scena);
+  } else if (scena) scena.classList.add("is-stoji");
   var ids = Object.keys(POSTAVY).filter(function(id){ return document.getElementById(id); });
   if (!ids.length || !("IntersectionObserver" in window)) return;
   var klid = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -19,6 +32,16 @@
   document.body.appendChild(box);
   var telo = box.querySelector(".postava__telo"), img = telo.querySelector("img"), helma = box.querySelector(".postava__helma");
   ids.forEach(function(id){ var p = new Image(); p.src = POSTAVY[id].src; });
+
+  /* Obce: skica na desce se meni podle karty, na kterou navstevnik najede (jen 4 karty) */
+  var obceKarty = document.querySelectorAll("#obce .stavby-refs > li");
+  obceKarty.forEach(function(li, i){
+    var src = POSTAVY.obce && POSTAVY.obce.skici[i];
+    if (!src) return;
+    li.addEventListener("pointerenter", function(){ (new Image()).src = src; if (aktualni === "obce" && !bezi) img.src = src; });
+    li.addEventListener("focusin", function(){ if (aktualni === "obce" && !bezi) img.src = src; });
+    li.addEventListener("pointerleave", function(){ if (aktualni === "obce" && !bezi) img.src = POSTAVY.obce.src; });
+  });
 
   var aktualni = null, cil = null, bezi = false;
   function obsad(id){

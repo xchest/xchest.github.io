@@ -640,3 +640,8 @@ section.is-ref > .ref-bg { opacity: 1; }
 .stavby-refs .ref-cred:hover { text-decoration: underline; }
 /* Interier: pozadi = tataz upravena realizace jako karta, jen v prave casti a s mekkym prechodem, ne pres celou sekci (AP 13. 10. 2026) */
 @media (max-width: 900px) { .stavby-refs { margin-left: -16px; margin-right: -16px; padding-left: 16px; padding-right: 16px; scroll-padding-left: 16px; } }
+/* najeti na kartu: ostatni karty zmizi, aby bylo videt okoli fotky (AP 13. 10.) */
+@media (hover: hover) and (min-width: 901px) {
+  .stavby-refs li { transition: transform .45s cubic-bezier(.22,.8,.24,1), box-shadow .5s, opacity .45s ease; }
+  section.is-ref .stavby-refs:has(li:hover) li:not(:hover) { opacity: 0; }
+}

@@ -486,7 +486,7 @@
       if (tecky) [].forEach.call(tecky.children, function(t, k){ t.classList.toggle("is-vidim", k === n); });
       i = n;
     }
-    function start(){ nacti(); if (casovac) return; seznam[0].style.animation = "none"; void seznam[0].offsetWidth; seznam[0].style.animation = ""; i = 0; ukaz(0); if (seznam.length > 1) casovac = setInterval(function(){ ukaz((i + 1) % seznam.length); }, 2600); }
+    function start(){ nacti(); if (casovac) return; i = 0; ukaz(0); if (seznam.length > 1) casovac = setInterval(function(){ ukaz((i + 1) % seznam.length); }, 2600); }
     function stop(){ clearInterval(casovac); casovac = null; seznam.forEach(function(im){ im.classList.remove("is-vidim", "is-bylo"); }); if (tecky) [].forEach.call(tecky.children, function(t){ t.classList.remove("is-vidim"); }); i = 0; }
     li.addEventListener("mouseenter", start); li.addEventListener("focus", start);
     li.addEventListener("mouseleave", function(){ if (!li.classList.contains("is-on")) stop(); });

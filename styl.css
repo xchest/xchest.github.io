@@ -566,7 +566,7 @@ html:has(body.snap) { scroll-snap-type: y mandatory; scroll-padding-top: 0; }
 /* bez zoomu - fotky se jen prolinaji, cela fotka je videt (AP 13. 10.: "hraje si se zvetsenim") */
 .stavby-refs img.is-vidim { opacity: 1; z-index: 2; }
 .stavby-refs span { position: absolute; left: 0; right: 0; bottom: 0; padding: 22px 10px 8px; font-size: 12px; line-height: 1.25; color: #fff; background: linear-gradient(transparent, rgba(0,0,0,.72)); z-index: 3; }
-.stavby-refs li:hover, .stavby-refs li:focus-visible, .stavby-refs li.is-on { --s: 1.07; box-shadow: 0 18px 40px rgba(0,0,0,.5); z-index: 3; }
+.stavby-refs li:hover, .stavby-refs li:focus-visible, .stavby-refs li.is-on { --s: 1; outline: 2px solid rgba(255,255,255,.85); outline-offset: -2px; box-shadow: 0 18px 40px rgba(0,0,0,.5); z-index: 3; }
 .stavby-refs li.is-tilt { transition: transform .12s linear, box-shadow .5s; }
 .stavby-refs .tecky { position: absolute; top: 10px; right: 10px; z-index: 3; display: flex; gap: 5px; opacity: 0; transition: opacity .4s; }
 .stavby-refs .tecky i { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.45); transition: background .4s, transform .4s; }
@@ -621,35 +621,14 @@ html:has(body.snap) { scroll-snap-type: y mandatory; scroll-padding-top: 0; }
 /* Reference: pozadi sekce podle karty - fotka, pak kratke video (AP 13. 10. 2026) */
 .panel > .container { position: relative; z-index: 2; }
 .ref-bg { position: absolute; inset: 0; z-index: 1; overflow: hidden; opacity: 0; transition: opacity .7s ease; pointer-events: none; background: #141414; }
-.ref-bg img, .ref-bg video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
-.ref-bg video { opacity: 0; transition: opacity .6s ease; }
-.ref-bg.is-video video { opacity: 1; }
-.ref-bg .ref-po, .ref-bg .ref-cara { display: none; }
-.ref-bg.is-ba .ref-po { display: block; clip-path: inset(0 100% 0 0); }
-.ref-bg.is-ba.is-wipe .ref-po { clip-path: inset(0 0 0 0); transition: clip-path 2.5s cubic-bezier(.45,0,.55,1) .15s; }
-.ref-bg .ref-cara { position: absolute; inset: 0; z-index: 1; border-right: 3px solid rgba(255,255,255,.92); box-shadow: 8px 0 18px -6px rgba(255,255,255,.55); transform: translateX(-100%); }
-.ref-bg.is-ba .ref-cara { display: block; }
-.ref-bg.is-ba.is-wipe .ref-cara { transform: translateX(0); opacity: 0; transition: transform 2.5s cubic-bezier(.45,0,.55,1) .15s, opacity .5s ease 2.65s; }
-.ref-bg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(20,20,20,.88), rgba(20,20,20,.45) 55%, rgba(20,20,20,.2)), linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(20,20,20,.92)); }
+/* Jen fotka pres celou sekci; nova nabehne vzadu a oddali se 1.08 -> 1 (AP 13. 10.: nepriblizovat) */
+.ref-bg img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; transform: scale(1.08); transition: opacity .9s ease, transform 2.6s cubic-bezier(.2,.7,.25,1); }
+.ref-bg img.is-vidim { opacity: 1; }
+.ref-bg img.is-oddal { transform: none; }
+@media (prefers-reduced-motion: reduce) { .ref-bg, .ref-bg img { transition: none !important; transform: none !important; } }
+.ref-bg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(20,20,20,.72), rgba(20,20,20,.28) 42%, rgba(20,20,20,0) 68%), linear-gradient(180deg, rgba(0,0,0,0) 62%, rgba(20,20,20,.8)); }
 section.is-ref > .ref-bg { opacity: 1; }
-.ref-ram { display: none; position: absolute; z-index: 2; right: 4vw; top: 0; bottom: 0; margin: auto 0; height: min(66vh, calc(46vw / var(--ar, 1.333))); aspect-ratio: var(--ar, 1.333); background: #1c1c1c; box-shadow: 0 24px 60px rgba(0,0,0,.55); opacity: 0; transition: opacity .35s ease; }
-.ref-bg.is-ba .ref-ram { display: block; }
-.ref-bg.is-ba.is-wipe .ref-ram { opacity: 1; }
-.ref-bg.is-ba > img { display: none; }
-.ref-ram > img:first-child { object-fit: contain; } /* puvodni stav/podklad (napr. dotace) muze mit jiny pomer - cely, na tmavem */
-.ref-st { position: absolute; left: 12px; bottom: 12px; z-index: 3; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: #fff; background: rgba(20,20,20,.72); padding: 5px 10px; transition: opacity .4s ease; }
-.ref-st--po { opacity: 0; }
-.ref-bg.is-wipe .ref-st--pred { opacity: 0; transition-delay: 2.2s; }
-.ref-bg.is-wipe .ref-st--po { opacity: 1; transition-delay: 2.3s; }
-/* Obecni hrobky: sekvence fotek ctyr obci, rychla cara mezi nimi (AP 13. 10. 2026) */
-.ref-bg.is-seq .ref-ram { opacity: 1; }
-.ref-bg.is-seq.is-wipe .ref-po { transition: clip-path .7s cubic-bezier(.6,0,.4,1); }
-.ref-bg.is-seq.is-wipe .ref-cara { transition: transform .7s cubic-bezier(.6,0,.4,1), opacity .25s ease .7s; }
-.ref-bg.is-seq .ref-st--po { display: none; }
-.ref-bg.is-seq.is-wipe .ref-st--pred { opacity: 1; }
-.ref-bg.is-reset .ref-po, .ref-bg.is-reset .ref-cara { transition: none !important; }
-@media (max-width: 900px) { .ref-ram { left: 16px; right: 16px; top: 14vh; bottom: auto; margin: 0; height: auto; max-height: 46vh; } }
+@media (max-width: 900px) { .ref-bg::after { background: linear-gradient(180deg, rgba(20,20,20,.35), rgba(20,20,20,.62) 35%, rgba(20,20,20,.62) 70%, rgba(20,20,20,.85)); } }
 .stavby-refs .ref-cred { position: absolute; top: 6px; left: 8px; z-index: 4; font-size: 10px; line-height: 1.3; color: rgba(255,255,255,.85); text-decoration: none; background: rgba(0,0,0,.5); padding: 2px 6px; }
 .stavby-refs .ref-cred:hover { text-decoration: underline; }
 /* Interier: pozadi = tataz upravena realizace jako karta, jen v prave casti a s mekkym prechodem, ne pres celou sekci (AP 13. 10. 2026) */
-@media (prefers-reduced-motion: reduce) { .ref-bg, .ref-bg video, .ref-bg .ref-po, .ref-bg .ref-cara, .ref-ram, .ref-st { transition: none !important; } }

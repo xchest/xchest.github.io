@@ -442,7 +442,29 @@
   document.addEventListener("visibilitychange",function(){if(document.hidden)vs.forEach(function(v){v.pause();});});
 })();
 
-// uvodni stranka: panely docvakava nativni scroll-snap (styl.css), kolecko jede plynule (audit 13. 10. 2026)
+// uvodni stranka: jedno otoceni koleckem = dalsi stranka (AP 12. 10. 2026). Samotny scroll-snap male otoceni
+// vraci zpet (mereno 13. 10.), proto skok skriptem - ale blokuje se jen po dobu animace, nikdy podle dalsich tiku
+(function(){
+  if(!document.body.classList.contains("snap")||matchMedia("(pointer: coarse)").matches)return;
+  var ps=[].slice.call(document.querySelectorAll(".panel")),until=0;
+  if(ps.length<2)return;
+  function cur(){var y=scrollY+4,i=0;ps.forEach(function(p,k){if(p.offsetTop<=y)i=k;});return i;}
+  addEventListener("wheel",function(e){
+    if(e.ctrlKey||Math.abs(e.deltaY)<Math.abs(e.deltaX))return;
+    var now=Date.now();
+    if(now<until){e.preventDefault();return;}       // jen behem animace skoku
+    var vh=innerHeight,i=cur();
+    var p=ps[i],d=e.deltaY>0?1:-1,top=p.offsetTop,bot=top+p.offsetHeight,tall=p.offsetHeight>vh*1.25;
+    if(tall&&d>0&&scrollY+vh<bot-4)return;         // vysoky panel: nativne dojet na konec
+    if(tall&&d<0&&scrollY>top+4)return;
+    var j=i+d;
+    if(j<0||j>=ps.length)return;                     // za poslednim panelem (paticka) nativne
+    e.preventDefault();
+    var q=ps[j],y=(d<0&&q.offsetHeight>vh*1.25)?q.offsetTop+q.offsetHeight-vh:q.offsetTop;
+    until=now+600;
+    scrollTo({top:y,behavior:"smooth"});
+  },{passive:false});
+})();
 
 /* Stavby: klepnuti na referenci na dotyku (12. 10. 2026) */
 (function(){

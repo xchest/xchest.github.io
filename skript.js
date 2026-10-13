@@ -513,40 +513,69 @@
 (function(){
   var klid = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   document.querySelectorAll("section > .ref-bg").forEach(function(vrstva){
-    var sek = vrstva.parentNode, aktivni = null, skryt = null;
+    var sek = vrstva.parentNode, aktivni = null, skryt = null, seqT = null;
     var img = document.createElement("img"); img.alt = ""; img.decoding = "async";
     var vid = document.createElement("video"); vid.muted = true; vid.loop = true; vid.playsInline = true; vid.preload = "none";
     vid.setAttribute("muted", ""); vid.setAttribute("playsinline", "");
     /* pred/po: vzdy zacne puvodnim stavem, cara ho behem 2,5 s prepise na novy (AP 13. 10. 2026) */
+    /* pred/po v ramu s celym obrazem (ne cover pres sekci - AP 13. 10.: "obrazky jsou prilis velke") */
+    var ram = document.createElement("div"); ram.className = "ref-ram";
+    var ramImg = document.createElement("img"); ramImg.alt = ""; ramImg.decoding = "async";
     var po = document.createElement("img"); po.alt = ""; po.decoding = "async"; po.className = "ref-po";
     var cara = document.createElement("div"); cara.className = "ref-cara";
-    vrstva.appendChild(img); vrstva.appendChild(vid); vrstva.appendChild(po); vrstva.appendChild(cara);
+    var stPred = document.createElement("span"); stPred.className = "ref-st ref-st--pred";
+    var stPo = document.createElement("span"); stPo.className = "ref-st ref-st--po";
+    ram.appendChild(ramImg); ram.appendChild(po); ram.appendChild(cara); ram.appendChild(stPred); ram.appendChild(stPo);
+    vrstva.appendChild(img); vrstva.appendChild(vid); vrstva.appendChild(ram);
     vid.addEventListener("playing", function(){ if (aktivni) vrstva.classList.add("is-video"); });
-    var paryLi = sek.querySelectorAll(".stavby-refs li[data-po]");
+    var paryLi = sek.querySelectorAll(".stavby-refs li[data-po], .stavby-refs li[data-seq]");
     if (paryLi.length && "IntersectionObserver" in window) {
       var pred = new IntersectionObserver(function(en){
         if (!en[0].isIntersecting) return; pred.disconnect();
-        paryLi.forEach(function(li){ [li.dataset.bg, li.dataset.po].forEach(function(u){ var i = new Image(); i.decoding = "async"; i.src = u; }); });
+        paryLi.forEach(function(li){ [li.dataset.bg, li.dataset.po].concat(li.dataset.seq ? li.dataset.seq.split("|") : []).forEach(function(u){ if (!u) return; var i = new Image(); i.decoding = "async"; i.src = u; }); });
       }, { rootMargin: "800px 0px" });
       pred.observe(sek);
     }
-    function dekoduj(el){ return el.decode ? el.decode().catch(function(){}) : Promise.resolve(); }
+    function dekoduj(el){ /* decode() ve skryte karte nedobehne - pojistka 1,5 s */ return el.decode ? Promise.race([el.decode().catch(function(){}), new Promise(function(r){ setTimeout(r, 1500); })]) : Promise.resolve(); }
     function zapni(li){
       clearTimeout(skryt);
       if (aktivni === li) return;
-      aktivni = li; vrstva.classList.remove("is-video", "is-wipe"); vid.pause();
-      img.src = li.dataset.bg;
+      aktivni = li; clearTimeout(seqT); vrstva.classList.remove("is-video", "is-wipe", "is-seq", "is-reset"); vid.pause();
       sek.classList.add("is-ref");
-      if (li.dataset.po) {
-        vrstva.classList.add("is-ba"); po.src = li.dataset.po;
-        vid.removeAttribute("src"); vid.load();
-        Promise.all([dekoduj(img), dekoduj(po)]).then(function(){
+      /* obecni hrobky: fotka obce, rychla cara, dalsi obec... posledni zustane (AP 13. 10. 2026) */
+      if (li.dataset.seq) {
+        var fot = li.dataset.seq.split("|"), jm = (li.dataset.seqStitky || "").split("|"), k = 0;
+        vrstva.classList.add("is-ba", "is-seq"); vid.removeAttribute("src"); vid.load();
+        var krok = function(){
           if (aktivni !== li) return;
+          vrstva.classList.add("is-reset"); vrstva.classList.remove("is-wipe");
+          ramImg.src = fot[k]; stPred.textContent = jm[k] || "";
+          if (k + 1 >= fot.length) { vrstva.classList.remove("is-reset"); return; }
+          po.src = fot[k + 1];
+          Promise.all([dekoduj(ramImg), dekoduj(po)]).then(function(){
+            if (aktivni !== li) return;
+            if (ramImg.naturalWidth) ram.style.setProperty("--ar", (ramImg.naturalWidth / ramImg.naturalHeight).toFixed(3));
+            void cara.offsetWidth; vrstva.classList.remove("is-reset");
+            seqT = setTimeout(function(){
+              void cara.offsetWidth; vrstva.classList.add("is-wipe");
+              seqT = setTimeout(function(){ k++; krok(); }, 750);
+            }, k ? 900 : 1200);
+          });
+        };
+        krok(); return;
+      }
+      if (li.dataset.po) {
+        vrstva.classList.add("is-ba"); ramImg.src = li.dataset.bg; po.src = li.dataset.po;
+        stPred.textContent = li.dataset.predStitek || "Původní stav"; stPo.textContent = li.dataset.poStitek || "Hotovo";
+        vid.removeAttribute("src"); vid.load();
+        Promise.all([dekoduj(ramImg), dekoduj(po)]).then(function(){
+          if (aktivni !== li) return;
+          if (po.naturalWidth) ram.style.setProperty("--ar", (po.naturalWidth / po.naturalHeight).toFixed(3));
           void cara.offsetWidth; vrstva.classList.add("is-wipe");
         });
         return;
       }
-      vrstva.classList.remove("is-ba");
+      vrstva.classList.remove("is-ba"); img.src = li.dataset.bg;
       /* bez videa jen fotka; posuvniky pred/po zruseny - pred a po ukazuje video (AP 13. 10.) */
       if (!li.dataset.vid) { vid.removeAttribute("src"); vid.load(); return; }
       vid.poster = li.dataset.poster; vid.src = li.dataset.vid;
@@ -556,7 +585,7 @@
       clearTimeout(skryt);
       skryt = setTimeout(function(){
         if (!hned && sek.querySelector(".stavby-refs li.is-on, .stavby-refs li:hover, .stavby-refs li:focus")) return;
-        aktivni = null; sek.classList.remove("is-ref"); vrstva.classList.remove("is-video", "is-wipe"); vid.pause();
+        aktivni = null; clearTimeout(seqT); sek.classList.remove("is-ref"); vrstva.classList.remove("is-video", "is-wipe", "is-seq", "is-reset"); vid.pause();
       }, hned ? 0 : 250);
     }
     sek.querySelectorAll(".stavby-refs li[data-bg]").forEach(function(li){

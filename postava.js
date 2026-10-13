@@ -5,7 +5,8 @@
     nahrobky: { src: "/obrazky/postava-hroby.webp", w: 597, h: 900, vyska: 0.8 },
     interier: { src: "/obrazky/postava-interier.webp", w: 425, h: 900 },
     stavby: { src: "/obrazky/postava-stavby.webp", w: 454, h: 900, flip: true, helma: { x: 0.21, y: 0.03 } },
-    obce: { src: "/obrazky/postava-obce.webp", w: 409, h: 900 }
+    obce: { src: "/obrazky/postava-obce.webp", w: 409, h: 900 },
+    "o-nas": { src: "/obrazky/postava-tradice.webp", w: 278, h: 900 }
   };
   var ids = Object.keys(POSTAVY).filter(function(id){ return document.getElementById(id); });
   if (!ids.length || !("IntersectionObserver" in window)) return;

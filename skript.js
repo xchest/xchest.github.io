@@ -519,8 +519,11 @@
       clearTimeout(skryt);
       if (aktivni === li) return;
       aktivni = li; vrstva.classList.remove("is-video"); vid.pause();
-      img.src = li.dataset.bg; vid.poster = li.dataset.poster; vid.src = li.dataset.vid;
+      img.src = li.dataset.bg;
       sek.classList.add("is-ref");
+      /* karta s porovnanim pred/po ukazuje slider, video pod nim by nebylo videt (AP 13. 10.) */
+      if (li.dataset.ba || !li.dataset.vid) { vid.removeAttribute("src"); vid.load(); return; }
+      vid.poster = li.dataset.poster; vid.src = li.dataset.vid;
       if (!klid) { var p = vid.play(); if (p) p.catch(function(){}); }
     }
     function vypni(hned){
@@ -530,7 +533,7 @@
         aktivni = null; sek.classList.remove("is-ref"); vrstva.classList.remove("is-video"); vid.pause();
       }, hned ? 0 : 250);
     }
-    sek.querySelectorAll(".stavby-refs li[data-vid]").forEach(function(li){
+    sek.querySelectorAll(".stavby-refs li[data-bg]").forEach(function(li){
       li.addEventListener("mouseenter", function(){ zapni(li); });
       li.addEventListener("focus", function(){ zapni(li); });
       li.addEventListener("click", function(){ if (li.classList.contains("is-on")) zapni(li); else vypni(); });

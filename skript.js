@@ -357,6 +357,7 @@
       var sek = ba.closest('section');
       if (sek) sek.querySelectorAll('[data-ba]').forEach(function (k) {
         var d = JSON.parse(k.dataset.ba), n = -1;
+        pary.forEach(function (p, j) { if (p[0] === d[0]) n = j; }); // dvojice uz ve slideru je - bez dvojiteho tlacitka
         var jdi = function () {
           if (n < 0) {
             n = pary.push(d) - 1; [d[0], d[1]].forEach(function (s) { var i = new Image(); i.src = s; });
@@ -502,5 +503,39 @@
       li.classList.add("is-tilt"); li.style.setProperty("--ry", (x * 8).toFixed(1) + "deg"); li.style.setProperty("--rx", (-y * 6).toFixed(1) + "deg");
     });
     li.addEventListener("mouseleave", function(){ li.classList.remove("is-tilt"); li.style.removeProperty("--rx"); li.style.removeProperty("--ry"); });
+  });
+})();
+/* Reference: karta prepne pozadi sekce na svou fotku a pusti kratke video (AP 13. 10. 2026) */
+(function(){
+  var klid = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  document.querySelectorAll("section > .ref-bg").forEach(function(vrstva){
+    var sek = vrstva.parentNode, aktivni = null, skryt = null;
+    var img = document.createElement("img"); img.alt = ""; img.decoding = "async";
+    var vid = document.createElement("video"); vid.muted = true; vid.loop = true; vid.playsInline = true; vid.preload = "none";
+    vid.setAttribute("muted", ""); vid.setAttribute("playsinline", "");
+    vrstva.appendChild(img); vrstva.appendChild(vid);
+    vid.addEventListener("playing", function(){ if (aktivni) vrstva.classList.add("is-video"); });
+    function zapni(li){
+      clearTimeout(skryt);
+      if (aktivni === li) return;
+      aktivni = li; vrstva.classList.remove("is-video"); vid.pause();
+      img.src = li.dataset.bg; vid.poster = li.dataset.poster; vid.src = li.dataset.vid;
+      sek.classList.add("is-ref");
+      if (!klid) { var p = vid.play(); if (p) p.catch(function(){}); }
+    }
+    function vypni(hned){
+      clearTimeout(skryt);
+      skryt = setTimeout(function(){
+        if (!hned && sek.querySelector(".stavby-refs li.is-on, .stavby-refs li:hover, .stavby-refs li:focus")) return;
+        aktivni = null; sek.classList.remove("is-ref"); vrstva.classList.remove("is-video"); vid.pause();
+      }, hned ? 0 : 250);
+    }
+    sek.querySelectorAll(".stavby-refs li[data-vid]").forEach(function(li){
+      li.addEventListener("mouseenter", function(){ zapni(li); });
+      li.addEventListener("focus", function(){ zapni(li); });
+      li.addEventListener("click", function(){ if (li.classList.contains("is-on")) zapni(li); else vypni(); });
+      li.addEventListener("mouseleave", function(){ vypni(); }); li.addEventListener("blur", function(){ vypni(); });
+    });
+    if ("IntersectionObserver" in window) new IntersectionObserver(function(en){ if (!en[0].isIntersecting && aktivni) vypni(true); }, { threshold: 0 }).observe(sek);
   });
 })();

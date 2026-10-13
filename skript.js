@@ -514,23 +514,34 @@
   var klid = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   document.querySelectorAll("section > .ref-bg").forEach(function(vrstva){
     var sek = vrstva.parentNode, aktivni = null, skryt = null, seqT = null, hore = 0;
-    var vrstvy = [0, 1].map(function(){ var i = document.createElement("img"); i.alt = ""; i.decoding = "async"; vrstva.appendChild(i); return i; });
+    /* fotka cela (contain), volne misto vyplni jeji rozmazana kopie (AP 13. 10.: "proc to neni na cely obrazek") */
+    var vrstvy = [0, 1].map(function(){
+      var f = document.createElement("img"); f.alt = ""; f.decoding = "async"; f.className = "ref-bg__fill"; vrstva.appendChild(f);
+      var i = document.createElement("img"); i.alt = ""; i.decoding = "async"; i.fill = f; vrstva.appendChild(i); return i;
+    });
+    /* bar: zily a blesk se po 1,5 s postupne rozsviti (AP 13. 10.) */
+    var zare = document.createElement("img"); zare.alt = ""; zare.decoding = "async"; zare.className = "ref-bg__glow"; vrstva.appendChild(zare);
+    var zareT = null;
+    function zhasni(){ clearTimeout(zareT); zare.classList.remove("is-sviti", "is-vidim", "is-oddal"); }
     var karty = sek.querySelectorAll(".stavby-refs li[data-bg]");
     function fotky(li){ return li.dataset.seq ? li.dataset.seq.split("|") : [li.dataset.po || li.dataset.bg]; }
     if ("IntersectionObserver" in window) {
       var pred = new IntersectionObserver(function(en){
         if (!en[0].isIntersecting) return; pred.disconnect();
-        karty.forEach(function(li){ fotky(li).forEach(function(u){ var i = new Image(); i.decoding = "async"; i.src = u; }); });
+        karty.forEach(function(li){ fotky(li).concat(li.dataset.glow ? [li.dataset.glow] : []).forEach(function(u){ var i = new Image(); i.decoding = "async"; i.src = u; }); });
       }, { rootMargin: "800px 0px" });
       pred.observe(sek);
     }
     /* nova fotka nabehne vzadu: prolnuti + oddaleni 1.08 -> 1 */
     function ukaz(u, li){
       var nova = vrstvy[1 - hore], stara = vrstvy[hore];
-      nova.classList.remove("is-vidim", "is-oddal"); nova.src = u;
+      nova.classList.remove("is-vidim", "is-oddal"); nova.fill.classList.remove("is-vidim"); nova.src = u; nova.fill.src = u;
+      zhasni(); if (li.dataset.glow) zare.src = li.dataset.glow;
       var hotovo = function(){
         if (aktivni !== li) return;
-        void nova.offsetWidth; nova.classList.add("is-vidim", "is-oddal"); stara.classList.remove("is-vidim");
+        void nova.offsetWidth; nova.classList.add("is-vidim", "is-oddal"); nova.fill.classList.add("is-vidim");
+        if (li.dataset.glow) { zare.classList.add("is-vidim", "is-oddal"); zareT = setTimeout(function(){ if (aktivni === li) zare.classList.add("is-sviti"); }, 1500); }
+        stara.classList.remove("is-vidim"); stara.fill.classList.remove("is-vidim");
         hore = 1 - hore;
       };
       if (nova.decode) nova.decode().then(hotovo, hotovo); else hotovo();
@@ -553,7 +564,7 @@
       skryt = setTimeout(function(){
         if (!hned && sek.querySelector(".stavby-refs li.is-on, .stavby-refs li:hover, .stavby-refs li:focus")) return;
         aktivni = null; clearTimeout(seqT); sek.classList.remove("is-ref");
-        vrstvy.forEach(function(i){ i.classList.remove("is-vidim"); });
+        vrstvy.forEach(function(i){ i.classList.remove("is-vidim"); i.fill.classList.remove("is-vidim"); }); zhasni();
       }, hned ? 0 : 250);
     }
     karty.forEach(function(li){

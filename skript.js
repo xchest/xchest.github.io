@@ -517,14 +517,36 @@
     var img = document.createElement("img"); img.alt = ""; img.decoding = "async";
     var vid = document.createElement("video"); vid.muted = true; vid.loop = true; vid.playsInline = true; vid.preload = "none";
     vid.setAttribute("muted", ""); vid.setAttribute("playsinline", "");
-    vrstva.appendChild(img); vrstva.appendChild(vid);
+    /* pred/po: vzdy zacne puvodnim stavem, cara ho behem 2,5 s prepise na novy (AP 13. 10. 2026) */
+    var po = document.createElement("img"); po.alt = ""; po.decoding = "async"; po.className = "ref-po";
+    var cara = document.createElement("div"); cara.className = "ref-cara";
+    vrstva.appendChild(img); vrstva.appendChild(vid); vrstva.appendChild(po); vrstva.appendChild(cara);
     vid.addEventListener("playing", function(){ if (aktivni) vrstva.classList.add("is-video"); });
+    var paryLi = sek.querySelectorAll(".stavby-refs li[data-po]");
+    if (paryLi.length && "IntersectionObserver" in window) {
+      var pred = new IntersectionObserver(function(en){
+        if (!en[0].isIntersecting) return; pred.disconnect();
+        paryLi.forEach(function(li){ [li.dataset.bg, li.dataset.po].forEach(function(u){ var i = new Image(); i.decoding = "async"; i.src = u; }); });
+      }, { rootMargin: "800px 0px" });
+      pred.observe(sek);
+    }
+    function dekoduj(el){ return el.decode ? el.decode().catch(function(){}) : Promise.resolve(); }
     function zapni(li){
       clearTimeout(skryt);
       if (aktivni === li) return;
-      aktivni = li; vrstva.classList.remove("is-video"); vid.pause();
+      aktivni = li; vrstva.classList.remove("is-video", "is-wipe"); vid.pause();
       img.src = li.dataset.bg;
       sek.classList.add("is-ref");
+      if (li.dataset.po) {
+        vrstva.classList.add("is-ba"); po.src = li.dataset.po;
+        vid.removeAttribute("src"); vid.load();
+        Promise.all([dekoduj(img), dekoduj(po)]).then(function(){
+          if (aktivni !== li) return;
+          void cara.offsetWidth; vrstva.classList.add("is-wipe");
+        });
+        return;
+      }
+      vrstva.classList.remove("is-ba");
       /* bez videa jen fotka; posuvniky pred/po zruseny - pred a po ukazuje video (AP 13. 10.) */
       if (!li.dataset.vid) { vid.removeAttribute("src"); vid.load(); return; }
       vid.poster = li.dataset.poster; vid.src = li.dataset.vid;
@@ -534,7 +556,7 @@
       clearTimeout(skryt);
       skryt = setTimeout(function(){
         if (!hned && sek.querySelector(".stavby-refs li.is-on, .stavby-refs li:hover, .stavby-refs li:focus")) return;
-        aktivni = null; sek.classList.remove("is-ref"); vrstva.classList.remove("is-video"); vid.pause();
+        aktivni = null; sek.classList.remove("is-ref"); vrstva.classList.remove("is-video", "is-wipe"); vid.pause();
       }, hned ? 0 : 250);
     }
     sek.querySelectorAll(".stavby-refs li[data-bg]").forEach(function(li){

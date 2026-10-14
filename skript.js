@@ -473,10 +473,53 @@ var kpT = (function () {
   },{passive:false});
 })();
 
-/* Stavby: klepnuti na referenci na dotyku (12. 10. 2026) */
+/* Reference: klik na kartu rovnou otevre galerii jejich fotek (AP 14. 10. 2026; driv jen prepinal is-on) */
 (function(){
-  document.querySelectorAll(".stavby-refs li").forEach(function(li){
-    li.addEventListener("click",function(){var on=li.classList.contains("is-on");document.querySelectorAll(".stavby-refs li.is-on").forEach(function(x){x.classList.remove("is-on");});if(!on)li.classList.add("is-on");});
+  var karty = document.querySelectorAll(".stavby-refs li");
+  if (!karty.length) return;
+  var lang = (document.documentElement.lang || "cs").slice(0, 2);
+  var T = { cs: ["Galerie", "Zavřít", "Předchozí", "Další", "Před", "Po"], en: ["Gallery", "Close", "Previous", "Next", "Before", "After"],
+            de: ["Galerie", "Schließen", "Zurück", "Weiter", "Vorher", "Nachher"], pl: ["Galeria", "Zamknij", "Poprzednie", "Następne", "Przed", "Po"],
+            uk: ["Галерея", "Закрити", "Попереднє", "Наступне", "До", "Після"], sk: ["Galéria", "Zavrieť", "Predchádzajúce", "Ďalšie", "Pred", "Po"] }[lang] ||
+          ["Galerie", "Zavřít", "Předchozí", "Další", "Před", "Po"];
+  var lb = document.createElement("div");
+  lb.className = "lightbox lightbox--ref"; lb.setAttribute("role", "dialog"); lb.setAttribute("aria-modal", "true"); lb.setAttribute("aria-label", T[0]);
+  lb.innerHTML = '<button class="lightbox__close" aria-label="' + T[1] + '">&times;</button><button class="lightbox__nav prev" aria-label="' + T[2] + '">&#8249;</button>' +
+    '<img alt="" decoding="async"><button class="lightbox__nav next" aria-label="' + T[3] + '">&#8250;</button><div class="lightbox__counter"></div>';
+  document.body.appendChild(lb);
+  var img = lb.querySelector("img"), cnt = lb.querySelector(".lightbox__counter"), prev = lb.querySelector(".prev"), next = lb.querySelector(".next");
+  var seznam = [], i = 0, odkud = null;
+  function fotky(li){
+    var nazev = (li.querySelector("span") || li).textContent.trim().replace(/\s+/g, " ");
+    if (li.dataset.seq) { var st = (li.dataset.seqStitky || "").split("|"); return li.dataset.seq.split("|").map(function(u, k){ return { u: u, t: st[k] ? nazev + " – " + st[k] : nazev }; }); }
+    var f = [];
+    if (li.dataset.bg) f.push({ u: li.dataset.bg, t: li.dataset.po ? nazev + " – " + (li.dataset.predStitek || T[4]) : nazev });
+    if (li.dataset.po) f.push({ u: li.dataset.po, t: nazev + " – " + T[5] });
+    if (!f.length) { var im = li.querySelector("img"); if (im) f.push({ u: im.currentSrc || im.src, t: nazev }); }
+    return f;
+  }
+  function ukaz(n){
+    i = (n + seznam.length) % seznam.length;
+    img.src = seznam[i].u; img.alt = seznam[i].t;
+    cnt.textContent = seznam.length > 1 ? seznam[i].t + "  ·  " + (i + 1) + " / " + seznam.length : seznam[i].t;
+  }
+  function otevri(li){
+    seznam = fotky(li); if (!seznam.length) return;
+    odkud = li; prev.hidden = next.hidden = seznam.length < 2;
+    ukaz(0); lb.classList.add("open"); document.body.style.overflow = "hidden"; lb.querySelector(".lightbox__close").focus({ preventScroll: true });
+  }
+  function zavri(){ lb.classList.remove("open"); document.body.style.overflow = ""; if (odkud) odkud.focus({ preventScroll: true }); odkud = null; }
+  karty.forEach(function(li){
+    li.addEventListener("click", function(e){ if (e.target.closest("a")) return; otevri(li); });
+    li.addEventListener("keydown", function(e){ if (e.key === "Enter" || e.key === " ") { e.preventDefault(); otevri(li); } });
+  });
+  lb.querySelector(".lightbox__close").addEventListener("click", zavri);
+  prev.addEventListener("click", function(){ ukaz(i - 1); });
+  next.addEventListener("click", function(){ ukaz(i + 1); });
+  lb.addEventListener("click", function(e){ if (e.target === lb) zavri(); });
+  document.addEventListener("keydown", function(e){
+    if (!lb.classList.contains("open")) return;
+    if (e.key === "Escape") zavri(); else if (e.key === "ArrowLeft") ukaz(i - 1); else if (e.key === "ArrowRight") ukaz(i + 1);
   });
 })();
 /* Stavby: pri najeti/fokusu/tapnuti se prolinaji 4-5 fotek z te stavby (AP 12. 10. 2026) */
@@ -580,7 +623,6 @@ var kpT = (function () {
     karty.forEach(function(li){
       li.addEventListener("mouseenter", function(){ zapni(li); });
       li.addEventListener("focus", function(){ zapni(li); });
-      li.addEventListener("click", function(){ if (li.classList.contains("is-on")) zapni(li); else vypni(); });
       li.addEventListener("mouseleave", function(){ vypni(); }); li.addEventListener("blur", function(){ vypni(); });
     });
     if ("IntersectionObserver" in window) new IntersectionObserver(function(en){ if (!en[0].isIntersecting && aktivni) vypni(true); }, { threshold: 0 }).observe(sek);

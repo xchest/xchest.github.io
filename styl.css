@@ -215,9 +215,9 @@ em { font-style: italic; color: var(--accent); }
 .filters button:hover { border-color: var(--ink); }
 .filters button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
 
-.lightbox { position: fixed; inset: 0; z-index: 200; background: rgba(10,10,10,.95); display: none; align-items: center; justify-content: center; }
+.lightbox { position: fixed; inset: 0; z-index: 1000; background: rgba(10,10,10,.95); display: none; align-items: center; justify-content: center; }
 .lightbox.open { display: flex; }
-.lightbox img { max-width: 90vw; max-height: 82vh; object-fit: contain; }
+.lightbox img { width: auto; height: auto; max-width: min(90vw, 1600px); max-height: 82vh; object-fit: contain; } /* 14. 10. 2026: na sirokem monitoru cela fotka, bez priblizeni */
 .lightbox__close { position: absolute; top: 20px; right: 28px; background: none; border: 0; color: var(--ink); font-size: 2.4rem; cursor: pointer; line-height: 1; }
 .lightbox__nav { position: absolute; top: 50%; transform: translateY(-50%); background: none; border: 0; color: var(--ink); font-size: 3rem; cursor: pointer; padding: 0 22px; opacity: .7; }
 .lightbox__nav:hover { opacity: 1; }
@@ -279,7 +279,7 @@ em { font-style: italic; color: var(--accent); }
 
 .footer { padding: 56px 0 40px; border-top: 1px solid var(--line); color: var(--mute); font-size: 14px; }
 .footer__top { display: flex; justify-content: space-between; align-items: flex-start; gap: 32px; flex-wrap: wrap; margin-bottom: 32px; }
-.footer__mark { width: 44px; opacity: .9; }
+.footer__mark { display: none; } /* 14. 10. 2026 AP: znak u nazvu v paticce zbytecny */
 .footer__name { font: 400 26px/1.1 var(--serif); color: var(--ink); margin-top: 12px; }
 .footer__divider { display: none; }
 .footer__nav { display: flex; gap: 22px; flex-wrap: wrap; }
@@ -314,13 +314,14 @@ em { font-style: italic; color: var(--accent); }
 .faq details p { padding: 0 0 24px; margin: 0; color: var(--mute); max-width: 720px; }
 .faq details a { text-decoration: underline; text-underline-offset: 3px; }
 
-.cta-band { display: grid; grid-template-columns: 1fr auto; gap: 40px; align-items: center; padding: 48px; background: var(--ink); color: var(--bg); }
+/* 14. 10. 2026 (AP: "zrus tu hranu, nehodi se k tomu zbytku"): tmavy pruh misto svetleho bloku */
+.cta-band { display: grid; grid-template-columns: 1fr auto; gap: 40px; align-items: center; padding: 48px; background: var(--bg-2); color: var(--ink); }
 .cta-band__h { font-size: clamp(32px, 3.6vw, 52px); margin-bottom: 10px; }
-.cta-band p { color: var(--text-dark-muted); margin: 0; }
+.cta-band p { color: var(--mute); margin: 0; }
 .cta-band__actions { display: flex; flex-direction: column; gap: 10px; min-width: 240px; }
-.cta-band .btn { border-color: var(--bg); color: var(--bg); }
-.cta-band .btn--gold { background: var(--bg); color: var(--ink); }
-.cta-band .btn:hover { background: var(--bg); color: var(--ink); }
+.cta-band .btn { border-color: var(--ink); color: var(--ink); }
+.cta-band .btn--gold { background: var(--ink); color: var(--bg); }
+.cta-band .btn:hover { background: var(--ink); color: var(--bg); }
 
 .rel { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); }
 .rel__item { display: flex; align-items: center; justify-content: space-between; min-height: 64px; padding: 18px 20px 18px 0; border-bottom: 1px solid var(--line); font: 400 24px/1.1 var(--serif); transition: color .2s; }

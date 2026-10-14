@@ -10,6 +10,8 @@
 
 /* --- Panel ovládání --- */
 .panel { background: var(--bg-2); border: 1px solid var(--line); border-radius: var(--radius); padding: 8px 0; }
+/* styl.css má .panel pro sekce homepage (flex, 100svh, snap) — v návrháři zrušit */
+.tool .panel { display: block; min-height: 0; padding: 8px 0; align-items: normal; scroll-snap-align: none; position: static; }
 .panel fieldset { border: 0; padding: 18px 22px; border-bottom: 1px solid rgba(194,154,100,.14); }
 .panel fieldset:last-child { border-bottom: 0; }
 .panel legend { font-family: 'Manrope', sans-serif; font-weight: 600; color: var(--gold); font-size: .72rem; letter-spacing: .18em; text-transform: uppercase; padding: 0; margin-bottom: 12px; float: left; width: 100%; }

@@ -117,14 +117,14 @@ var kpT = (function () {
 
     /* Okamžitá kontrola: po opuštění pole a pak při psaní. Prázdné nepovinné pole je v pořádku. */
     var pravidla = {
-      jmeno: function (v) { return v.length >= 2 ? '' : t('Napište prosím jméno.'); },
-      email: function (v) { return !v || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? '' : t('E-mail nevypadá úplně — chybí @ nebo doména?'); },
+      jmeno: function (v) { return v.length >= 2 ? '' : kpT('Napište prosím jméno.'); },
+      email: function (v) { return !v || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? '' : kpT('E-mail nevypadá úplně — chybí @ nebo doména?'); },
       telefon: function (v) {
         if (!v) return '';
         var d = v.replace(/\D/g, '');
-        return (d.length === 9 || (d.length === 12 && d.indexOf('420') === 0)) ? '' : t('Telefon má mít 9 číslic (případně s +420).');
+        return (d.length === 9 || (d.length === 12 && d.indexOf('420') === 0)) ? '' : kpT('Telefon má mít 9 číslic (případně s +420).');
       },
-      zprava: function (v) { return v.length >= 3 ? '' : t('Napište prosím, s čím vám můžeme pomoci.'); }
+      zprava: function (v) { return v.length >= 3 ? '' : kpT('Napište prosím, s čím vám můžeme pomoci.'); }
     };
     Object.keys(pravidla).forEach(function (name) {
       var input = form.elements[name];
@@ -169,10 +169,10 @@ var kpT = (function () {
 
       [jmeno, email, zprava].forEach(function (i) { if (i) setInvalid(i, false); });
 
-      if (!jmeno.value.trim()) { problems.push(t('Napište prosím jméno.')); setInvalid(jmeno, true); }
-      if (!zprava.value.trim()) { problems.push(t('Napište prosím, s čím vám můžeme pomoci.')); setInvalid(zprava, true); }
+      if (!jmeno.value.trim()) { problems.push(kpT('Napište prosím jméno.')); setInvalid(jmeno, true); }
+      if (!zprava.value.trim()) { problems.push(kpT('Napište prosím, s čím vám můžeme pomoci.')); setInvalid(zprava, true); }
       if (email.value.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) {
-        problems.push(t('E-mail nevypadá úplně — chybí @ nebo doména?')); setInvalid(email, true);
+        problems.push(kpT('E-mail nevypadá úplně — chybí @ nebo doména?')); setInvalid(email, true);
       }
 
       if (problems.length) {
@@ -189,7 +189,7 @@ var kpT = (function () {
       var endpoint = form.getAttribute('data-endpoint');
 
       if (netlify || endpoint) {
-        if (btn) { btn.disabled = true; btn.textContent = t('Odesílám…'); }
+        if (btn) { btn.disabled = true; btn.textContent = kpT('Odesílám…'); }
         var url, opts;
         if (netlify) {
           url = form.getAttribute('action') || '/';
@@ -205,9 +205,9 @@ var kpT = (function () {
         fetch(url, opts).then(function (r) {
           if (!r.ok) throw new Error('bad status');
           form.reset();
-          if (okEl) { okEl.textContent = t('Děkujeme, poptávku jsme přijali. Brzy se ozveme.'); okEl.style.display = 'block'; }
+          if (okEl) { okEl.textContent = kpT('Děkujeme, poptávku jsme přijali. Brzy se ozveme.'); okEl.style.display = 'block'; }
         }).catch(function () {
-          if (errEl) errEl.textContent = t('Odeslání se nezdařilo. Zavolejte prosím na +420 602 108 793.');
+          if (errEl) errEl.textContent = kpT('Odeslání se nezdařilo. Zavolejte prosím na +420 602 108 793.');
         }).finally(function () {
           if (btn) { btn.disabled = false; btn.textContent = origText; }
         });
@@ -221,7 +221,7 @@ var kpT = (function () {
           '\n\nZpráva:\n' + zprava.value.trim()
         );
         window.location.href = 'mailto:pomniky@kamenictviprochazka.cz?subject=' + subj + '&body=' + body;
-        if (okEl) { okEl.textContent = t('Otevíráme váš e-mailový klient s předvyplněnou poptávkou…'); okEl.style.display = 'block'; }
+        if (okEl) { okEl.textContent = kpT('Otevíráme váš e-mailový klient s předvyplněnou poptávkou…'); okEl.style.display = 'block'; }
       }
     });
   }
@@ -334,8 +334,8 @@ var kpT = (function () {
         el.addEventListener('click', function () { ruka = performance.now(); ukaz(i); });
         ovl.appendChild(el); return el;
       });
-      var pb = document.createElement('button'); pb.type = 'button'; pb.textContent = t('Zastavit');
-      pb.addEventListener('click', function () { pauza = !pauza; pb.textContent = pauza ? t('Spustit') : t('Zastavit'); t0 = null; });
+      var pb = document.createElement('button'); pb.type = 'button'; pb.textContent = kpT('Zastavit');
+      pb.addEventListener('click', function () { pauza = !pauza; pb.textContent = pauza ? kpT('Spustit') : kpT('Zastavit'); t0 = null; });
       ovl.appendChild(pb);
       ba.parentNode.insertBefore(ovl, ba.nextSibling);
       var ukaz = function (i) {
@@ -343,7 +343,7 @@ var kpT = (function () {
         ba.classList.add('is-swap');
         setTimeout(function () {
           idx = i; pred.src = pary[i][0]; po.src = pary[i][1]; cap.textContent = pary[i][2];
-          pred.alt = pary[i][2] + t(' před obnovou'); po.alt = pary[i][2] + t(' po obnově');
+          pred.alt = pary[i][2] + kpT(' před obnovou'); po.alt = pary[i][2] + kpT(' po obnově');
           tecky.forEach(function (t, j) { t.setAttribute('aria-pressed', j === i ? 'true' : 'false'); });
           ba.classList.remove('is-swap'); t0 = null;
         }, 450);
@@ -386,7 +386,7 @@ var kpT = (function () {
     // Tlačítka „jen před / půl / jen po" — na mobilu se jezdcem hůř trefuje.
     var btns = document.createElement('div');
     btns.className = 'ba-btns';
-    [[t('Jen před'), 100], [t('Půl na půl'), 50], [t('Jen po'), 0]].forEach(function (b) {
+    [[kpT('Jen před'), 100], [kpT('Půl na půl'), 50], [kpT('Jen po'), 0]].forEach(function (b) {
       var el = document.createElement('button');
       el.type = 'button'; el.textContent = b[0]; el.setAttribute('aria-pressed', 'false');
       el.addEventListener('click', function () {

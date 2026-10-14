@@ -8,23 +8,16 @@ window.KP = (function () {
   /* Materiály, se kterými pracujeme. Vzhled = fotografie vzorku (obrazky/kameny/<id>.webp);
      procedurální textura z barev vzorku jen jako náhrada, dokud se fotka nenačte (nebo chybí). */
   var KAMENY = [
-    { id: 'zimbabwe', nazev: 'Nero Assoluto', pod: 'černá žula, Zimbabwe', base: '#192222', specks: ['#101718', '#141c1c', '#1c2524', '#1e2726'], hustota: 0.5, svetly: false },
-    { id: 'premium', nazev: 'Premium Black', pod: 'černá žula', base: '#202125', specks: ['#18181b', '#1d1d21', '#26272b', '#2c2d31'], hustota: 0.45, svetly: false },
-    { id: 'galaxy', nazev: 'Star Galaxy', pod: 'černá žula se zlatými jiskrami', base: '#141517', specks: ['#080809', '#0f0f11', '#1f1f21', '#8a7a5c'], hustota: 0.7, svetly: false },
-    { id: 'impala', nazev: 'Nero Impala', pod: 'šedá žula', base: '#7a7b74', specks: ['#4f4e47', '#686963', '#93938c', '#c9c6be'], hustota: 1.3, svetly: true },
-    { id: 'azul', nazev: 'Azul Platino', pod: 'šedá žula', base: '#6b6c6f', specks: ['#46464a', '#5b5c5f', '#7a7b7f', '#909195'], hustota: 1.3, svetly: false },
-    { id: 'cinza', nazev: 'Cinza Ariz', pod: 'světle šedá žula', base: '#a0979b', specks: ['#3a3134', '#786e72', '#b6adb1', '#c5bdc2'], hustota: 1.5, svetly: true },
-    { id: 'delycatus', nazev: 'Delycatus White', pod: 'světlá žula', base: '#89898d', specks: ['#3e3e42', '#6f6f73', '#9b9b9e', '#aeaeb1'], hustota: 1.0, svetly: true, zily: '#5a5a5e' },
-    { id: 'olive', nazev: 'Olive Green', pod: 'šedozelená žula', base: '#8c8d90', specks: ['#42444a', '#6c6d71', '#a3a3a6', '#bababb'], hustota: 1.1, svetly: true, zily: '#4a4c52' },
-    { id: 'vizag', nazev: 'Vizag Blue', pod: 'modrošedá žula', base: '#494857', specks: ['#23232f', '#393746', '#5c5b6a', '#8a8995'], hustota: 1.0, svetly: false, zily: '#2a2936' },
-    { id: 'multired', nazev: 'Multicolour Red', pod: 'červenohnědá žula', base: '#5c4034', specks: ['#2f190f', '#472e23', '#74584b', '#92908e'], hustota: 1.0, svetly: false, zily: '#2f190f' },
-    { id: 'vanga', nazev: 'Vanga Red', pod: 'červená žula', base: '#583830', specks: ['#412720', '#503129', '#5d403a', '#6e4c44'], hustota: 1.2, svetly: false },
-    { id: 'imperial', nazev: 'Imperial Red', pod: 'červená žula', base: '#87534f', specks: ['#5b3c3d', '#794845', '#926360', '#a0716d'], hustota: 1.3, svetly: false },
-    { id: 'regal', nazev: 'Regal Black', pod: 'černá žula', base: '#241d1a', specks: ['#090402', '#191310', '#342d2a', '#726a68'], hustota: 0.9, svetly: false },
-    { id: 'pedro', nazev: 'Pedra Porto', pod: 'světle šedá žula', base: '#a3a09a', specks: ['#343331', '#817e79', '#bfbdb7', '#e7e5df'], hustota: 1.6, svetly: true },
-    { id: 'moleanos', nazev: 'Moleanos', pod: 'béžový vápenec, Portugalsko', base: '#bdb5b1', specks: ['#a19894', '#b8b0ad', '#c1b8b5', '#ccc1bd'], hustota: 0.6, svetly: true }
+    { id: 'regal', nazev: 'Regal Black', pod: 'černá žula', base: '#181c1e', specks: ['#0d1113', '#141719', '#1a1e1f', '#282b2d'], hustota: 0.6, svetly: false },
+    { id: 'impala', nazev: 'Nero Impala', pod: 'tmavě šedá žula', base: '#393a3a', specks: ['#2b2c2c', '#363635', '#3c3c3c', '#4b4b4c'], hustota: 1.1, svetly: false },
+    { id: 'aurora', nazev: 'Aurora', pod: 'červenohnědá žula, Indie', base: '#4f4446', specks: ['#38373c', '#414045', '#4e4b4f', '#615a5e'], hustota: 1.0, svetly: false, zily: '#615a5e' },
+    { id: 'vizag', nazev: 'Vizag Blue', pod: 'modrošedá žula', base: '#656a7b', specks: ['#4a4d5d', '#5c6070', '#6d7283', '#848a9d'], hustota: 1.0, svetly: false, zily: '#4a4d5d' },
+    { id: 'viscont', nazev: 'Viscont White', pod: 'světle šedá žula s kresbou', base: '#b4b5b4', specks: ['#8f908e', '#acadac', '#c2c3c1', '#d9dad8'], hustota: 1.2, svetly: true, zily: '#8f908e' }
   ];
-  function kamen(id) { for (var i = 0; i < KAMENY.length; i++) if (KAMENY[i].id === id) return KAMENY[i]; return KAMENY[0]; }
+  /* Dřívější materiály (uložené návrhy) → nejbližší z pěti základních žul. */
+  var NAHRADA = { zimbabwe: 'regal', premium: 'regal', galaxy: 'regal', azul: 'impala', olive: 'impala', cinza: 'viscont', delycatus: 'viscont', pedro: 'viscont', moleanos: 'viscont', multired: 'aurora', vanga: 'aurora', imperial: 'aurora' };
+  function kamenId(id) { for (var i = 0; i < KAMENY.length; i++) if (KAMENY[i].id === id) return id; return NAHRADA[id] || KAMENY[0].id; }
+  function kamen(id) { id = kamenId(id); for (var i = 0; i < KAMENY.length; i++) if (KAMENY[i].id === id) return KAMENY[i]; return KAMENY[0]; }
 
   /* Deterministický PRNG — stejný kámen = stejná kresba při každém překreslení. */
   function prng(seed) {
@@ -33,12 +26,14 @@ window.KP = (function () {
   }
   function hash(str) { var h = 2166136261; for (var i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
 
-  /* Fotky vzorků: fotoMm = přibližná šířka záběru ve skutečnosti (mm) → měřítko zrna na desce. */
-  var FOTO = { zimbabwe: 1500, premium: 600, galaxy: 600, impala: 1500, azul: 1500, cinza: 600, delycatus: 1500, olive: 600, vizag: 1500, multired: 1500, vanga: 1500, imperial: 1500, pedro: 600, moleanos: 300 };
-  var VERZE = '1014s', fotky = {}, cekaji = [], nacteno = false;
-  function fotoUrl(id) { return FOTO[id] ? '/obrazky/kameny/' + id + '.webp?v=' + VERZE : ''; }
-  function fotoMm(id) { return FOTO[id] || 0; }
-  function fotka(id) { var im = fotky[id]; return im && im.complete && im.naturalWidth ? im : null; }
+  /* Fotky celých desek ze skladu (srovnané, ořezané): rozměr záběru ve skutečnosti [šířka, výška] mm.
+     Deska je větší než kterýkoliv kus hrobu → jedna fotka ve skutečném měřítku, nic se neopakuje ani nezrcadlí. */
+  var FOTO = { regal: [3133, 1942], impala: [3143, 1892], aurora: [3298, 1882], vizag: [3143, 1982], viscont: [3298, 1922] };
+  var VERZE = '1014t', fotky = {}, cekaji = [], nacteno = false;
+  function fotoUrl(id) { id = kamenId(id); return FOTO[id] ? '/obrazky/kameny/' + id + '.webp?v=' + VERZE : ''; }
+  function fotoMm(id) { var f = FOTO[kamenId(id)]; return f ? f[0] : 0; }
+  function fotoRozmer(id) { return FOTO[kamenId(id)] || null; }
+  function fotka(id) { var im = fotky[kamenId(id)]; return im && im.complete && im.naturalWidth ? im : null; }
   /* Načte všechny fotky; po načtení zahodí procedurální cache a zavolá cb (překreslení). */
   function nactiFotky(cb) {
     if (cb) { if (nacteno) { cb(); return; } cekaji.push(cb); }
@@ -48,41 +43,24 @@ window.KP = (function () {
       var im = new Image();
       im.onload = im.onerror = function () {
         if (--zbyva) return;
-        nacteno = true; cache = {}; zrc = {};
+        nacteno = true; cache = {};
         var c = cekaji; cekaji = []; c.forEach(function (f) { try { f(); } catch (e) { console.error(e); } });
       };
       im.src = fotoUrl(id); fotky[id] = im;
     });
   }
-  /* Zrcadlená dlaždice 2× (bez švů při opakování). */
-  var zrc = {};
-  function zrcadlo(id) {
-    if (zrc[id]) return zrc[id];
-    var im = fotka(id); if (!im) return null;
-    var w = im.naturalWidth, h = im.naturalHeight, c = document.createElement('canvas');
-    c.width = w * 2; c.height = h * 2;
-    var g = c.getContext('2d');
-    [[1, 1, 0, 0], [-1, 1, 2 * w, 0], [1, -1, 0, 2 * h], [-1, -1, 2 * w, 2 * h]].forEach(function (t) {
-      g.setTransform(t[0], 0, 0, t[1], t[2], t[3]); g.drawImage(im, 0, 0);
-    });
-    zrc[id] = c; return c;
-  }
-
   var cache = {};
   /* Vrátí canvas s texturou kamene (dlaždice size × size): fotka, jinak procedurální náhrada. */
   function textura(id, size) {
     size = size || 512;
-    var key = id + '@' + size;
+    id = kamenId(id); var key = id + '@' + size;
     if (cache[key]) return cache[key];
     var im = fotka(id);
     if (im) {
+      // střední výřez fotky desky (vzorník, náhrada) — bez zrcadlení
       var fc = document.createElement('canvas'); fc.width = fc.height = size;
-      var m = Math.min(im.naturalWidth, im.naturalHeight), half = size / 2, fg = fc.getContext('2d');
-      var sx = (im.naturalWidth - m) / 2, sy = (im.naturalHeight - m) / 2;
-      // čtvercový výřez zrcadlený do 2×2 → dlaždice bez švů
-      [[1, 1, 0, 0], [-1, 1, size, 0], [1, -1, 0, size], [-1, -1, size, size]].forEach(function (t) {
-        fg.setTransform(t[0], 0, 0, t[1], t[2], t[3]); fg.drawImage(im, sx, sy, m, m, 0, 0, half, half);
-      });
+      var m = Math.min(im.naturalWidth, im.naturalHeight) * 0.5;
+      fc.getContext('2d').drawImage(im, (im.naturalWidth - m) / 2, (im.naturalHeight - m) / 2, m, m, 0, 0, size, size);
       cache[key] = fc; return fc;
     }
     var k = kamen(id), c = document.createElement('canvas');
@@ -158,8 +136,8 @@ window.KP = (function () {
 
   function vychoziNapis() {
     // deska 55 × 75 cm = nápisová deska typového hrobu UH; písmo 40 mm ≈ medián jmen ve výrobních podkladech
-    return { titul: 'Rodina', rodina: 'Novákova', osoby: [{ jmeno: 'Jan Novák', narozen: '12. 3. 1935', umrti: '4. 6. 2024' }], dolni: 'z Českého Brodu', datum: 'znaky', epitaf: '', font: 'gloucester', technika: 'zlato', kamen: 'zimbabwe', verzalky: true, vyska: 40, deskaS: 55, deskaV: 75, zarovnani: 'center', tvar: 'obdelnik' };
+    return { titul: 'Rodina', rodina: 'Novákova', osoby: [{ jmeno: 'Jan Novák', narozen: '12. 3. 1935', umrti: '4. 6. 2024' }], dolni: 'z Českého Brodu', datum: 'znaky', epitaf: '', font: 'gloucester', technika: 'zlato', kamen: 'regal', verzalky: true, vyska: 40, deskaS: 55, deskaV: 75, zarovnani: 'center', tvar: 'obdelnik' };
   }
 
-  return { KAMENY: KAMENY, kamen: kamen, textura: textura, fotoUrl: fotoUrl, fotoMm: fotoMm, fotka: fotka, nactiFotky: nactiFotky, zrcadlo: zrcadlo, prng: prng, hexA: hexA, uloz: uloz, nacti: nacti, toast: toast, doPoptavky: doPoptavky, stahni: stahni, datumText: datumText, vychoziNapis: vychoziNapis };
+  return { KAMENY: KAMENY, kamen: kamen, textura: textura, fotoUrl: fotoUrl, fotoMm: fotoMm, fotoRozmer: fotoRozmer, fotka: fotka, kamenId: kamenId, nactiFotky: nactiFotky, prng: prng, hexA: hexA, uloz: uloz, nacti: nacti, toast: toast, doPoptavky: doPoptavky, stahni: stahni, datumText: datumText, vychoziNapis: vychoziNapis };
 })();

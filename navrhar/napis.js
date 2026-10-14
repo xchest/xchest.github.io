@@ -166,11 +166,11 @@
     sh.addColorStop(0, 'rgba(0,0,0,.55)'); sh.addColorStop(1, 'rgba(0,0,0,0)');
     g.fillStyle = sh; g.fillRect(0, PY + PH - 40, W, 160);
 
-    var pat, zr = KP.zrcadlo(kamen.id);
-    if (zr) { // fotka vzorku v měřítku desky (fotoMm = šířka záběru), zrcadlená dlaždice bez švů
-      pat = g.createPattern(zr, 'repeat');
-      var sc = Math.max(0.5, Math.min(2.2, KP.fotoMm(kamen.id) * PXMM / (zr.width / 2)));
-      if (pat.setTransform) pat.setTransform(new DOMMatrix().translate(PX, PY).scale(sc));
+    var pat, im = KP.fotka(kamen.id), roz = KP.fotoRozmer(kamen.id);
+    if (im && roz) { // jedna fotka celé desky ve skutečném měřítku, střed fotky = střed desky; bez opakování a zrcadlení
+      pat = g.createPattern(im, 'no-repeat');
+      var sc = roz[0] * PXMM / im.naturalWidth;
+      if (pat.setTransform) pat.setTransform(new DOMMatrix().translate(PX + PW / 2 - im.naturalWidth * sc / 2, PY + PH / 2 - im.naturalHeight * sc / 2).scale(sc));
     } else pat = g.createPattern(KP.textura(kamen.id, 512), 'repeat');
     // boční hrana (tloušťka desky)
     g.save(); obrys(g, PX + HRANA, PY + HRANA * 0.6, PW, PH, stav.tvar);

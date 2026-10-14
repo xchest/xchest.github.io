@@ -38,11 +38,12 @@
     return {
       typ: typ, sirka: t.sirka, delka: t.delka, ramV: t.ramV, stelaS: t.stelaS, stelaV: t.stelaV,
       tvar: 'vlna', body: vlnaBody(), deska: 'pres', vypln: 'kacirek', chodnik: 'kamen',
-      kamen: napis.kamen || 'zimbabwe', vaza: typ !== 'urna', vazaMat: 'kamen', svitilna: typ !== 'urna', svitilnaMat: 'kamen', foto: false
+      kamen: KP.kamenId(napis.kamen), vaza: typ !== 'urna', vazaMat: 'kamen', svitilna: typ !== 'urna', svitilnaMat: 'kamen', foto: false
     };
   }
   var stav = KP.nacti('localStorage', 'kp_pomnik2');
   if (!stav || !TYPY[stav.typ]) stav = vychozi('urna');
+  stav.kamen = KP.kamenId(stav.kamen);
   var pohled = 'celo';
 
   /* ---------- tvar horní hrany pomníku ----------
@@ -207,6 +208,16 @@
     var p = el('pattern', { id: id, patternUnits: 'userSpaceOnUse', width: size, height: size }, defs);
     el('image', { href: canvas.toDataURL(), width: size, height: size, preserveAspectRatio: 'none' }, p);
   }
+  /* Kámen = jedna fotka celé desky ve skutečném měřítku (s = px/cm), střed desky v (cx, cy); v půdorysu
+     otočená podél hrobu. Deska je větší než hrob → nic se neopakuje. Bez fotky procedurální náhrada. */
+  function deskaVzorek(defs, s, cx, cy, otoc) {
+    var r = KP.fotoRozmer(stav.kamen);
+    if (!r || !KP.fotka(stav.kamen)) { vzorek('kamen', KP.textura(stav.kamen, 256), 180, defs); return; }
+    var w = r[0] / 10 * s, h = r[1] / 10 * s, a = { id: 'kamen', patternUnits: 'userSpaceOnUse', x: cx - w / 2, y: cy - h / 2, width: w, height: h };
+    if (otoc) a.patternTransform = 'rotate(90 ' + cx + ' ' + cy + ')';
+    var p = el('pattern', a, defs);
+    el('image', { href: KP.fotoUrl(stav.kamen), width: w, height: h, preserveAspectRatio: 'none' }, p);
+  }
   var vyplnCache = {};
   function vyplnTextura(typ) {
     if (vyplnCache[typ]) return vyplnCache[typ];
@@ -273,6 +284,7 @@
     var st = stela(), s = meritko(stav.typ, 'celo'), R = stav.ramV, W2 = stav.sirka / 2;
     var gy = 720, cx = 500;
     var X = function (cm) { return cx + cm * s; }, Y = function (h) { return gy - h * s; };
+    deskaVzorek(defs, s, cx, Y(R + st.h / 2), false);
     el('rect', { x: 0, y: gy, width: 1000, height: 80, fill: 'url(#zem)' });
     el('line', { x1: 30, y1: gy, x2: 970, y2: gy, stroke: 'rgba(194,154,100,.35)', 'stroke-width': 1 });
     if (stav.chodnik === 'kamen') { // chodník v úrovni terénu: v pohledu jen hrana pásu
@@ -359,6 +371,7 @@
     var L = stav.delka, W2 = stav.sirka / 2, worldD = L + (chod ? CHOD_P : 0);
     var cx = 480, y0 = 420 - worldD * s / 2;
     var X = function (cm) { return cx + cm * s; }, Y = function (cm) { return y0 + cm * s; }; // y = cm od zadní hrany
+    deskaVzorek(defs, s, cx, 420, true);
     vzorek('vypln', vyplnTextura(stav.vypln), 160, defs);
     function deska(x0, x1, y1, y2, stin) {
       if (stin) el('rect', { x: X(x0) + 3, y: Y(y1) + 4, width: (x1 - x0) * s, height: (y2 - y1) * s, fill: 'rgba(0,0,0,.45)' });
@@ -452,6 +465,7 @@
   }
   function kresliPerspektivu(defs, druh) {
     var cam = kamera(druh), st = stela(), R = stav.ramV, L = stav.delka, W2 = stav.sirka / 2, sW = soklS() / 2;
+    deskaVzorek(defs, meritko(stav.typ, 'celo'), 500, 420, false); // perspektiva: přibližné měřítko čela
     vzorek('vypln', vyplnTextura(stav.vypln), 160, defs);
     // obloha + terén
     var nebe = el('linearGradient', { id: 'nebe', x1: 0, y1: 0, x2: 0, y2: 1 }, defs);
@@ -528,7 +542,6 @@
   function kresli() {
     while (svg.firstChild) svg.removeChild(svg.firstChild);
     var defs = el('defs', {});
-    vzorek('kamen', KP.textura(stav.kamen, 256), 180, defs);
     var l = el('linearGradient', { id: 'lesk', x1: 0, y1: 0, x2: 1, y2: 1 }, defs);
     el('stop', { offset: 0, 'stop-color': '#fff', 'stop-opacity': 0.1 }, l); el('stop', { offset: 0.5, 'stop-color': '#fff', 'stop-opacity': 0 }, l); el('stop', { offset: 1, 'stop-color': '#000', 'stop-opacity': 0.2 }, l);
     var nz = el('linearGradient', { id: 'nerez', x1: 0, y1: 0, x2: 1, y2: 0 }, defs);

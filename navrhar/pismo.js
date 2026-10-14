@@ -40,6 +40,7 @@
     if (!FONTY.some(function (f) { return f.id === n.font; })) n.font = d.font;
     if (['zlato', 'stribro', 'bila', 'hloubene'].indexOf(n.technika) < 0) n.technika = d.technika;
     n.datum = 'znaky';
+    n.kamen = KP.kamenId(n.kamen); // jen 5 základních žul (AP 14. 10. 2026)
     delete n.ornament;
     if (!Array.isArray(n.osoby)) n.osoby = d.osoby;
     n.osoby.forEach(function (o) { delete o.rozena; }); // „rozená" se na nápis nepíše (AP 11. 10. 2026)

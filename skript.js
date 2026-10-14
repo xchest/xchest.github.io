@@ -531,11 +531,14 @@ var kpT = (function () {
     var zareT = null;
     function zhasni(){ clearTimeout(zareT); zare.classList.remove("is-sviti", "is-vidim", "is-oddal"); }
     var karty = sek.querySelectorAll(".stavby-refs li[data-bg]");
-    function fotky(li){ return li.dataset.seq ? li.dataset.seq.split("|") : [li.dataset.po || li.dataset.bg]; }
+    /* mobil: misto 1600px fotek 800px varianty (rychlost) */
+    var uzke = window.matchMedia("(max-width: 900px)").matches;
+    function zm(u){ return uzke && u ? u.replace(/-1600\.webp$/, "-800.webp") : u; }
+    function fotky(li){ return (li.dataset.seq ? li.dataset.seq.split("|") : [li.dataset.po || li.dataset.bg]).map(zm); }
     if ("IntersectionObserver" in window) {
       var pred = new IntersectionObserver(function(en){
         if (!en[0].isIntersecting) return; pred.disconnect();
-        karty.forEach(function(li){ fotky(li).concat(li.dataset.glow ? [li.dataset.glow] : []).forEach(function(u){ var i = new Image(); i.decoding = "async"; i.src = u; }); });
+        karty.forEach(function(li){ fotky(li).concat(li.dataset.glow ? [li.dataset.glow] : []).forEach(function(u){ var i = new Image(); i.decoding = "async"; i.src = zm(u); }); });
       }, { rootMargin: "800px 0px" });
       pred.observe(sek);
     }
@@ -543,7 +546,7 @@ var kpT = (function () {
     function ukaz(u, li){
       var nova = vrstvy[1 - hore], stara = vrstvy[hore];
       nova.classList.remove("is-vidim", "is-oddal"); nova.fill.classList.remove("is-vidim"); nova.src = u; nova.fill.src = u;
-      zhasni(); if (li.dataset.glow) zare.src = li.dataset.glow;
+      zhasni(); if (li.dataset.glow) zare.src = zm(li.dataset.glow);
       var hotovo = function(){
         if (aktivni !== li) return;
         void nova.offsetWidth; nova.classList.add("is-vidim", "is-oddal"); nova.fill.classList.add("is-vidim");

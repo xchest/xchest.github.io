@@ -1,12 +1,14 @@
 /* Kamenik Ales se pri scrollu prevlece podle sekce (12. 10. 2026).
-   Postava vyskoci z obrazovky nahoru a spadne zpet uz v nove podobe; u staveb pred ni spadne helma. */
+   Postava vyskoci z obrazovky nahoru a spadne zpet uz v nove podobe; u staveb mu helma dopadne na hlavu.
+   14. 10. 2026 (vytka AP "na kazde fotce vypadam jinak"): vsechny podoby = jedna vychozi postava, meni se jen obleceni;
+   stejna vyska temeno-podrazka (900 px), osa hlavy ve stejne vzdalenosti od praveho okraje. */
 (function(){
   var POSTAVY = {
-    nahrobky: { src: "/obrazky/postava-hroby.webp", w: 597, h: 900, vyska: 0.8 },
-    interier: { src: "/obrazky/postava-interier.webp", w: 425, h: 900 },
-    stavby: { src: "/obrazky/postava-stavby.webp", w: 454, h: 900, flip: true, helma: { x: 0.21, y: 0.03 } },
-    obce: { src: "/obrazky/postava-obce.webp", w: 409, h: 900,
-      skici: ["/obrazky/postava-obce-tgm.webp", "/obrazky/postava-obce-valecny.webp", "/obrazky/postava-obce-hrobka.webp", "/obrazky/postava-obce-kriz.webp"] }
+    nahrobky: { src: "/obrazky/postava-hroby.webp?v=1014ze", w: 381, h: 900 },
+    interier: { src: "/obrazky/postava-interier.webp?v=1014ze", w: 545, h: 900 },
+    stavby: { src: "/obrazky/postava-stavby.webp?v=1014ze", w: 385, h: 900, helma: { x: 0.3818, y: -0.035, w: 0.36 } },
+    obce: { src: "/obrazky/postava-obce.webp?v=1014ze", w: 399, h: 900,
+      skici: ["/obrazky/postava-obce-tgm.webp?v=1014ze", "/obrazky/postava-obce-valecny.webp?v=1014ze", "/obrazky/postava-obce-hrobka.webp?v=1014ze", "/obrazky/postava-obce-kriz.webp?v=1014ze"] }
   };
   /* Tradice: globalni postava odejde, do sceny schodu dopadne Ales na sve puvodni misto (13. 10. 2026) */
   var scena = document.querySelector(".about__scena");
@@ -50,7 +52,7 @@
     telo.classList.toggle("is-flip", !!p.flip);
     box.style.setProperty("--pomer", p.w / p.h);
     box.style.setProperty("--vyska", p.vyska || 1);
-    if (p.helma) { box.style.setProperty("--hx", (p.flip ? 1 - p.helma.x : p.helma.x)); box.style.setProperty("--hy", p.helma.y); }
+    if (p.helma) { box.style.setProperty("--hx", p.helma.x); box.style.setProperty("--hy", p.helma.y); box.style.setProperty("--hw", p.helma.w); }
   }
   function po(ms, fn){ setTimeout(fn, klid ? 0 : ms); }
   function prepni(){
@@ -58,7 +60,7 @@
     bezi = true;
     var dalsi = cil;
     var odchod = aktualni ? 260 : 0;
-    if (aktualni) box.className = "postava is-ven";
+    if (aktualni) box.className = "postava is-ven" + (POSTAVY[aktualni].helma ? " s-helmou" : "");
     po(odchod, function(){
       if (!dalsi) { box.className = "postava"; aktualni = null; bezi = false; prepni(); return; }
       obsad(dalsi);

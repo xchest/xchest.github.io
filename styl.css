@@ -515,7 +515,7 @@ html:has(body.snap) { scroll-snap-type: y mandatory; scroll-padding-top: 0; }
 .about__schody { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
   -webkit-mask-image: linear-gradient(to right, transparent 0, #000 32%), linear-gradient(to bottom, transparent 0, #000 12%); -webkit-mask-composite: source-in;
   mask-image: linear-gradient(to right, transparent 0, #000 32%), linear-gradient(to bottom, transparent 0, #000 12%); mask-composite: intersect; opacity: .92; }
-.about__ap { position: absolute; left: 35.33%; top: 10.92%; width: 23.4%; height: auto; transform-origin: 50% 100%; opacity: 0; transform: translateY(-120vh); }
+.about__ap { position: absolute; left: 34.21%; top: 10.98%; width: 26.97%; height: auto; transform-origin: 50% 100%; opacity: 0; transform: translateY(-120vh); }
 .about__stin { position: absolute; left: 44.4%; top: 65.1%; width: 12.5%; height: 2.6%; border-radius: 50%; background: radial-gradient(closest-side, rgba(0,0,0,.42), transparent); opacity: 0; }
 .about__scena.is-dopad .about__ap { opacity: 1; animation: postava-pad .9s linear forwards; }
 .about__scena.is-dopad .about__stin { animation: tradice-stin .9s linear forwards; }
@@ -588,11 +588,12 @@ html:has(body.snap) { scroll-snap-type: y mandatory; scroll-padding-top: 0; }
 .postava__telo { height: 100%; transform-origin: 50% 100%; filter: drop-shadow(0 14px 18px rgba(0,0,0,.45)); }
 .postava__telo img { height: 100%; width: auto; display: block; }
 .postava__telo.is-flip img { transform: scaleX(-1); }
-.postava__helma { position: absolute; left: calc(var(--hx, .5) * 100%); top: calc(var(--hy, 0) * 100%); width: 24%; height: auto; transform: translate(-50%, -32%); opacity: 0; }
+.postava__helma { position: absolute; left: calc(var(--hx, .5) * 100%); top: calc(var(--hy, 0) * 100%); width: calc(var(--hw, .39) * 100%); height: auto; transform: translateX(-53%) scaleX(-1); opacity: 0; filter: drop-shadow(0 3px 4px rgba(0,0,0,.35)); }
 .postava.is-ven .postava__telo { animation: postava-skok .26s cubic-bezier(.5,0,.9,.4) forwards; }
 .postava.is-nahore .postava__telo { transform: translateY(-120vh); }
 .postava.is-dopad .postava__telo { animation: postava-pad .9s linear forwards; }
-.postava.s-helmou .postava__helma { animation: postava-helma .9s linear forwards; }
+.postava.is-dopad.s-helmou .postava__helma { animation: postava-helma .9s linear forwards; }
+.postava.is-ven.s-helmou .postava__helma { opacity: 1; animation: postava-helma-ven .26s cubic-bezier(.5,0,.9,.4) forwards; }
 @keyframes postava-skok {
   0% { transform: none; }
   30% { transform: translateY(3%) scale(1.03, .93); }
@@ -605,17 +606,23 @@ html:has(body.snap) { scroll-snap-type: y mandatory; scroll-padding-top: 0; }
   78% { transform: translateY(-1.5%) scale(.99, 1.02); }
   100% { transform: none; }
 }
+@keyframes postava-helma-ven {
+  0% { transform: translateX(-53%) scaleX(-1); opacity: 1; }
+  30% { transform: translateX(-53%) translateY(8%) scaleX(-1); opacity: 1; }
+  100% { transform: translateX(-53%) translateY(-120vh) scaleX(-1); opacity: 1; }
+}
 @keyframes postava-helma {
-  0% { transform: translate(-50%, -32%) translateY(-130vh) rotate(-200deg); opacity: 1; filter: blur(5px); animation-timing-function: cubic-bezier(.4,0,.9,.6); }
-  42% { transform: translate(-50%, -32%) translateY(-12vh) rotate(-20deg); opacity: 1; filter: blur(1px); }
-  56% { transform: translate(-50%, -32%) rotate(0); opacity: 1; filter: none; }
-  66% { opacity: 0; }
-  100% { transform: translate(-50%, -32%); opacity: 0; }
+  /* helma prileti az po dopadu tela a zustane nasazena na hlave (14. 10. 2026) */
+  0%, 60% { transform: translateX(-53%) translateY(-130vh) rotate(160deg) scaleX(-1); opacity: 1; animation-timing-function: cubic-bezier(.45,0,1,.7); }
+  86% { transform: translateX(-53%) translateY(0) rotate(0) scaleX(-1); opacity: 1; animation-timing-function: ease-out; }
+  93% { transform: translateX(-53%) translateY(-6%) rotate(-4deg) scaleX(-1); opacity: 1; }
+  100% { transform: translateX(-53%) scaleX(-1); opacity: 1; }
 }
 @media (max-width: 700px) { .postava { height: calc(min(34vh, 260px) * var(--vyska, 1)); right: 8px; } }
 @media (prefers-reduced-motion: reduce) {
   .postava .postava__telo, .postava .postava__helma { animation: none !important; transform: none; }
-  .postava__helma { display: none; }
+  .postava .postava__helma { transform: translateX(-53%) scaleX(-1); }
+  .postava.is-dopad.s-helmou .postava__helma { opacity: 1; }
   .postava { transition: opacity .3s; opacity: 0; }
   .postava.is-dopad { opacity: 1; }
 }

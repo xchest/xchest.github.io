@@ -1,12 +1,12 @@
 /* Kamenik Ales se pri scrollu prevlece podle sekce (12. 10. 2026).
-   Postava vyskoci z obrazovky nahoru a spadne zpet uz v nove podobe; u staveb mu helma dopadne na hlavu.
+   Postava vyskoci z obrazovky nahoru a spadne zpet uz v nove podobe; u staveb ma helmu nasazenou primo v obrazku (15. 10. 2026, vytka AP: prilétající helma sedela spatne).
    14. 10. 2026 (vytka AP "na kazde fotce vypadam jinak"): vsechny podoby = jedna vychozi postava, meni se jen obleceni;
    stejna vyska temeno-podrazka (900 px), osa hlavy ve stejne vzdalenosti od praveho okraje. */
 (function(){
   var POSTAVY = {
     nahrobky: { src: "/obrazky/postava-hroby.webp?v=1014ze", w: 381, h: 900 },
     interier: { src: "/obrazky/postava-interier.webp?v=1014ze", w: 545, h: 900 },
-    stavby: { src: "/obrazky/postava-stavby.webp?v=1014ze", w: 385, h: 900, helma: { x: 0.40, y: -0.055, w: 0.39 } },
+    stavby: { src: "/obrazky/postava-stavby.webp?v=1015a", w: 385, h: 901 },
     obce: { src: "/obrazky/postava-obce.webp?v=1014ze", w: 399, h: 900,
       skici: ["/obrazky/postava-obce-tgm.webp?v=1014ze", "/obrazky/postava-obce-valecny.webp?v=1014ze", "/obrazky/postava-obce-hrobka.webp?v=1014ze", "/obrazky/postava-obce-kriz.webp?v=1014ze"] }
   };
@@ -41,9 +41,9 @@
   var box = document.createElement("div");
   box.className = "postava";
   box.setAttribute("aria-hidden", "true");
-  box.innerHTML = '<div class="postava__telo"><img alt="" decoding="async"></div><img class="postava__helma" src="/obrazky/postava-helma.webp" alt="" decoding="async">';
+  box.innerHTML = '<div class="postava__telo"><img alt="" decoding="async"></div>';
   document.body.appendChild(box);
-  var telo = box.querySelector(".postava__telo"), img = telo.querySelector("img"), helma = box.querySelector(".postava__helma");
+  var telo = box.querySelector(".postava__telo"), img = telo.querySelector("img");
   ids.forEach(function(id){ var p = new Image(); p.src = POSTAVY[id].src; });
 
   /* Obce: na desce je vzdy nakreslen pamatnik, na ktery Ales prave ukazuje (vytka AP 14. 10. 2026).

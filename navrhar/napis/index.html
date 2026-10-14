@@ -17,7 +17,7 @@
   <link rel="preload" href="/fonty/manrope-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonty/instrument-serif-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/styl.css">
-  <link rel="stylesheet" href="/navrhar/navrhar.css">
+  <link rel="stylesheet" href="/navrhar/navrhar.css?v=1014r">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Domů", "item": "https://kamenictviprochazka.cz/"}, {"@type": "ListItem", "position": 2, "name": "Návrhář", "item": "https://kamenictviprochazka.cz/navrhar/"}, {"@type": "ListItem", "position": 3, "name": "Nápis", "item": "https://kamenictviprochazka.cz/navrhar/napis/"}]}</script>
 </head>
 <body>
@@ -123,6 +123,24 @@
         </fieldset>
 
         <fieldset>
+          <legend>Ornament</legend>
+          <div class="chips orns" id="ornamenty"></div>
+          <div class="ctl-row" id="ornVolby">
+            <label class="ctl"><span>Umístění</span>
+              <select id="n-ornPoz">
+                <option value="vlevo">Vlevo od nápisu</option>
+                <option value="vpravo">Vpravo od nápisu</option>
+                <option value="nahore">Nad nápisem</option>
+              </select>
+            </label>
+            <label class="ctl"><span>Výška ornamentu: <output id="o-ornV">220</output> mm</span>
+              <input type="range" id="n-ornV" min="60" max="500" step="5" value="220">
+            </label>
+          </div>
+          <p class="hint">Předlohy z naší knihovny pro pískování — provádí se stejnou technikou a barvou jako písmo. Máte-li vlastní motiv, pošlete ho s poptávkou.</p>
+        </fieldset>
+
+        <fieldset>
           <legend>Kámen desky</legend>
           <div class="chips" id="kameny"></div>
         </fieldset>
@@ -188,9 +206,10 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script src="/skript.js"></script>
-<script src="/navrhar/spolecne.js"></script>
-<script src="/navrhar/pismo.js"></script>
-<script src="/navrhar/napis.js"></script>
+<script src="/navrhar/spolecne.js?v=1014r"></script>
+<script src="/navrhar/ornamenty.js?v=1014r"></script>
+<script src="/navrhar/pismo.js?v=1014r"></script>
+<script src="/navrhar/napis.js?v=1014r"></script>
 <div class="mbar" aria-label="Rychlý kontakt"><a class="mbar__call" href="tel:+420602108793">Zavolat</a><a class="mbar__form" href="/#kontakt">Poptávka</a></div>
 </body>
 </html>

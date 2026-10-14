@@ -126,3 +126,11 @@
 .linkbtn { background: none; border: 0; color: var(--gold); text-decoration: underline; font: inherit; cursor: pointer; padding: 0 0 0 6px; }
 .ctl-row select { background: var(--bg-3); border: 1px solid rgba(194,154,100,.22); color: var(--text); padding: 8px 10px; font: inherit; font-size: .88rem; border-radius: var(--radius); }
 .drawing .bod:focus { outline: none; stroke: #fff; }
+
+/* Ornamenty (generátor nápisu) — náhledy předloh */
+.orns { grid-template-columns: repeat(4, 1fr); }
+.orns .chip label { padding: 8px 4px; }
+.orns .chip svg { width: 100%; height: 54px; }
+.orns .chip svg path { fill: currentColor; }
+.orns .chip svg path.tah { fill: none; stroke: currentColor; stroke-width: 22; }
+@media (max-width: 420px) { .orns { grid-template-columns: repeat(3, 1fr); } }

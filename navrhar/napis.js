@@ -8,9 +8,8 @@
   var g = cv.getContext('2d');
   var MAX_OSOB = 4;
   var stav = KP.normalizujNapis(KP.nacti('localStorage', 'kp_napis'));
-  /* Návaznost na konfigurátor pomníku: je-li už navržen pomník, deska nápisu = jeho stéla. */
-  var pomnik = KP.nacti('localStorage', 'kp_pomnik');
-  if (pomnik && pomnik.stelaS && pomnik.stelaV) { stav.deskaS = Math.min(pomnik.stelaS, pomnik.sirka || pomnik.stelaS); stav.deskaV = pomnik.stelaV; }
+  /* Návaznost na konfigurátor pomníku: pomnik.js při každé změně zapisuje do kp_napis skutečný rozměr stély
+     (deskaS/deskaV, vč. zúžení kvůli váze a svítilně) — zde se proto rozměr nepřepisuje. */
 
   var $ = function (id) { return document.getElementById(id); };
   var osobyEl = $('osoby');
@@ -25,6 +24,22 @@
     sw.style.backgroundSize = 'cover';
     kamenyEl.appendChild(d);
   });
+
+  /* --- ornament: náhledy předloh z knihovny (KP.ORNAMENTY) --- */
+  var ornEl = $('ornamenty');
+  function ornIkona(o) {
+    var vb = o.w > o.h ? [0, (o.h - o.w) / 2, o.w, o.w] : [(o.w - o.h) / 2, 0, o.h, o.h];
+    return '<svg viewBox="' + vb.join(' ') + '" aria-hidden="true">' + o.d.map(function (d) {
+      return '<path' + (o.tah ? ' class="tah"' : o.eo ? ' fill-rule="evenodd"' : '') + ' d="' + d + '"/>';
+    }).join('') + '</svg>';
+  }
+  [{ id: '', nazev: 'Bez ornamentu' }].concat(KP.ORNAMENTY || []).forEach(function (o) {
+    var d = document.createElement('div'); d.className = 'chip';
+    d.innerHTML = '<input type="radio" name="orn" id="o-' + (o.id || 'bez') + '" value="' + o.id + '"><label for="o-' + (o.id || 'bez') + '">' +
+      (o.d ? ornIkona(o) : '<svg viewBox="0 0 40 40" aria-hidden="true"><path class="tah" style="stroke-width:2" d="M10 10L30 30M30 10L10 30"/></svg>') + o.nazev + '</label>';
+    ornEl.appendChild(d);
+  });
+  function ornVolby() { $('ornVolby').hidden = !stav.orn; $('o-ornV').textContent = stav.ornV; }
 
   /* --- osoby --- */
   function vykresliOsoby() {
@@ -54,8 +69,8 @@
   });
 
   /* --- jednoduchá pole: id prvku → klíč stavu --- */
-  var POLE = { 'n-titul': 'titul', 'n-rodina': 'rodina', 'n-dolni': 'dolni', 'n-vyska': 'vyska', 'n-deskaS': 'deskaS', 'n-deskaV': 'deskaV', 'n-zarovnani': 'zarovnani', 'n-tvar': 'tvar' };
-  var CISELNE = { vyska: 1, deskaS: 1, deskaV: 1 };
+  var POLE = { 'n-titul': 'titul', 'n-rodina': 'rodina', 'n-dolni': 'dolni', 'n-vyska': 'vyska', 'n-deskaS': 'deskaS', 'n-deskaV': 'deskaV', 'n-zarovnani': 'zarovnani', 'n-tvar': 'tvar', 'n-ornPoz': 'ornPoz', 'n-ornV': 'ornV' };
+  var CISELNE = { vyska: 1, deskaS: 1, deskaV: 1, ornV: 1 };
   Object.keys(POLE).forEach(function (id) {
     var el = $(id), k = POLE[id];
     el.value = stav[k] != null ? stav[k] : el.value;
@@ -77,7 +92,7 @@
   $('n-verzalky').checked = stav.verzalky !== false;
   $('n-verzalky').addEventListener('change', function () { stav.verzalky = this.checked; zmena(); });
 
-  ['font', 'technika', 'kamen'].forEach(function (name) {
+  ['font', 'technika', 'kamen', 'orn'].forEach(function (name) {
     var r = document.querySelector('input[name="' + name + '"][value="' + stav[name] + '"]');
     if (r) r.checked = true;
     document.querySelectorAll('input[name="' + name + '"]').forEach(function (inp) {
@@ -187,13 +202,14 @@
 
   var ulozT;
   function zmena() {
+    ornVolby();
     kresli();
     clearTimeout(ulozT); ulozT = setTimeout(uloz, 300);
   }
   function uloz() {
     KP.uloz('localStorage', 'kp_napis', stav);
-    var p = KP.nacti('localStorage', 'kp_pomnik'); // rozměr desky předej konfigurátoru pomníku
-    if (p) { p.stelaS = stav.deskaS; p.stelaV = stav.deskaV; if (p.sirka < p.stelaS) p.sirka = p.stelaS; KP.uloz('localStorage', 'kp_pomnik', p); }
+    var p = KP.nacti('localStorage', 'kp_pomnik2'); // rozměr desky předej konfigurátoru pomníku
+    if (p) { p.stelaS = stav.deskaS; p.stelaV = stav.deskaV; KP.uloz('localStorage', 'kp_pomnik2', p); }
   }
 
   function shrnuti() {
@@ -209,6 +225,8 @@
     });
     if (stav.epitaf) r.push('Epitaf: ' + stav.epitaf);
     if ((stav.dolni || '').trim()) r.push('Dolní řádek: ' + stav.dolni);
+    var orn = KP.ornament(stav.orn);
+    if (orn) r.push('Ornament: ' + orn.nazev + ', ' + { vlevo: 'vlevo od nápisu', vpravo: 'vpravo od nápisu', nahore: 'nad nápisem' }[stav.ornPoz] + ', výška asi ' + stav.ornV + ' mm');
     r.push('Deska: ' + stav.deskaS + ' × ' + stav.deskaV + ' cm, výška písma hlavního řádku ' + stav.vyska + ' mm');
     r.push('Písmo: ' + pismo.nazev + (stav.verzalky ? ' (velká písmena)' : '') + ', provedení: ' + tech);
     r.push('Kámen: ' + k.nazev + ' (' + k.pod + '), tvar desky: ' + ({ obdelnik: 'obdélník', oblouk: 'oblouk', vlna: 'vlna' }[stav.tvar] || stav.tvar));
@@ -221,6 +239,7 @@
   $('stahnout').addEventListener('click', function () { KP.stahni(cv, 'napis-kamenictvi-prochazka.png'); KP.toast('Obrázek se stahuje — můžete ho přiložit k e-mailu.'); });
 
   vykresliOsoby();
+  ornVolby();
   kresli();
   KP.fontyPripraveny().then(kresli);
 })(window.KP);

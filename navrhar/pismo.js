@@ -47,8 +47,37 @@
     if (!(n.deskaS >= 30 && n.deskaS <= 200)) n.deskaS = d.deskaS;
     if (!(n.deskaV >= 30 && n.deskaV <= 200)) n.deskaV = d.deskaV;
     delete n.velikost;
+    // ornament z firemní knihovny předloh (AP 14. 10. 2026): id, pozice, výška v mm
+    if (!KP.ornament(n.orn)) n.orn = '';
+    if (['vlevo', 'vpravo', 'nahore'].indexOf(n.ornPoz) < 0) n.ornPoz = 'vlevo';
+    if (!(n.ornV >= ORN_MIN && n.ornV <= ORN_MAX)) n.ornV = 220;
     return n;
   };
+
+  var ORN_MIN = 60, ORN_MAX = 500;
+  KP.ORN_MIN = ORN_MIN; KP.ORN_MAX = ORN_MAX;
+  KP.ornament = function (id) {
+    return id && (KP.ORNAMENTY || []).filter(function (o) { return o.id === id; })[0] || null;
+  };
+  var ornCesty = {};
+  /* Vykreslí ornament do boxu (x, y, w, h) — zachová poměr stran, barva = provedení písma. */
+  function kresliOrnament(g, o, x, y, w, h, technika, kamen) {
+    var s = Math.min(w / o.w, h / o.h);
+    if (!(s > 0)) return;
+    var p = ornCesty[o.id] || (ornCesty[o.id] = o.d.map(function (d) { return new Path2D(d); }));
+    g.save();
+    g.translate(x + (w - o.w * s) / 2, y + (h - o.h * s) / 2);
+    g.scale(s, s);
+    var barva = vypln(g, technika, kamen, 0, o.h);
+    if (o.tah) {
+      g.strokeStyle = barva; g.lineWidth = o.tah; g.lineJoin = g.lineCap = 'round';
+      p.forEach(function (c) { g.stroke(c); });
+    } else {
+      g.fillStyle = barva;
+      p.forEach(function (c) { g.fill(c, o.eo ? 'evenodd' : 'nonzero'); });
+    }
+    g.restore();
+  }
 
   /* Webové náhrady se do canvasu dostanou až po načtení — počkej na ně (vč. české diakritiky). */
   KP.fontyPripraveny = function () {
@@ -136,6 +165,21 @@
      a vrací rozbor místa; bez měřítka nápis jen vyplní box. */
   KP.kresliText = function (g, n, box) {
     var kamen = KP.kamen(n.kamen);
+    var orn = KP.ornament(n.orn);
+    if (orn) { // ornament si vezme pruh desky (vlevo/vpravo/nahoře), nápis se vysází do zbytku
+      var mez = Math.min(box.w, box.h) * 0.05;
+      var oh = box.pxmm ? n.ornV * box.pxmm : box.h * 0.45, ow;
+      if (n.ornPoz === 'nahore') {
+        oh = Math.min(oh, box.h * 0.6); ow = Math.min(box.w, oh * orn.w / orn.h); oh = ow * orn.h / orn.w;
+        kresliOrnament(g, orn, box.x + (box.w - ow) / 2, box.y, ow, oh, n.technika, kamen);
+        box = { x: box.x, y: box.y + oh + mez, w: box.w, h: box.h - oh - mez, pxmm: box.pxmm };
+      } else {
+        oh = Math.min(oh, box.h); ow = Math.min(oh * orn.w / orn.h, box.w * 0.45); oh = ow * orn.h / orn.w;
+        var ox = n.ornPoz === 'vpravo' ? box.x + box.w - ow : box.x;
+        kresliOrnament(g, orn, ox, box.y, ow, oh, n.technika, kamen); // osově s horním okrajem nápisu (jména)
+        box = { x: n.ornPoz === 'vpravo' ? box.x : box.x + ow + mez, y: box.y, w: box.w - ow - mez, h: box.h, pxmm: box.pxmm };
+      }
+    }
     var r = radky(n), vse = r.horni.concat(r.dolni);
     var info = { vyska: n.vyska, pouzito: n.vyska, vejdeSe: true, volnoMm: null, pripisMm: null };
     if (!vse.length) return info;

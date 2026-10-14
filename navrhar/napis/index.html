@@ -17,7 +17,7 @@
   <link rel="preload" href="/fonty/manrope-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonty/instrument-serif-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/styl.css">
-  <link rel="stylesheet" href="/navrhar/navrhar.css?v=1014t">
+  <link rel="stylesheet" href="/navrhar/navrhar.css?v=1014u">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Domů", "item": "https://kamenictviprochazka.cz/"}, {"@type": "ListItem", "position": 2, "name": "Návrhář", "item": "https://kamenictviprochazka.cz/navrhar/"}, {"@type": "ListItem", "position": 3, "name": "Nápis", "item": "https://kamenictviprochazka.cz/navrhar/napis/"}]}</script>
 </head>
 <body>
@@ -49,13 +49,14 @@
 
 <main class="tool">
   <div class="container">
-    <p class="tool__intro">Napište jména a data, vyberte kámen, písmo a techniku provedení. Náhled je orientační — přesné rozvržení písma, velikost liter a cenu vám připravíme v nezávazné nabídce.</p>
+    <p class="tool__intro">Postupujte ve třech krocích: napište text a vyberte písmo, potom tvar desky, ornament a rozvržení, nakonec kámen a barvu písma. Náhled je orientační — přesné rozvržení písma, velikost liter a cenu vám připravíme v nezávazné nabídce.</p>
 
     <div class="tool__grid tool__grid--napis">
       <form class="panel panel--sekce" id="napisForm" autocomplete="off">
         <details class="sekce" name="sekce" id="sek-text" open>
-          <summary><span class="sekce__nazev">Text nápisu a epitaf</span><span class="sekce__stav" id="st-text"></span></summary>
+          <summary><span class="sekce__nazev">1 · Text a písmo</span><span class="sekce__stav"><span id="st-text"></span> · <span id="st-pismo"></span></span></summary>
           <div class="sekce__obsah">
+          <h3 class="sekce__pod">Text nápisu a epitaf</h3>
           <div class="ctl-row">
             <label class="ctl"><span>Záhlaví</span>
               <input type="text" id="n-titul" maxlength="30" placeholder="např. Rodina">
@@ -84,11 +85,7 @@
           <label class="ctl" id="epitafVlastni" hidden><span>Vlastní epitaf</span>
             <input type="text" id="n-epitaf" maxlength="70">
           </label>
-          </div>
-        </details>
-        <details class="sekce" name="sekce" id="sek-pismo">
-          <summary><span class="sekce__nazev">Písmo a místo na desce</span><span class="sekce__stav" id="st-pismo"></span></summary>
-          <div class="sekce__obsah">
+          <h3 class="sekce__pod">Písmo</h3>
           <div class="chips" role="radiogroup" aria-label="Písmo">
             <div class="chip"><input type="radio" name="font" id="f1" value="gloucester" checked><label for="f1"><span class="fontdemo" style="font-family:'Gloucester MT Pro','Gloucester MT Pro Bold ExtCond','Gloucester MT Extra Condensed','Sorts Mill Goudy',serif">Aa</span>Gloucester</label></div>
             <div class="chip"><input type="radio" name="font" id="f2" value="futura"><label for="f2"><span class="fontdemo" style="font-family:'Futura Md BT','Futura BT',Futura,Jost,sans-serif;font-weight:500">Aa</span>Futura (bezpatkové)</label></div>
@@ -97,60 +94,12 @@
           </div>
           <p class="hint">Písma, kterými nápisy skutečně sázíme. Nemáte-li je v počítači, náhled použije nejbližší volné písmo — nápis na kameni vysázíme v originále.</p>
           <label class="ctl-check" style="margin-top:12px"><input type="checkbox" id="n-verzalky" checked> Velkými písmeny (verzálky)</label>
-          <label class="ctl" style="margin-top:8px"><span>Výška písma hlavního řádku: <output id="o-vyska">40</output> mm</span>
-            <input type="range" id="n-vyska" min="25" max="90" step="1" value="40">
-          </label>
-          <div class="sizeinfo" id="vyskaInfo" aria-live="polite"></div>
-          <p class="hint" style="margin-bottom:12px">Z naší výroby: jména obvykle 40–50 mm, data 25–30 mm, RODINA kolem 45–50 mm, dolní řádek „Z …“ kolem 30 mm. Na rodinné desce volte písmo tak, aby pod nápisem zůstalo místo na přípis dalších jmen <em>stejnou velikostí</em> — menší přípis na stejné desce nevypadá dobře.</p>
-          <label class="ctl"><span>Zarovnání</span>
-            <select id="n-zarovnani">
-              <option value="center">Na střed</option>
-              <option value="left">Vlevo</option>
-            </select>
-          </label>
-          </div>
-        </details>
-        <details class="sekce" name="sekce" id="sek-provedeni">
-          <summary><span class="sekce__nazev">Provedení písma</span><span class="sekce__stav" id="st-provedeni"></span></summary>
-          <div class="sekce__obsah">
-          <div class="chips">
-            <div class="chip"><input type="radio" name="technika" id="t1" value="zlato" checked><label for="t1"><span class="swatch" style="background:linear-gradient(135deg,#8a6a2c,#f3d98c,#a07a32)"></span>Pískované, zlacené</label></div>
-            <div class="chip"><input type="radio" name="technika" id="t2" value="stribro"><label for="t2"><span class="swatch" style="background:linear-gradient(135deg,#7d8186,#eef0f2,#8c9095)"></span>Pískované, stříbřené</label></div>
-            <div class="chip"><input type="radio" name="technika" id="t3" value="bila"><label for="t3"><span class="swatch" style="background:#e9e7e2"></span>Pískované, bílá barva</label></div>
-            <div class="chip"><input type="radio" name="technika" id="t4" value="hloubene"><label for="t4"><span class="swatch" style="background:#2b2b2b"></span>Pískované bez barvy</label></div>
-          </div>
           </div>
         </details>
         <details class="sekce" name="sekce" id="sek-orn">
-          <summary><span class="sekce__nazev">Ornament</span><span class="sekce__stav" id="st-orn"></span></summary>
+          <summary><span class="sekce__nazev">2 · Tvar, ornament a rozvržení</span><span class="sekce__stav"><span id="st-deska"></span> · <span id="st-orn"></span></span></summary>
           <div class="sekce__obsah">
-          <div class="chips orns" id="ornamenty"></div>
-          <div id="ornVolby">
-            <div class="ctl"><span>Umístění</span>
-              <div class="chips chips--seg" role="radiogroup" aria-label="Umístění ornamentu">
-                <div class="chip"><input type="radio" name="ornPoz" id="op1" value="vlevo"><label for="op1">Vlevo</label></div>
-                <div class="chip"><input type="radio" name="ornPoz" id="op2" value="vpravo"><label for="op2">Vpravo</label></div>
-                <div class="chip"><input type="radio" name="ornPoz" id="op3" value="nahore"><label for="op3">Nad nápisem</label></div>
-                <div class="chip"><input type="radio" name="ornPoz" id="op4" value="pod"><label for="op4">Pod nápisem</label></div>
-                <div class="chip"><input type="radio" name="ornPoz" id="op5" value="dole"><label for="op5">Dole</label></div>
-              </div>
-            </div>
-                        <label class="ctl"><span>Výška ornamentu: <output id="o-ornV">220</output> mm</span>
-              <input type="range" id="n-ornV" min="60" max="500" step="5" value="220">
-            </label>
-          </div>
-          <p class="hint">Předlohy z naší knihovny pro pískování — provádí se stejnou technikou a barvou jako písmo. Máte-li vlastní motiv, pošlete ho s poptávkou.</p>
-          </div>
-        </details>
-        <details class="sekce" name="sekce" id="sek-kamen">
-          <summary><span class="sekce__nazev">Kámen</span><span class="sekce__stav" id="st-kamen"></span></summary>
-          <div class="sekce__obsah">
-          <div class="chips" id="kameny"></div>
-          </div>
-        </details>
-        <details class="sekce" name="sekce" id="sek-deska">
-          <summary><span class="sekce__nazev">Rozměr a tvar desky</span><span class="sekce__stav" id="st-deska"></span></summary>
-          <div class="sekce__obsah">
+          <h3 class="sekce__pod">Rozměr a tvar desky</h3>
           <div class="ctl-row">
             <label class="ctl"><span>Šířka (cm)</span>
               <input type="number" id="n-deskaS" min="30" max="200" step="1" inputmode="numeric">
@@ -173,6 +122,49 @@
                 <option value="vlna">Vlna</option>
               </select>
             </label>
+          </div>
+          <h3 class="sekce__pod">Ornament</h3>
+          <div class="chips orns" id="ornamenty"></div>
+          <div id="ornVolby">
+            <div class="ctl"><span>Umístění</span>
+              <div class="chips chips--seg" role="radiogroup" aria-label="Umístění ornamentu">
+                <div class="chip"><input type="radio" name="ornPoz" id="op1" value="vlevo"><label for="op1">Vlevo</label></div>
+                <div class="chip"><input type="radio" name="ornPoz" id="op2" value="vpravo"><label for="op2">Vpravo</label></div>
+                <div class="chip"><input type="radio" name="ornPoz" id="op3" value="nahore"><label for="op3">Nad nápisem</label></div>
+                <div class="chip"><input type="radio" name="ornPoz" id="op4" value="pod"><label for="op4">Pod nápisem</label></div>
+                <div class="chip"><input type="radio" name="ornPoz" id="op5" value="dole"><label for="op5">Dole</label></div>
+              </div>
+            </div>
+                        <label class="ctl"><span>Výška ornamentu: <output id="o-ornV">220</output> mm</span>
+              <input type="range" id="n-ornV" min="60" max="500" step="5" value="220">
+            </label>
+          </div>
+          <p class="hint">Předlohy z naší knihovny pro pískování — provádí se stejnou technikou a barvou jako písmo. Máte-li vlastní motiv, pošlete ho s poptávkou.</p>
+          <h3 class="sekce__pod">Velikost a poloha písma</h3>
+          <label class="ctl" style="margin-top:8px"><span>Výška písma hlavního řádku: <output id="o-vyska">40</output> mm</span>
+            <input type="range" id="n-vyska" min="25" max="90" step="1" value="40">
+          </label>
+          <div class="sizeinfo" id="vyskaInfo" aria-live="polite"></div>
+          <p class="hint" style="margin-bottom:12px">Z naší výroby: jména obvykle 40–50 mm, data 25–30 mm, RODINA kolem 45–50 mm, dolní řádek „Z …“ kolem 30 mm. Na rodinné desce volte písmo tak, aby pod nápisem zůstalo místo na přípis dalších jmen <em>stejnou velikostí</em> — menší přípis na stejné desce nevypadá dobře.</p>
+          <label class="ctl"><span>Zarovnání</span>
+            <select id="n-zarovnani">
+              <option value="center">Na střed</option>
+              <option value="left">Vlevo</option>
+            </select>
+          </label>
+          </div>
+        </details>
+        <details class="sekce" name="sekce" id="sek-kamen">
+          <summary><span class="sekce__nazev">3 · Kámen a barva písma</span><span class="sekce__stav"><span id="st-kamen"></span> · <span id="st-provedeni"></span></span></summary>
+          <div class="sekce__obsah">
+          <h3 class="sekce__pod">Kámen</h3>
+          <div class="chips" id="kameny"></div>
+          <h3 class="sekce__pod">Barva a provedení písma</h3>
+          <div class="chips">
+            <div class="chip"><input type="radio" name="technika" id="t1" value="zlato" checked><label for="t1"><span class="swatch" style="background:linear-gradient(135deg,#8a6a2c,#f3d98c,#a07a32)"></span>Pískované, zlacené</label></div>
+            <div class="chip"><input type="radio" name="technika" id="t2" value="stribro"><label for="t2"><span class="swatch" style="background:linear-gradient(135deg,#7d8186,#eef0f2,#8c9095)"></span>Pískované, stříbřené</label></div>
+            <div class="chip"><input type="radio" name="technika" id="t3" value="bila"><label for="t3"><span class="swatch" style="background:#e9e7e2"></span>Pískované, bílá barva</label></div>
+            <div class="chip"><input type="radio" name="technika" id="t4" value="hloubene"><label for="t4"><span class="swatch" style="background:#2b2b2b"></span>Pískované bez barvy</label></div>
           </div>
           </div>
         </details>
@@ -231,10 +223,10 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script src="/skript.js"></script>
-<script src="/navrhar/spolecne.js?v=1014t"></script>
-<script src="/navrhar/ornamenty.js?v=1014t"></script>
-<script src="/navrhar/pismo.js?v=1014t"></script>
-<script src="/navrhar/napis.js?v=1014t"></script>
+<script src="/navrhar/spolecne.js?v=1014u"></script>
+<script src="/navrhar/ornamenty.js?v=1014u"></script>
+<script src="/navrhar/pismo.js?v=1014u"></script>
+<script src="/navrhar/napis.js?v=1014u"></script>
 <div class="mbar" aria-label="Rychlý kontakt"><a class="mbar__call" href="tel:+420602108793">Zavolat</a><a class="mbar__form" href="/#kontakt">Poptávka</a></div>
 </body>
 </html>

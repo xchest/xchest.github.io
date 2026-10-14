@@ -29,7 +29,7 @@ window.KP = (function () {
   /* Fotky celých desek ze skladu (srovnané, ořezané): rozměr záběru ve skutečnosti [šířka, výška] mm.
      Deska je větší než kterýkoliv kus hrobu → jedna fotka ve skutečném měřítku, nic se neopakuje ani nezrcadlí. */
   var FOTO = { regal: [3133, 1942], impala: [3143, 1892], aurora: [3298, 1882], vizag: [3143, 1982], viscont: [3298, 1922] };
-  var VERZE = '1014t', fotky = {}, cekaji = [], nacteno = false;
+  var VERZE = '1014u', fotky = {}, cekaji = [], nacteno = false;
   function fotoUrl(id) { id = kamenId(id); return FOTO[id] ? '/obrazky/kameny/' + id + '.webp?v=' + VERZE : ''; }
   function fotoMm(id) { var f = FOTO[kamenId(id)]; return f ? f[0] : 0; }
   function fotoRozmer(id) { return FOTO[kamenId(id)] || null; }

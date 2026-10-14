@@ -5,8 +5,8 @@
 window.KP = (function () {
   'use strict';
 
-  /* Materiály, se kterými pracujeme. Barvy změřené z fotografií vzorků — vzhled je ilustrační
-     procedurální textura, ne fotka konkrétní desky. */
+  /* Materiály, se kterými pracujeme. Vzhled = fotografie vzorku (obrazky/kameny/<id>.webp);
+     procedurální textura z barev vzorku jen jako náhrada, dokud se fotka nenačte (nebo chybí). */
   var KAMENY = [
     { id: 'zimbabwe', nazev: 'Nero Assoluto', pod: 'černá žula, Zimbabwe', base: '#192222', specks: ['#101718', '#141c1c', '#1c2524', '#1e2726'], hustota: 0.5, svetly: false },
     { id: 'premium', nazev: 'Premium Black', pod: 'černá žula', base: '#202125', specks: ['#18181b', '#1d1d21', '#26272b', '#2c2d31'], hustota: 0.45, svetly: false },
@@ -33,12 +33,58 @@ window.KP = (function () {
   }
   function hash(str) { var h = 2166136261; for (var i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
 
+  /* Fotky vzorků: fotoMm = přibližná šířka záběru ve skutečnosti (mm) → měřítko zrna na desce. */
+  var FOTO = { zimbabwe: 1500, premium: 600, galaxy: 600, impala: 1500, azul: 1500, cinza: 600, delycatus: 1500, olive: 600, vizag: 1500, multired: 1500, vanga: 1500, imperial: 1500, pedro: 600, moleanos: 300 };
+  var VERZE = '1014s', fotky = {}, cekaji = [], nacteno = false;
+  function fotoUrl(id) { return FOTO[id] ? '/obrazky/kameny/' + id + '.webp?v=' + VERZE : ''; }
+  function fotoMm(id) { return FOTO[id] || 0; }
+  function fotka(id) { var im = fotky[id]; return im && im.complete && im.naturalWidth ? im : null; }
+  /* Načte všechny fotky; po načtení zahodí procedurální cache a zavolá cb (překreslení). */
+  function nactiFotky(cb) {
+    if (cb) { if (nacteno) { cb(); return; } cekaji.push(cb); }
+    if (nactiFotky.bezi) return; nactiFotky.bezi = true;
+    var ids = Object.keys(FOTO), zbyva = ids.length;
+    ids.forEach(function (id) {
+      var im = new Image();
+      im.onload = im.onerror = function () {
+        if (--zbyva) return;
+        nacteno = true; cache = {}; zrc = {};
+        var c = cekaji; cekaji = []; c.forEach(function (f) { try { f(); } catch (e) { console.error(e); } });
+      };
+      im.src = fotoUrl(id); fotky[id] = im;
+    });
+  }
+  /* Zrcadlená dlaždice 2× (bez švů při opakování). */
+  var zrc = {};
+  function zrcadlo(id) {
+    if (zrc[id]) return zrc[id];
+    var im = fotka(id); if (!im) return null;
+    var w = im.naturalWidth, h = im.naturalHeight, c = document.createElement('canvas');
+    c.width = w * 2; c.height = h * 2;
+    var g = c.getContext('2d');
+    [[1, 1, 0, 0], [-1, 1, 2 * w, 0], [1, -1, 0, 2 * h], [-1, -1, 2 * w, 2 * h]].forEach(function (t) {
+      g.setTransform(t[0], 0, 0, t[1], t[2], t[3]); g.drawImage(im, 0, 0);
+    });
+    zrc[id] = c; return c;
+  }
+
   var cache = {};
-  /* Vrátí canvas s texturou kamene (dlaždice size × size). */
+  /* Vrátí canvas s texturou kamene (dlaždice size × size): fotka, jinak procedurální náhrada. */
   function textura(id, size) {
     size = size || 512;
     var key = id + '@' + size;
     if (cache[key]) return cache[key];
+    var im = fotka(id);
+    if (im) {
+      var fc = document.createElement('canvas'); fc.width = fc.height = size;
+      var m = Math.min(im.naturalWidth, im.naturalHeight), half = size / 2, fg = fc.getContext('2d');
+      var sx = (im.naturalWidth - m) / 2, sy = (im.naturalHeight - m) / 2;
+      // čtvercový výřez zrcadlený do 2×2 → dlaždice bez švů
+      [[1, 1, 0, 0], [-1, 1, size, 0], [1, -1, 0, size], [-1, -1, size, size]].forEach(function (t) {
+        fg.setTransform(t[0], 0, 0, t[1], t[2], t[3]); fg.drawImage(im, sx, sy, m, m, 0, 0, half, half);
+      });
+      cache[key] = fc; return fc;
+    }
     var k = kamen(id), c = document.createElement('canvas');
     c.width = c.height = size;
     var g = c.getContext('2d'), rnd = prng(hash(key));
@@ -115,5 +161,5 @@ window.KP = (function () {
     return { titul: 'Rodina', rodina: 'Novákova', osoby: [{ jmeno: 'Jan Novák', narozen: '12. 3. 1935', umrti: '4. 6. 2024' }], dolni: 'z Českého Brodu', datum: 'znaky', epitaf: '', font: 'gloucester', technika: 'zlato', kamen: 'zimbabwe', verzalky: true, vyska: 40, deskaS: 55, deskaV: 75, zarovnani: 'center', tvar: 'obdelnik' };
   }
 
-  return { KAMENY: KAMENY, kamen: kamen, textura: textura, prng: prng, hexA: hexA, uloz: uloz, nacti: nacti, toast: toast, doPoptavky: doPoptavky, stahni: stahni, datumText: datumText, vychoziNapis: vychoziNapis };
+  return { KAMENY: KAMENY, kamen: kamen, textura: textura, fotoUrl: fotoUrl, fotoMm: fotoMm, fotka: fotka, nactiFotky: nactiFotky, zrcadlo: zrcadlo, prng: prng, hexA: hexA, uloz: uloz, nacti: nacti, toast: toast, doPoptavky: doPoptavky, stahni: stahni, datumText: datumText, vychoziNapis: vychoziNapis };
 })();

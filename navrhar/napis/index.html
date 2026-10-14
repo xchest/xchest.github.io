@@ -17,7 +17,7 @@
   <link rel="preload" href="/fonty/manrope-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonty/instrument-serif-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/styl.css">
-  <link rel="stylesheet" href="/navrhar/navrhar.css?v=1014r">
+  <link rel="stylesheet" href="/navrhar/navrhar.css?v=1014s">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Domů", "item": "https://kamenictviprochazka.cz/"}, {"@type": "ListItem", "position": 2, "name": "Návrhář", "item": "https://kamenictviprochazka.cz/navrhar/"}, {"@type": "ListItem", "position": 3, "name": "Nápis", "item": "https://kamenictviprochazka.cz/navrhar/napis/"}]}</script>
 </head>
 <body>
@@ -51,10 +51,11 @@
   <div class="container">
     <p class="tool__intro">Napište jména a data, vyberte kámen, písmo a techniku provedení. Náhled je orientační — přesné rozvržení písma, velikost liter a cenu vám připravíme v nezávazné nabídce.</p>
 
-    <div class="tool__grid">
-      <form class="panel" id="napisForm" autocomplete="off">
-        <fieldset>
-          <legend>Text nápisu</legend>
+    <div class="tool__grid tool__grid--napis">
+      <form class="panel panel--sekce" id="napisForm" autocomplete="off">
+        <details class="sekce" name="sekce" id="sek-text" open>
+          <summary><span class="sekce__nazev">Text nápisu a epitaf</span><span class="sekce__stav" id="st-text"></span></summary>
+          <div class="sekce__obsah">
           <div class="ctl-row">
             <label class="ctl"><span>Záhlaví</span>
               <input type="text" id="n-titul" maxlength="30" placeholder="např. Rodina">
@@ -69,11 +70,7 @@
             <input type="text" id="n-dolni" maxlength="40" placeholder="např. z Českého Brodu">
           </label>
           <p class="hint">Obvyklá rodinná deska: RODINA / NOVÁKOVA / Z ČESKÉHO BRODU. Jména a data osob můžete doplnit, nebo nechat místo na pozdější přípis.</p>
-        </fieldset>
-
-        <fieldset>
-          <legend>Epitaf</legend>
-          <label class="ctl"><span>Rychlá volba</span>
+          <label class="ctl" style="margin-top:14px"><span>Epitaf</span>
             <select id="n-epitafPreset">
               <option value="">— bez epitafu —</option>
               <option>Odpočívejte v pokoji</option>
@@ -87,10 +84,11 @@
           <label class="ctl" id="epitafVlastni" hidden><span>Vlastní epitaf</span>
             <input type="text" id="n-epitaf" maxlength="70">
           </label>
-        </fieldset>
-
-        <fieldset>
-          <legend>Písmo</legend>
+          </div>
+        </details>
+        <details class="sekce" name="sekce" id="sek-pismo">
+          <summary><span class="sekce__nazev">Písmo a místo na desce</span><span class="sekce__stav" id="st-pismo"></span></summary>
+          <div class="sekce__obsah">
           <div class="chips" role="radiogroup" aria-label="Písmo">
             <div class="chip"><input type="radio" name="font" id="f1" value="gloucester" checked><label for="f1"><span class="fontdemo" style="font-family:'Gloucester MT Pro','Gloucester MT Pro Bold ExtCond','Gloucester MT Extra Condensed','Sorts Mill Goudy',serif">Aa</span>Gloucester</label></div>
             <div class="chip"><input type="radio" name="font" id="f2" value="futura"><label for="f2"><span class="fontdemo" style="font-family:'Futura Md BT','Futura BT',Futura,Jost,sans-serif;font-weight:500">Aa</span>Futura (bezpatkové)</label></div>
@@ -110,43 +108,49 @@
               <option value="left">Vlevo</option>
             </select>
           </label>
-        </fieldset>
-
-        <fieldset>
-          <legend>Provedení písma</legend>
+          </div>
+        </details>
+        <details class="sekce" name="sekce" id="sek-provedeni">
+          <summary><span class="sekce__nazev">Provedení písma</span><span class="sekce__stav" id="st-provedeni"></span></summary>
+          <div class="sekce__obsah">
           <div class="chips">
             <div class="chip"><input type="radio" name="technika" id="t1" value="zlato" checked><label for="t1"><span class="swatch" style="background:linear-gradient(135deg,#8a6a2c,#f3d98c,#a07a32)"></span>Pískované, zlacené</label></div>
             <div class="chip"><input type="radio" name="technika" id="t2" value="stribro"><label for="t2"><span class="swatch" style="background:linear-gradient(135deg,#7d8186,#eef0f2,#8c9095)"></span>Pískované, stříbřené</label></div>
             <div class="chip"><input type="radio" name="technika" id="t3" value="bila"><label for="t3"><span class="swatch" style="background:#e9e7e2"></span>Pískované, bílá barva</label></div>
             <div class="chip"><input type="radio" name="technika" id="t4" value="hloubene"><label for="t4"><span class="swatch" style="background:#2b2b2b"></span>Pískované bez barvy</label></div>
           </div>
-        </fieldset>
-
-        <fieldset>
-          <legend>Ornament</legend>
+          </div>
+        </details>
+        <details class="sekce" name="sekce" id="sek-orn">
+          <summary><span class="sekce__nazev">Ornament</span><span class="sekce__stav" id="st-orn"></span></summary>
+          <div class="sekce__obsah">
           <div class="chips orns" id="ornamenty"></div>
-          <div class="ctl-row" id="ornVolby">
-            <label class="ctl"><span>Umístění</span>
-              <select id="n-ornPoz">
-                <option value="vlevo">Vlevo od nápisu</option>
-                <option value="vpravo">Vpravo od nápisu</option>
-                <option value="nahore">Nad nápisem</option>
-              </select>
-            </label>
-            <label class="ctl"><span>Výška ornamentu: <output id="o-ornV">220</output> mm</span>
+          <div id="ornVolby">
+            <div class="ctl"><span>Umístění</span>
+              <div class="chips chips--seg" role="radiogroup" aria-label="Umístění ornamentu">
+                <div class="chip"><input type="radio" name="ornPoz" id="op1" value="vlevo"><label for="op1">Vlevo</label></div>
+                <div class="chip"><input type="radio" name="ornPoz" id="op2" value="vpravo"><label for="op2">Vpravo</label></div>
+                <div class="chip"><input type="radio" name="ornPoz" id="op3" value="nahore"><label for="op3">Nad nápisem</label></div>
+                <div class="chip"><input type="radio" name="ornPoz" id="op4" value="pod"><label for="op4">Pod nápisem</label></div>
+                <div class="chip"><input type="radio" name="ornPoz" id="op5" value="dole"><label for="op5">Dole</label></div>
+              </div>
+            </div>
+                        <label class="ctl"><span>Výška ornamentu: <output id="o-ornV">220</output> mm</span>
               <input type="range" id="n-ornV" min="60" max="500" step="5" value="220">
             </label>
           </div>
           <p class="hint">Předlohy z naší knihovny pro pískování — provádí se stejnou technikou a barvou jako písmo. Máte-li vlastní motiv, pošlete ho s poptávkou.</p>
-        </fieldset>
-
-        <fieldset>
-          <legend>Kámen desky</legend>
+          </div>
+        </details>
+        <details class="sekce" name="sekce" id="sek-kamen">
+          <summary><span class="sekce__nazev">Kámen</span><span class="sekce__stav" id="st-kamen"></span></summary>
+          <div class="sekce__obsah">
           <div class="chips" id="kameny"></div>
-        </fieldset>
-
-        <fieldset>
-          <legend>Deska</legend>
+          </div>
+        </details>
+        <details class="sekce" name="sekce" id="sek-deska">
+          <summary><span class="sekce__nazev">Rozměr a tvar desky</span><span class="sekce__stav" id="st-deska"></span></summary>
+          <div class="sekce__obsah">
           <div class="ctl-row">
             <label class="ctl"><span>Šířka (cm)</span>
               <input type="number" id="n-deskaS" min="30" max="200" step="1" inputmode="numeric">
@@ -170,19 +174,40 @@
               </select>
             </label>
           </div>
-        </fieldset>
+          </div>
+        </details>
       </form>
 
       <div class="stage">
-        <div class="stage__frame">
-          <canvas id="napisCanvas" width="1200" height="1500" role="img" aria-label="Náhled nápisu na náhrobní desce"></canvas>
+        <div class="stage__wrap">
+          <div class="stage__frame">
+            <canvas id="napisCanvas" width="1200" height="1500" role="img" aria-label="Náhled nápisu na náhrobní desce"></canvas>
+          </div>
+          <div class="lista" id="lista" role="toolbar" aria-label="Posun a otočení">
+            <div class="lista__cil" role="radiogroup" aria-label="Co upravit">
+              <button type="button" class="lista__btn is-on" data-cil="txt" aria-pressed="true">Nápis</button>
+              <button type="button" class="lista__btn" data-cil="orn" aria-pressed="false">Ornament</button>
+            </div>
+            <button type="button" class="lista__btn" data-akce="stred" title="Vycentrovat na desce">Na střed</button>
+            <div class="lista__sipky">
+              <span></span><button type="button" class="lista__btn" data-akce="nahoru" aria-label="Posunout nahoru">↑</button><span></span>
+              <button type="button" class="lista__btn" data-akce="vlevo" aria-label="Posunout vlevo">←</button><button type="button" class="lista__btn" data-akce="dolu" aria-label="Posunout dolů">↓</button><button type="button" class="lista__btn" data-akce="vpravo" aria-label="Posunout vpravo">→</button>
+            </div>
+            <div class="lista__rot">
+              <button type="button" class="lista__btn" data-akce="rotL" aria-label="Otočit doleva">↺</button>
+              <output id="o-rot">0°</output>
+              <button type="button" class="lista__btn" data-akce="rotP" aria-label="Otočit doprava">↻</button>
+            </div>
+            <button type="button" class="lista__btn lista__btn--ghost" data-akce="reset" title="Vrátit do výchozí polohy">Výchozí</button>
+            <p class="lista__tip">Nápis i ornament můžete chytit myší a posunout přímo na desce.</p>
+          </div>
         </div>
         <div class="stage__actions">
           <button type="button" class="btn btn--gold" id="poslatPoptavku">Poslat v poptávce</button>
           <a class="btn btn--outline" href="/navrhar/pomnik/" id="doPomniku">Použít na pomníku</a>
           <button type="button" class="btn btn--outline" id="stahnout">Stáhnout obrázek</button>
         </div>
-        <p class="stage__note"><strong>Orientační náhled.</strong> Struktura kamene je ilustrační, skutečná deska má vlastní kresbu. Nápis zůstává jen ve vašem prohlížeči — nikam se neodesílá, dokud sami nepošlete poptávku.</p>
+        <p class="stage__note"><strong>Orientační náhled.</strong> Kámen je zobrazen podle fotografie vzorku, skutečná deska má vlastní kresbu. Nápis zůstává jen ve vašem prohlížeči — nikam se neodesílá, dokud sami nepošlete poptávku.</p>
       </div>
     </div>
   </div>
@@ -206,10 +231,10 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script src="/skript.js"></script>
-<script src="/navrhar/spolecne.js?v=1014r"></script>
-<script src="/navrhar/ornamenty.js?v=1014r"></script>
-<script src="/navrhar/pismo.js?v=1014r"></script>
-<script src="/navrhar/napis.js?v=1014r"></script>
+<script src="/navrhar/spolecne.js?v=1014s"></script>
+<script src="/navrhar/ornamenty.js?v=1014s"></script>
+<script src="/navrhar/pismo.js?v=1014s"></script>
+<script src="/navrhar/napis.js?v=1014s"></script>
 <div class="mbar" aria-label="Rychlý kontakt"><a class="mbar__call" href="tel:+420602108793">Zavolat</a><a class="mbar__form" href="/#kontakt">Poptávka</a></div>
 </body>
 </html>

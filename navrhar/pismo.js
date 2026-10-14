@@ -35,7 +35,7 @@
   /* Starý uložený stav (dřívější písma, bronz, ornamenty) převede na platné hodnoty. */
   KP.normalizujNapis = function (n) {
     var d = KP.vychoziNapis();
-    if (!n || typeof n !== 'object') return d;
+    if (!n || typeof n !== 'object') n = d; // i výchozí stav projde normalizací (posuny/otočení = 0, ne undefined)
     if (n.font === 'times' || n.font === 'arial') n.font = 'futura'; // Times → Arial → Futura z firemních návrhů (AP 11. 10. 2026)
     if (!FONTY.some(function (f) { return f.id === n.font; })) n.font = d.font;
     if (['zlato', 'stribro', 'bila', 'hloubene'].indexOf(n.technika) < 0) n.technika = d.technika;
@@ -49,7 +49,10 @@
     delete n.velikost;
     // ornament z firemní knihovny předloh (AP 14. 10. 2026): id, pozice, výška v mm
     if (!KP.ornament(n.orn)) n.orn = '';
-    if (['vlevo', 'vpravo', 'nahore'].indexOf(n.ornPoz) < 0) n.ornPoz = 'vlevo';
+    if (['vlevo', 'vpravo', 'nahore', 'pod', 'dole'].indexOf(n.ornPoz) < 0) n.ornPoz = 'vlevo';
+    // posun (mm) a otočení (°) nápisu a ornamentu po desce — drag / lišta vedle náhledu
+    ['txtDx', 'txtDy', 'ornDx', 'ornDy'].forEach(function (k) { n[k] = Math.max(-2000, Math.min(2000, +n[k] || 0)); });
+    ['txtRot', 'ornRot'].forEach(function (k) { n[k] = Math.max(-180, Math.min(180, +n[k] || 0)); });
     if (!(n.ornV >= ORN_MIN && n.ornV <= ORN_MAX)) n.ornV = 220;
     return n;
   };
@@ -163,26 +166,51 @@
 
   /* Vysází nápis do box {x,y,w,h}. S box.pxmm (px na mm) sází ve skutečné velikosti n.vyska mm
      a vrací rozbor místa; bez měřítka nápis jen vyplní box. */
+  /* Posun (mm) a otočení (°) skupiny kolem jejího středu. */
+  function sTransformaci(g, bx, dx, dy, rot, fn) {
+    var cx = bx.x + bx.w / 2, cy = bx.y + bx.h / 2;
+    g.save();
+    g.translate(cx + dx, cy + dy); g.rotate(rot * Math.PI / 180); g.translate(-cx, -cy);
+    fn();
+    g.restore();
+    return { x: bx.x + dx, y: bx.y + dy, w: bx.w, h: bx.h, cx: cx + dx, cy: cy + dy, rot: rot };
+  }
+
   KP.kresliText = function (g, n, box) {
     var kamen = KP.kamen(n.kamen);
     var orn = KP.ornament(n.orn);
-    if (orn) { // ornament si vezme pruh desky (vlevo/vpravo/nahoře), nápis se vysází do zbytku
+    var mm = box.pxmm || box.w / ((n.deskaS || 55) * 10 * 0.82); // px na mm (posuny jsou v mm desky)
+    var info = { vyska: n.vyska, pouzito: n.vyska, vejdeSe: true, volnoMm: null, pripisMm: null, txtBox: null, ornBox: null };
+    var oBox = null, rezPod = 0, poz = n.ornPoz;
+    if (orn) { // ornament si vezme pruh desky, nápis se vysází do zbytku
       var mez = Math.min(box.w, box.h) * 0.05;
       var oh = box.pxmm ? n.ornV * box.pxmm : box.h * 0.45, ow;
-      if (n.ornPoz === 'nahore') {
-        oh = Math.min(oh, box.h * 0.6); ow = Math.min(box.w, oh * orn.w / orn.h); oh = ow * orn.h / orn.w;
-        kresliOrnament(g, orn, box.x + (box.w - ow) / 2, box.y, ow, oh, n.technika, kamen);
-        box = { x: box.x, y: box.y + oh + mez, w: box.w, h: box.h - oh - mez, pxmm: box.pxmm };
+      if (poz === 'nahore' || poz === 'dole' || poz === 'pod') {
+        oh = Math.min(oh, box.h * (poz === 'nahore' ? 0.6 : 0.45)); ow = Math.min(box.w, oh * orn.w / orn.h); oh = ow * orn.h / orn.w;
+        if (poz === 'nahore') {
+          oBox = { x: box.x + (box.w - ow) / 2, y: box.y, w: ow, h: oh };
+          box = { x: box.x, y: box.y + oh + mez, w: box.w, h: box.h - oh - mez, pxmm: box.pxmm };
+        } else if (poz === 'dole') { // v epitafním prostoru u spodního okraje
+          oBox = { x: box.x + (box.w - ow) / 2, y: box.y + box.h - oh, w: ow, h: oh };
+          box = { x: box.x, y: box.y, w: box.w, h: box.h - oh - mez, pxmm: box.pxmm };
+        } else { // hned pod jmény — umístí se po sazbě horního bloku
+          oBox = { x: box.x + (box.w - ow) / 2, y: 0, w: ow, h: oh };
+          rezPod = oh + mez;
+        }
       } else {
         oh = Math.min(oh, box.h); ow = Math.min(oh * orn.w / orn.h, box.w * 0.45); oh = ow * orn.h / orn.w;
-        var ox = n.ornPoz === 'vpravo' ? box.x + box.w - ow : box.x;
-        kresliOrnament(g, orn, ox, box.y, ow, oh, n.technika, kamen); // osově s horním okrajem nápisu (jména)
-        box = { x: n.ornPoz === 'vpravo' ? box.x : box.x + ow + mez, y: box.y, w: box.w - ow - mez, h: box.h, pxmm: box.pxmm };
+        oBox = { x: poz === 'vpravo' ? box.x + box.w - ow : box.x, y: box.y, w: ow, h: oh }; // osově s horním okrajem nápisu
+        box = { x: poz === 'vpravo' ? box.x : box.x + ow + mez, y: box.y, w: box.w - ow - mez, h: box.h, pxmm: box.pxmm };
       }
     }
+    function kresliOrn() {
+      if (!oBox) return;
+      info.ornBox = sTransformaci(g, oBox, (n.ornDx || 0) * mm, (n.ornDy || 0) * mm, n.ornRot || 0, function () {
+        kresliOrnament(g, orn, oBox.x, oBox.y, oBox.w, oBox.h, n.technika, kamen);
+      });
+    }
     var r = radky(n), vse = r.horni.concat(r.dolni);
-    var info = { vyska: n.vyska, pouzito: n.vyska, vejdeSe: true, volnoMm: null, pripisMm: null };
-    if (!vse.length) return info;
+    if (!vse.length) { if (poz === 'pod' && oBox) oBox.y = box.y; kresliOrn(); return info; }
     var mezeraBloku = r.horni.length && r.dolni.length ? 0.6 : 0;
     var hUnit = vyskaBloku(r.horni) + vyskaBloku(r.dolni) + mezeraBloku;
     var maxW = 0; // šířka nejdelšího řádku při hlavním řádku 100 px
@@ -191,7 +219,7 @@
       var z = nastavPismo(g, n.font, 100 * l.v, l.prol);
       maxW = Math.max(maxW, g.measureText(l.t).width * z);
     });
-    var fit = Math.min(box.h / hUnit, maxW ? box.w / (maxW / 100) : Infinity);
+    var fit = Math.min((box.h - rezPod) / hUnit, maxW ? box.w / (maxW / 100) : Infinity);
     var B;
     if (box.pxmm) {
       B = n.vyska * box.pxmm;
@@ -200,30 +228,48 @@
 
     var align = n.zarovnani === 'left' ? 'left' : 'center';
     var x = align === 'left' ? box.x : box.x + box.w / 2;
-    g.textAlign = align; g.textBaseline = 'alphabetic';
-    function sazej(lines, y) {
+    // 1) rozvržení řádků (pozice + šířky), 2) obálka skupiny, 3) kresba s posunem/otočením
+    var sazba = [];
+    function rozvrhni(lines, y) {
       lines.forEach(function (l) {
         if (l.typ === 'mezera') { y += l.v * B; return; }
         var size = l.v * B, lh = size * LH;
         var z = nastavPismo(g, n.font, size, l.prol);
-        tiskni(g, l.t, x, y + lh * 0.5 + size * 0.34, { size: size, zuzeni: z, kamen: kamen, technika: n.technika });
+        sazba.push({ l: l, y: y, size: size, lh: lh, z: z, w: g.measureText(l.t).width * z });
         y += lh;
       });
+      return y;
     }
     var hH = vyskaBloku(r.horni) * B, hD = vyskaBloku(r.dolni) * B;
+    var konecHorni;
     if (box.pxmm && r.dolni.length) {
-      sazej(r.horni, box.y);                 // horní blok od horního okraje
-      sazej(r.dolni, box.y + box.h - hD);    // dolní řádek („Z …") u spodního okraje
+      konecHorni = rozvrhni(r.horni, box.y);    // horní blok od horního okraje
+      rozvrhni(r.dolni, box.y + box.h - hD);    // dolní řádek („Z …") u spodního okraje
     } else {
-      var total = hUnit * B;
+      var total = hUnit * B + rezPod;
       var y0 = box.pxmm ? box.y : box.y + (box.h - total) * 0.42;
-      sazej(r.horni, y0);
-      sazej(r.dolni, y0 + hH + mezeraBloku * B);
+      konecHorni = rozvrhni(r.horni, y0);
+      rozvrhni(r.dolni, y0 + hH + rezPod + mezeraBloku * B);
     }
+    if (poz === 'pod' && oBox) oBox.y = konecHorni + (rezPod - oBox.h) * 0.6;
+    var x0 = Infinity, x1 = -Infinity, y0b = Infinity, y1b = -Infinity;
+    sazba.forEach(function (s) {
+      var l0 = align === 'left' ? x : x - s.w / 2;
+      x0 = Math.min(x0, l0); x1 = Math.max(x1, l0 + s.w);
+      y0b = Math.min(y0b, s.y); y1b = Math.max(y1b, s.y + s.lh);
+    });
+    kresliOrn();
+    g.textAlign = align; g.textBaseline = 'alphabetic';
+    info.txtBox = sTransformaci(g, { x: x0, y: y0b, w: x1 - x0, h: y1b - y0b }, (n.txtDx || 0) * mm, (n.txtDy || 0) * mm, n.txtRot || 0, function () {
+      sazba.forEach(function (s) {
+        nastavPismo(g, n.font, s.size, s.l.prol);
+        tiskni(g, s.l.t, x, s.y + s.lh * 0.5 + s.size * 0.34, { size: s.size, zuzeni: s.z, kamen: kamen, technika: n.technika });
+      });
+    });
     if ('letterSpacing' in g) g.letterSpacing = '0px';
     if (box.pxmm) {
       // volné místo mezi blokem nahoře a dolním řádkem; přípis = mezera + jméno + datum téže velikosti
-      info.volnoMm = Math.max(0, Math.round((box.h - hH - hD) / box.pxmm));
+      info.volnoMm = Math.max(0, Math.round((box.h - hH - hD - rezPod) / box.pxmm));
       info.pripisMm = Math.round((0.3 + r.vJm * LH + r.vJm * POMER.datum * LH) * B / box.pxmm);
     }
     return info;

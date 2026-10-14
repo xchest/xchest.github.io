@@ -20,7 +20,7 @@
     var d = document.createElement('div'); d.className = 'chip';
     d.innerHTML = '<input type="radio" name="kamen" id="k-' + k.id + '" value="' + k.id + '"><label for="k-' + k.id + '"><span class="swatch"></span>' + k.nazev + '</label>';
     var sw = d.querySelector('.swatch');
-    sw.style.backgroundImage = 'url(' + KP.textura(k.id, 128).toDataURL() + ')';
+    sw.style.backgroundImage = 'url(' + (KP.fotoUrl(k.id) || KP.textura(k.id, 128).toDataURL()) + ')'; // fotka vzorku
     sw.style.backgroundSize = 'cover';
     kamenyEl.appendChild(d);
   });
@@ -69,7 +69,7 @@
   });
 
   /* --- jednoduchá pole: id prvku → klíč stavu --- */
-  var POLE = { 'n-titul': 'titul', 'n-rodina': 'rodina', 'n-dolni': 'dolni', 'n-vyska': 'vyska', 'n-deskaS': 'deskaS', 'n-deskaV': 'deskaV', 'n-zarovnani': 'zarovnani', 'n-tvar': 'tvar', 'n-ornPoz': 'ornPoz', 'n-ornV': 'ornV' };
+  var POLE = { 'n-titul': 'titul', 'n-rodina': 'rodina', 'n-dolni': 'dolni', 'n-vyska': 'vyska', 'n-deskaS': 'deskaS', 'n-deskaV': 'deskaV', 'n-zarovnani': 'zarovnani', 'n-tvar': 'tvar', 'n-ornV': 'ornV' };
   var CISELNE = { vyska: 1, deskaS: 1, deskaV: 1, ornV: 1 };
   Object.keys(POLE).forEach(function (id) {
     var el = $(id), k = POLE[id];
@@ -92,11 +92,16 @@
   $('n-verzalky').checked = stav.verzalky !== false;
   $('n-verzalky').addEventListener('change', function () { stav.verzalky = this.checked; zmena(); });
 
-  ['font', 'technika', 'kamen', 'orn'].forEach(function (name) {
+  ['font', 'technika', 'kamen', 'orn', 'ornPoz'].forEach(function (name) {
     var r = document.querySelector('input[name="' + name + '"][value="' + stav[name] + '"]');
     if (r) r.checked = true;
     document.querySelectorAll('input[name="' + name + '"]').forEach(function (inp) {
-      inp.addEventListener('change', function () { stav[name] = inp.value; zmena(); });
+      inp.addEventListener('change', function () {
+        stav[name] = inp.value;
+        if (name === 'ornPoz' || name === 'orn') stav.ornDx = stav.ornDy = stav.ornRot = 0; // nová poloha = výchozí místo
+        if (name === 'orn') vyber(inp.value ? 'orn' : 'txt');
+        zmena();
+      });
     });
   });
 
@@ -161,7 +166,12 @@
     sh.addColorStop(0, 'rgba(0,0,0,.55)'); sh.addColorStop(1, 'rgba(0,0,0,0)');
     g.fillStyle = sh; g.fillRect(0, PY + PH - 40, W, 160);
 
-    var pat = g.createPattern(KP.textura(kamen.id, 512), 'repeat');
+    var pat, zr = KP.zrcadlo(kamen.id);
+    if (zr) { // fotka vzorku v měřítku desky (fotoMm = šířka záběru), zrcadlená dlaždice bez švů
+      pat = g.createPattern(zr, 'repeat');
+      var sc = Math.max(0.5, Math.min(2.2, KP.fotoMm(kamen.id) * PXMM / (zr.width / 2)));
+      if (pat.setTransform) pat.setTransform(new DOMMatrix().translate(PX, PY).scale(sc));
+    } else pat = g.createPattern(KP.textura(kamen.id, 512), 'repeat');
     // boční hrana (tloušťka desky)
     g.save(); obrys(g, PX + HRANA, PY + HRANA * 0.6, PW, PH, stav.tvar);
     g.fillStyle = pat; g.fill(); g.fillStyle = 'rgba(0,0,0,.45)'; g.fill(); g.restore();
@@ -173,7 +183,9 @@
     g.fillStyle = lesk; g.fillRect(PX, PY - 200, PW, PH + 200);
     var pad = Math.min(PW, PH) * 0.09, top = horniOkraj(stav.tvar);
     var info = KP.kresliText(g, stav, { x: PX + pad, y: PY + top + pad, w: PW - 2 * pad, h: PH - top - 2 * pad, pxmm: PXMM });
+    posledni = info;
     g.restore();
+    if (!bezVyberu) oznacVyber(info);
     // kóta rozměru desky
     g.save(); g.fillStyle = 'rgba(216,184,133,.85)'; g.font = '500 30px Manrope, sans-serif'; g.textAlign = 'center';
     g.fillText(stav.deskaS + ' × ' + stav.deskaV + ' cm', PX + PW / 2, PY + PH + 80); g.restore();
@@ -200,9 +212,116 @@
     el.innerHTML = t;
   }
 
+  /* --- výběr, posun a otočení nápisu / ornamentu (drag po desce + lišta) --- */
+  var posledni = null, bezVyberu = false, cil = 'txt', tah = null, KROK = 5, KROK_ROT = 2;
+  function oznacVyber(info) {
+    var b = info[cil + 'Box']; if (!b) return;
+    g.save(); g.translate(b.cx, b.cy); g.rotate(b.rot * Math.PI / 180);
+    g.setLineDash([10, 8]); g.lineWidth = 2; g.strokeStyle = 'rgba(216,184,133,.9)';
+    g.strokeRect(-b.w / 2 - 12, -b.h / 2 - 12, b.w + 24, b.h + 24); g.restore();
+  }
+  function vyber(c) {
+    if (c === 'orn' && !stav.orn) c = 'txt';
+    cil = c;
+    document.querySelectorAll('.lista__cil button').forEach(function (b) {
+      var on = b.dataset.cil === cil; b.classList.toggle('is-on', on); b.setAttribute('aria-pressed', on);
+    });
+    $('o-rot').textContent = Math.round(stav[cil + 'Rot'] || 0) + '°';
+  }
+  function bod(e) {
+    var r = cv.getBoundingClientRect();
+    return { x: (e.clientX - r.left) * W / r.width, y: (e.clientY - r.top) * H / r.height };
+  }
+  function zasah(p, b) { // bod v otočeném obdélníku (s rezervou pro chycení)
+    if (!b) return false;
+    var a = -b.rot * Math.PI / 180, dx = p.x - b.cx, dy = p.y - b.cy;
+    var x = dx * Math.cos(a) - dy * Math.sin(a), y = dx * Math.sin(a) + dy * Math.cos(a);
+    return Math.abs(x) <= b.w / 2 + 16 && Math.abs(y) <= b.h / 2 + 16;
+  }
+  function coPodBodem(p) {
+    if (!posledni) return null;
+    if (zasah(p, posledni.ornBox)) return 'orn';
+    if (zasah(p, posledni.txtBox)) return 'txt';
+    return null;
+  }
+  function otevri(id) { var d = $('sek-' + id); if (d && !d.open) d.open = true; }
+  cv.addEventListener('pointerdown', function (e) {
+    var p = bod(e), co = coPodBodem(p);
+    if (!co) return;
+    vyber(co); // sekci akordeonu neotvírat — změna výšky panelu by posunula stránku pod kurzorem
+    var b = posledni[co + 'Box'];
+    tah = { x: p.x, y: p.y, dx: stav[co + 'Dx'], dy: stav[co + 'Dy'], cx: b.cx, cy: b.cy };
+    cv.setPointerCapture(e.pointerId); cv.classList.add('is-tah');
+    e.preventDefault(); kresli();
+  });
+  cv.addEventListener('pointermove', function (e) {
+    var p = bod(e);
+    if (!tah) { cv.style.cursor = coPodBodem(p) ? 'grab' : ''; return; }
+    // střed objektu zůstane na desce
+    var mx = Math.max(PX, Math.min(PX + PW, tah.cx + p.x - tah.x)) - tah.cx;
+    var my = Math.max(PY, Math.min(PY + PH, tah.cy + p.y - tah.y)) - tah.cy;
+    stav[cil + 'Dx'] = Math.round(tah.dx + mx / PXMM);
+    stav[cil + 'Dy'] = Math.round(tah.dy + my / PXMM);
+    zmena();
+  });
+  function konecTahu() { if (tah) { tah = null; cv.classList.remove('is-tah'); } }
+  cv.addEventListener('pointerup', konecTahu);
+  cv.addEventListener('pointercancel', konecTahu);
+
+  document.querySelectorAll('.lista__cil button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      if (b.dataset.cil === 'orn' && !stav.orn) { otevri('orn'); KP.toast('Nejdřív vyberte ornament.'); return; }
+      vyber(b.dataset.cil); kresli();
+    });
+  });
+  document.querySelectorAll('.lista [data-akce]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var a = b.dataset.akce, k = cil;
+      if (a === 'nahoru') stav[k + 'Dy'] -= KROK;
+      else if (a === 'dolu') stav[k + 'Dy'] += KROK;
+      else if (a === 'vlevo') stav[k + 'Dx'] -= KROK;
+      else if (a === 'vpravo') stav[k + 'Dx'] += KROK;
+      else if (a === 'rotL') stav[k + 'Rot'] = Math.max(-180, stav[k + 'Rot'] - KROK_ROT);
+      else if (a === 'rotP') stav[k + 'Rot'] = Math.min(180, stav[k + 'Rot'] + KROK_ROT);
+      else if (a === 'reset') stav[k + 'Dx'] = stav[k + 'Dy'] = stav[k + 'Rot'] = 0;
+      else if (a === 'stred') { // vodorovně na osu desky
+        var bx = posledni && posledni[k + 'Box'];
+        if (bx) stav[k + 'Dx'] = Math.round(stav[k + 'Dx'] + (PX + PW / 2 - bx.cx) / PXMM);
+      }
+      $('o-rot').textContent = Math.round(stav[k + 'Rot']) + '°';
+      zmena();
+    });
+  });
+
+  /* Stav sekcí akordeonu — co je zvoleno, je vidět i u zavřené sekce. */
+  var POZ = { vlevo: 'vlevo', vpravo: 'vpravo', nahore: 'nad nápisem', pod: 'pod nápisem', dole: 'dole' };
+  function souhrny() {
+    var jm = stav.osoby.map(function (o) { return (o.jmeno || '').trim(); }).filter(Boolean);
+    var hl = [stav.titul, stav.rodina].filter(function (x) { return (x || '').trim(); }).join(' ');
+    $('st-text').textContent = [hl, jm.join(', '), stav.epitaf].filter(Boolean).join(' · ');
+    var pismo = KP.FONTY.filter(function (f) { return f.id === stav.font; })[0] || KP.FONTY[0];
+    $('st-pismo').textContent = pismo.nazev + ' · ' + stav.vyska + ' mm';
+    var lab = document.querySelector('input[name="technika"]:checked + label');
+    $('st-provedeni').textContent = lab ? lab.textContent.trim() : '';
+    var orn = KP.ornament(stav.orn);
+    $('st-orn').textContent = orn ? orn.nazev + ' · ' + POZ[stav.ornPoz] : 'bez ornamentu';
+    $('st-kamen').textContent = KP.kamen(stav.kamen).nazev;
+    $('st-deska').textContent = stav.deskaS + ' × ' + stav.deskaV + ' cm · ' + ({ obdelnik: 'obdélník', oblouk: 'oblouk', vlna: 'vlna' }[stav.tvar] || '');
+  }
+  // otevřená sekce zůstane jediná i v prohlížečích bez <details name>
+  document.querySelectorAll('details.sekce').forEach(function (d) {
+    d.addEventListener('toggle', function () {
+      if (!d.open) return;
+      document.querySelectorAll('details.sekce').forEach(function (o) { if (o !== d) o.open = false; });
+      if (d.id === 'sek-orn' && stav.orn) vyber('orn'); else if (d.id === 'sek-text') vyber('txt');
+      kresli();
+    });
+  });
+
   var ulozT;
   function zmena() {
     ornVolby();
+    souhrny();
     kresli();
     clearTimeout(ulozT); ulozT = setTimeout(uloz, 300);
   }
@@ -226,7 +345,9 @@
     if (stav.epitaf) r.push('Epitaf: ' + stav.epitaf);
     if ((stav.dolni || '').trim()) r.push('Dolní řádek: ' + stav.dolni);
     var orn = KP.ornament(stav.orn);
-    if (orn) r.push('Ornament: ' + orn.nazev + ', ' + { vlevo: 'vlevo od nápisu', vpravo: 'vpravo od nápisu', nahore: 'nad nápisem' }[stav.ornPoz] + ', výška asi ' + stav.ornV + ' mm');
+    if (orn) r.push('Ornament: ' + orn.nazev + ', ' + { vlevo: 'vlevo od nápisu', vpravo: 'vpravo od nápisu', nahore: 'nad nápisem', pod: 'pod nápisem', dole: 'dole na desce' }[stav.ornPoz] + ', výška asi ' + stav.ornV + ' mm');
+    var posun = ['txtDx', 'txtDy', 'txtRot', 'ornDx', 'ornDy', 'ornRot'].some(function (k) { return stav[k]; });
+    if (posun) r.push('Rozvržení upraveno v náhledu (posun / otočení nápisu nebo ornamentu) — prosím podle přiloženého obrázku.');
     r.push('Deska: ' + stav.deskaS + ' × ' + stav.deskaV + ' cm, výška písma hlavního řádku ' + stav.vyska + ' mm');
     r.push('Písmo: ' + pismo.nazev + (stav.verzalky ? ' (velká písmena)' : '') + ', provedení: ' + tech);
     r.push('Kámen: ' + k.nazev + ' (' + k.pod + '), tvar desky: ' + ({ obdelnik: 'obdélník', oblouk: 'oblouk', vlna: 'vlna' }[stav.tvar] || stav.tvar));
@@ -236,10 +357,14 @@
 
   $('poslatPoptavku').addEventListener('click', function () { uloz(); KP.doPoptavky(shrnuti()); });
   $('doPomniku').addEventListener('click', uloz);
-  $('stahnout').addEventListener('click', function () { KP.stahni(cv, 'napis-kamenictvi-prochazka.png'); KP.toast('Obrázek se stahuje — můžete ho přiložit k e-mailu.'); });
+  $('stahnout').addEventListener('click', function () {
+    bezVyberu = true; kresli(); KP.stahni(cv, 'napis-kamenictvi-prochazka.png'); bezVyberu = false; setTimeout(kresli, 100); KP.toast('Obrázek se stahuje — můžete ho přiložit k e-mailu.'); });
 
   vykresliOsoby();
   ornVolby();
+  souhrny();
+  vyber('txt');
   kresli();
   KP.fontyPripraveny().then(kresli);
+  KP.nactiFotky(kresli);
 })(window.KP);

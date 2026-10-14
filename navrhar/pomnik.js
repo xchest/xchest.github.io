@@ -124,7 +124,7 @@
     var d = document.createElement('div'); d.className = 'chip';
     d.innerHTML = '<input type="radio" name="kamen" id="k-' + k.id + '" value="' + k.id + '"><label for="k-' + k.id + '"><span class="swatch"></span>' + k.nazev + '</label>';
     var sw = d.querySelector('.swatch');
-    sw.style.backgroundImage = 'url(' + KP.textura(k.id, 128).toDataURL() + ')'; sw.style.backgroundSize = 'cover';
+    sw.style.backgroundImage = 'url(' + (KP.fotoUrl(k.id) || KP.textura(k.id, 128).toDataURL()) + ')'; sw.style.backgroundSize = 'cover';
     kamenyEl.appendChild(d);
   });
 
@@ -653,4 +653,5 @@
   syncPole();
   zmena();
   KP.fontyPripraveny().then(function () { NAPIS_CACHE.klic = ''; kresli(); });
+  KP.nactiFotky(function () { NAPIS_CACHE.klic = ''; kresli(); });
 })(window.KP);

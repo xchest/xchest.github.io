@@ -417,6 +417,7 @@
     max-height: 34vh;
     margin: 0 auto;
   }
+  .tool--napis .stage__note { margin: 6px 2px 0; font-size: 12px; line-height: 1.35; }
   .tool--napis .panel--sekce { width: 100%; }
   .tool--napis .ctl-row > *,
   .tool--napis .chips > *,

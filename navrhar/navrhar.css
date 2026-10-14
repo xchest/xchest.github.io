@@ -109,3 +109,20 @@
 .sizeinfo b { color: var(--text, #eee); }
 .sizeinfo.is-warn { border-color: rgba(224,122,110,.6); color: #f0b2a9; }
 .sizeinfo.is-ok { border-color: rgba(140,190,130,.45); }
+
+/* Posuvníky konfigurátoru hrobu — větší, s označením typizovaného rozměru */
+.ctl--range { margin-bottom: 18px; }
+.ctl--range > span { display: flex; justify-content: space-between; align-items: baseline; }
+.ctl--range > span b { font-weight: 600; color: var(--gold-2); font-size: .95rem; letter-spacing: .02em; text-transform: none; }
+.ctl input[type="range"] { -webkit-appearance: none; appearance: none; height: 34px; background: transparent; cursor: pointer; touch-action: pan-y; }
+.ctl input[type="range"]::-webkit-slider-runnable-track { height: 8px; border-radius: 4px; background: rgba(194,154,100,.28); }
+.ctl input[type="range"]::-moz-range-track { height: 8px; border-radius: 4px; background: rgba(194,154,100,.28); }
+.ctl input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 28px; height: 28px; margin-top: -10px; border-radius: 50%; background: var(--gold); border: 3px solid #1a1712; box-shadow: 0 0 0 1px var(--gold); }
+.ctl input[type="range"]::-moz-range-thumb { width: 24px; height: 24px; border-radius: 50%; background: var(--gold); border: 3px solid #1a1712; }
+.ctl input[type="range"]:focus-visible { outline: 2px solid var(--gold-2); outline-offset: 2px; }
+.typbadge { display: block; font-style: normal; font-size: .74rem; margin-top: 2px; padding: 4px 8px; border-radius: var(--radius); border: 1px solid rgba(194,154,100,.25); color: var(--text-muted); }
+.typbadge.is-ok { border-color: rgba(140,190,130,.45); color: #b9d8b0; }
+.typbadge.is-warn { border-color: rgba(224,160,110,.55); color: #f0c7a0; }
+.linkbtn { background: none; border: 0; color: var(--gold); text-decoration: underline; font: inherit; cursor: pointer; padding: 0 0 0 6px; }
+.ctl-row select { background: var(--bg-3); border: 1px solid rgba(194,154,100,.22); color: var(--text); padding: 8px 10px; font: inherit; font-size: .88rem; border-radius: var(--radius); }
+.drawing .bod:focus { outline: none; stroke: #fff; }

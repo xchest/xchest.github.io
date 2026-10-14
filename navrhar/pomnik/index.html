@@ -14,10 +14,8 @@
   <meta property="og:image" content="https://kamenictviprochazka.cz/obrazky/pouzelogokamenictviprochazka.png">
   <link rel="preload" href="/fonty/manrope-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonty/instrument-serif-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="/fonty/manrope-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="/fonty/instrument-serif-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/styl.css">
-  <link rel="stylesheet" href="/navrhar/navrhar.css">
+  <link rel="stylesheet" href="/navrhar/navrhar.css?v=1014q">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Domů", "item": "https://kamenictviprochazka.cz/"}, {"@type": "ListItem", "position": 2, "name": "Návrhář", "item": "https://kamenictviprochazka.cz/navrhar/"}, {"@type": "ListItem", "position": 3, "name": "Hrob a pomník", "item": "https://kamenictviprochazka.cz/navrhar/pomnik/"}]}</script>
 </head>
 <body>
@@ -60,47 +58,43 @@
             <div class="chip"><input type="radio" name="typ" id="ty2" value="jednohrob"><label for="ty2"><svg viewBox="0 0 40 40" aria-hidden="true"><rect x="12" y="6" width="16" height="30" fill="none" stroke="currentColor" stroke-width="2"/><rect x="13" y="3" width="14" height="5" fill="currentColor"/></svg>Jednohrob</label></div>
             <div class="chip"><input type="radio" name="typ" id="ty3" value="dvojhrob"><label for="ty3"><svg viewBox="0 0 40 40" aria-hidden="true"><rect x="5" y="6" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2"/><rect x="7" y="3" width="26" height="5" fill="currentColor"/></svg>Dvojhrob</label></div>
           </div>
-          <div class="ctl-row" style="margin-top:12px">
-            <label class="ctl"><span>Šířka (cm)</span><input type="number" id="p-sirka" min="50" max="300" step="5"></label>
-            <label class="ctl"><span>Délka (cm)</span><input type="number" id="p-delka" min="60" max="300" step="5"></label>
-          </div>
-          <p class="hint">Vnější rozměr rámu. Předvyplněno orientačně podle typu.</p>
+          <p class="hint">Typ nastaví typizované rozměry. Opětovný klik na zvolený typ vrátí všechny rozměry na standard.</p>
+          <label class="ctl ctl--range"><span>Šířka rámu <b><output id="o-sirka"></output> cm</b></span><input type="range" id="p-sirka" step="5"><em class="typbadge" id="t-sirka"></em></label>
+          <label class="ctl ctl--range"><span>Délka rámu <b><output id="o-delka"></output> cm</b></span><input type="range" id="p-delka" step="5"><em class="typbadge" id="t-delka"></em></label>
+          <label class="ctl ctl--range"><span>Výška rámu <b><output id="o-ramV"></output> cm</b></span><input type="range" id="p-ramV" step="1"><em class="typbadge" id="t-ramV"></em></label>
+          <p class="hint">Vnější rozměr rámu. Rám je složený ze 4 dílů (čelo, dva boky, vložka); vzadu na obrubě leží sokl 7 × 25 cm.</p>
         </fieldset>
 
         <fieldset>
           <legend>Tvar pomníku</legend>
           <div class="chips" id="tvary" role="radiogroup" aria-label="Tvar pomníku"></div>
-          <div class="ctl-row" style="margin-top:12px">
-            <label class="ctl"><span>Výška <output id="o-stelaV"></output> cm</span><input type="range" id="p-stelaV" min="40" max="140" step="5"></label>
-            <label class="ctl"><span>Šířka <output id="o-stelaS"></output> cm</span><input type="range" id="p-stelaS" min="30" max="200" step="5"></label>
-          </div>
-          <label class="ctl"><span>Sokl pod pomníkem</span>
-            <select id="p-sokl">
-              <option value="25">Sokl 25 cm</option>
-              <option value="15">Nízký sokl 15 cm</option>
-              <option value="0">Bez soklu</option>
-            </select>
-          </label>
+          <div class="hint" id="bodyInfo" hidden>V čelním pohledu táhněte zlaté body nahoru a dolů. <button type="button" class="linkbtn" id="bodyReset">Vrátit na vlnu</button></div>
+          <label class="ctl ctl--range"><span>Výška pomníku <b><output id="o-stelaV"></output> cm</b></span><input type="range" id="p-stelaV" step="5"><em class="typbadge" id="t-stelaV"></em></label>
+          <label class="ctl ctl--range"><span>Šířka pomníku <b><output id="o-stelaS"></output> cm</b></span><input type="range" id="p-stelaS" step="1"><em class="typbadge" id="t-stelaS"></em></label>
         </fieldset>
 
         <fieldset>
-          <legend>Krycí deska a výplň</legend>
+          <legend>Krycí deska a chodník</legend>
           <label class="ctl"><span>Krycí deska</span>
             <select id="p-deska">
-              <option value="cela">Celá — kryje celý hrob</option>
-              <option value="polovina">Polovina — vpředu výplň</option>
-              <option value="delena">Dělená — dva díly</option>
-              <option value="bez">Bez desky — celá výplň</option>
+              <option value="pres">Přes rám — leží na rámu</option>
+              <option value="mezi">Mezi rám — zapuštěná do rámu</option>
+              <option value="bez">Bez desky — výplň</option>
             </select>
           </label>
-          <label class="ctl"><span>Výplň (kde není deska)</span>
+          <label class="ctl" id="vyplnBox"><span>Výplň</span>
             <select id="p-vypln">
               <option value="kacirek">Bílý kačírek</option>
               <option value="sterk">Černý štěrk</option>
               <option value="zahon">Záhon / květiny</option>
             </select>
           </label>
-          <label class="ctl-check"><input type="checkbox" id="p-chodnik"> Obvodový chodník (vpředu a po stranách)</label>
+          <label class="ctl"><span>Chodník</span>
+            <select id="p-chodnik">
+              <option value="kamen">Kamenný chodník (vpředu a po stranách)</option>
+              <option value="bez">Bez chodníku</option>
+            </select>
+          </label>
         </fieldset>
 
         <fieldset>
@@ -118,9 +112,16 @@
 
         <fieldset>
           <legend>Doplňky</legend>
-          <label class="ctl-check"><input type="checkbox" id="p-vaza"> Váza</label>
-          <label class="ctl-check"><input type="checkbox" id="p-lucerna"> Lucerna (svítilna)</label>
+          <div class="ctl-row">
+            <label class="ctl-check"><input type="checkbox" id="p-vaza"> Váza</label>
+            <select id="p-vazaMat" aria-label="Materiál vázy"><option value="kamen">kamenná</option><option value="nerez">nerezová</option></select>
+          </div>
+          <div class="ctl-row">
+            <label class="ctl-check"><input type="checkbox" id="p-svitilna"> Svítilna</label>
+            <select id="p-svitilnaMat" aria-label="Materiál svítilny"><option value="kamen">kamenná</option><option value="nerez">nerezová</option></select>
+          </div>
           <label class="ctl-check"><input type="checkbox" id="p-foto"> Fotokeramika (ovál)</label>
+          <p class="hint">Váza a svítilna stojí na soklu vedle pomníku — nikdy se s ním nekryjí.</p>
         </fieldset>
 
         <fieldset>
@@ -138,6 +139,8 @@
         <div class="stage__tabs" role="tablist" aria-label="Pohled">
           <button type="button" role="tab" aria-selected="true" data-pohled="celo">Čelní pohled</button>
           <button type="button" role="tab" aria-selected="false" data-pohled="pudorys">Půdorys</button>
+          <button type="button" role="tab" aria-selected="false" data-pohled="predu">Zepředu</button>
+          <button type="button" role="tab" aria-selected="false" data-pohled="bok">Z boku</button>
         </div>
         <div class="stage__frame">
           <svg class="drawing" id="pomnikSvg" viewBox="0 0 1000 800" role="img" aria-label="Náhled hrobu"></svg>
@@ -177,7 +180,7 @@
 <script src="/skript.js"></script>
 <script src="/navrhar/spolecne.js"></script>
 <script src="/navrhar/pismo.js"></script>
-<script src="/navrhar/pomnik.js"></script>
+<script src="/navrhar/pomnik.js?v=1014q"></script>
 <div class="mbar" aria-label="Rychlý kontakt"><a class="mbar__call" href="tel:+420602108793">Zavolat</a><a class="mbar__form" href="/#kontakt">Poptávka</a></div>
 </body>
 </html>

@@ -265,8 +265,7 @@
     c.width = Math.max(10, Math.round(w * k)); c.height = Math.max(10, Math.round(h * k));
     var g = c.getContext('2d');
     var top = maxPokles(w) + h * 0.08 + (foto ? 19 : 0), bottom = h * 0.08, side = w * 0.1;
-    var data = {};
-    for (var key in napis) data[key] = napis[key];
+    var data = KP.viditelnyNapis(napis);
     data.kamen = stav.kamen;
     if (h - top - bottom > 8) KP.kresliText(g, data, { x: side * k, y: top * k, w: (w - 2 * side) * k, h: (h - top - bottom) * k, pxmm: k / 10 });
     return c.toDataURL();

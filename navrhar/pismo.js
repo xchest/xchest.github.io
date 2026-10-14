@@ -32,6 +32,17 @@
     return (mistniCache[f.id] = nalez);
   }
 
+  /* Kopie nápisu jen s řádky viditelnými podle typu desky (jedna / manzele / rodina); uložená data se nemění. */
+  KP.viditelnyNapis = function (n) {
+    var v = {}, k;
+    for (k in n) v[k] = n[k];
+    if (n.typ === 'jedna' || n.typ === 'manzele') {
+      v.osoby = (n.osoby || []).slice(0, n.typ === 'jedna' ? 1 : 2);
+      v.titul = v.rodina = v.dolni = '';
+    }
+    return v;
+  };
+
   /* Starý uložený stav (dřívější písma, bronz, ornamenty) převede na platné hodnoty. */
   KP.normalizujNapis = function (n) {
     var d = KP.vychoziNapis();

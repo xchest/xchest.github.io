@@ -7,7 +7,34 @@
   if (!cv) return;
   var g = cv.getContext('2d');
   var MAX_OSOB = 4;
-  var stav = KP.normalizujNapis(KP.nacti('localStorage', 'kp_napis'));
+  var ulozeny = KP.nacti('localStorage', 'kp_napis');
+  var novy = !ulozeny || typeof ulozeny !== 'object';
+  if (novy) {
+    ulozeny = KP.vychoziNapis();
+    ulozeny.titul = ulozeny.rodina = ulozeny.dolni = '';
+    ulozeny.osoby = [{ jmeno: 'Jan Novák', narozen: '12. 3. 1935', umrti: '4. 6. 2024' }];
+    ulozeny.orn = '';
+    ulozeny.typ = 'jedna';
+  }
+  if (['jedna', 'manzele', 'rodina'].indexOf(ulozeny.typ) < 0) {
+    ulozeny.typ = (ulozeny.titul || '').trim() || (ulozeny.rodina || '').trim() ? 'rodina' :
+      Array.isArray(ulozeny.osoby) && ulozeny.osoby.length >= 2 ? 'manzele' : 'jedna';
+  }
+  var udaje = KP.normalizujNapis(ulozeny);
+  function pocetOsob() { return udaje.typ === 'jedna' ? 1 : udaje.typ === 'manzele' ? 2 : MAX_OSOB; }
+  function doplnOsoby() {
+    var min = udaje.typ === 'rodina' ? 0 : pocetOsob();
+    while (udaje.osoby.length < min) udaje.osoby.push({ jmeno: '', narozen: '', umrti: '' });
+  }
+  /* Uložené údaje zůstávají úplné; kreslicí funkce dostávají jen viditelné řádky. */
+  function stavProNahled() {
+    var n = Object.assign({}, udaje);
+    n.osoby = udaje.osoby.slice(0, pocetOsob());
+    if (udaje.typ !== 'rodina') n.titul = n.rodina = n.dolni = '';
+    return n;
+  }
+  doplnOsoby();
+  var stav = stavProNahled();
   /* Návaznost na konfigurátor pomníku: pomnik.js při každé změně zapisuje do kp_napis skutečný rozměr stély
      (deskaS/deskaV, vč. zúžení kvůli váze a svítilně) — zde se proto rozměr nepřepisuje. */
 
@@ -39,31 +66,34 @@
       (o.d ? ornIkona(o) : '<svg viewBox="0 0 40 40" aria-hidden="true"><path class="tah" style="stroke-width:2" d="M10 10L30 30M30 10L10 30"/></svg>') + o.nazev + '</label>';
     ornEl.appendChild(d);
   });
-  function ornVolby() { $('ornVolby').hidden = !stav.orn; $('o-ornV').textContent = stav.ornV; }
+  function ornVolby() { $('ornVolby').hidden = !udaje.orn; $('o-ornV').textContent = udaje.ornV; }
 
   /* --- osoby --- */
   function vykresliOsoby() {
     osobyEl.innerHTML = '';
-    stav.osoby.forEach(function (o, i) {
+    var rodinna = udaje.typ === 'rodina', limit = pocetOsob();
+    $('rodinneZahlavi').hidden = $('rodinnyDolni').hidden = !rodinna;
+    udaje.osoby.forEach(function (o, i) {
       var box = document.createElement('div'); box.className = 'person';
+      box.hidden = i >= limit;
       box.innerHTML =
-        ('<button type="button" class="person__rm" aria-label="Odebrat osobu ' + (i + 1) + '">×</button>') +
-        '<label class="ctl"><span>Jméno ' + (stav.osoby.length > 1 ? (i + 1) : '') + '</span><input type="text" maxlength="40" data-k="jmeno"></label>' +
-        '<div class="ctl-row"><label class="ctl"><span>Narozen/a</span><input type="text" inputmode="numeric" maxlength="12" placeholder="např. 15. 9. 1883" data-k="narozen"></label>' +
+        (rodinna ? '<button type="button" class="person__rm" aria-label="Odebrat osobu ' + (i + 1) + '">×</button>' : '') +
+        '<label class="ctl"><span>Jméno' + (Math.min(udaje.osoby.length, limit) > 1 ? ' ' + (i + 1) : '') + '</span><input type="text" maxlength="40" data-k="jmeno"></label>' +
+        '<div class="ctl-row"><label class="ctl"><span>Narozen/a</span><input type="text" inputmode="numeric" maxlength="12" placeholder="např. 12. 3. 1935" data-k="narozen"></label>' +
         '<label class="ctl"><span>Zemřel/a</span><input type="text" inputmode="numeric" maxlength="12" placeholder="nechte prázdné" data-k="umrti"></label></div>';
       box.querySelectorAll('input').forEach(function (inp) {
         inp.value = o[inp.dataset.k] || '';
         inp.addEventListener('input', function () { o[inp.dataset.k] = inp.value; zmena(); });
       });
       var rm = box.querySelector('.person__rm');
-      if (rm) rm.addEventListener('click', function () { stav.osoby.splice(i, 1); vykresliOsoby(); zmena(); });
+      if (rm) rm.addEventListener('click', function () { udaje.osoby.splice(i, 1); vykresliOsoby(); zmena(); });
       osobyEl.appendChild(box);
     });
-    $('pridatOsobu').hidden = stav.osoby.length >= MAX_OSOB;
+    $('pridatOsobu').hidden = !rodinna || udaje.osoby.length >= MAX_OSOB;
   }
   $('pridatOsobu').addEventListener('click', function () {
-    if (stav.osoby.length >= MAX_OSOB) return;
-    stav.osoby.push({ jmeno: '', narozen: '', umrti: '' });
+    if (udaje.typ !== 'rodina' || udaje.osoby.length >= MAX_OSOB) return;
+    udaje.osoby.push({ jmeno: '', narozen: '', umrti: '' });
     vykresliOsoby(); zmena();
     var inputs = osobyEl.querySelectorAll('input[data-k="jmeno"]'); inputs[inputs.length - 1].focus();
   });
@@ -73,32 +103,52 @@
   var CISELNE = { vyska: 1, deskaS: 1, deskaV: 1, ornV: 1 };
   Object.keys(POLE).forEach(function (id) {
     var el = $(id), k = POLE[id];
-    el.value = stav[k] != null ? stav[k] : el.value;
+    el.value = udaje[k] != null ? udaje[k] : el.value;
     el.addEventListener('input', function () {
       if (CISELNE[k]) {
         var v = +el.value;
         if (!(v >= +el.min && v <= +el.max)) return; // rozepsané číslo mimo rozsah nekreslit
-        stav[k] = v;
-      } else stav[k] = el.value;
+        udaje[k] = v;
+      } else udaje[k] = el.value;
       zmena();
     });
   });
+  function rozmerVolby() {
+    $('deskyTyp').querySelectorAll('button').forEach(function (b) {
+      b.setAttribute('aria-pressed', +b.dataset.s === udaje.deskaS && +b.dataset.v === udaje.deskaV);
+    });
+  }
+  function vlastniRozmer(otevreny) {
+    $('vlastniRozmer').hidden = !otevreny;
+    $('jinyRozmer').setAttribute('aria-expanded', otevreny);
+  }
+  $('jinyRozmer').addEventListener('click', function () {
+    vlastniRozmer($('vlastniRozmer').hidden);
+    if (!$('vlastniRozmer').hidden) $('n-deskaS').focus();
+  });
+  var typovyRozmer = Array.prototype.some.call($('deskyTyp').querySelectorAll('button'), function (b) {
+    return +b.dataset.s === udaje.deskaS && +b.dataset.v === udaje.deskaV;
+  });
+  vlastniRozmer(!typovyRozmer);
+  rozmerVolby();
   $('deskyTyp').querySelectorAll('button').forEach(function (b) {
     b.addEventListener('click', function () {
-      stav.deskaS = +b.dataset.s; stav.deskaV = +b.dataset.v;
-      $('n-deskaS').value = stav.deskaS; $('n-deskaV').value = stav.deskaV; zmena();
+      udaje.deskaS = +b.dataset.s; udaje.deskaV = +b.dataset.v;
+      $('n-deskaS').value = udaje.deskaS; $('n-deskaV').value = udaje.deskaV; vlastniRozmer(false); zmena();
     });
   });
-  $('n-verzalky').checked = stav.verzalky !== false;
-  $('n-verzalky').addEventListener('change', function () { stav.verzalky = this.checked; zmena(); });
+  $('n-verzalky').checked = udaje.verzalky !== false;
+  $('n-verzalky').addEventListener('change', function () { udaje.verzalky = this.checked; zmena(); });
 
-  ['font', 'technika', 'kamen', 'orn', 'ornPoz'].forEach(function (name) {
-    var r = document.querySelector('input[name="' + name + '"][value="' + stav[name] + '"]');
+  ['font', 'technika', 'kamen', 'orn', 'ornPoz', 'tvar', 'typ'].forEach(function (name) {
+    var r = document.querySelector('input[name="' + name + '"][value="' + udaje[name] + '"]');
     if (r) r.checked = true;
     document.querySelectorAll('input[name="' + name + '"]').forEach(function (inp) {
       inp.addEventListener('change', function () {
-        stav[name] = inp.value;
-        if (name === 'ornPoz' || name === 'orn') stav.ornDx = stav.ornDy = stav.ornRot = 0; // nová poloha = výchozí místo
+        udaje[name] = inp.value;
+        if (name === 'typ') { doplnOsoby(); vykresliOsoby(); }
+        if (name === 'tvar') $('n-tvar').value = inp.value;
+        if (name === 'ornPoz' || name === 'orn') udaje.ornDx = udaje.ornDy = udaje.ornRot = 0; // nová poloha = výchozí místo
         if (name === 'orn') vyber(inp.value ? 'orn' : 'txt');
         zmena();
       });
@@ -108,17 +158,17 @@
   /* --- epitaf --- */
   var preset = $('n-epitafPreset'), vlastni = $('n-epitaf'), vlastniBox = $('epitafVlastni');
   (function initEpitaf() {
-    var e = stav.epitaf || '';
+    var e = udaje.epitaf || '';
     var shoda = Array.prototype.some.call(preset.options, function (o) { return o.value === e || (!o.value && !e); });
     if (e && !shoda) { preset.value = 'vlastni'; vlastni.value = e; vlastniBox.hidden = false; }
     else preset.value = e;
   })();
   preset.addEventListener('change', function () {
-    if (preset.value === 'vlastni') { vlastniBox.hidden = false; vlastni.focus(); stav.epitaf = vlastni.value; }
-    else { vlastniBox.hidden = true; stav.epitaf = preset.value; }
+    if (preset.value === 'vlastni') { vlastniBox.hidden = false; vlastni.focus(); udaje.epitaf = vlastni.value; }
+    else { vlastniBox.hidden = true; udaje.epitaf = preset.value; }
     zmena();
   });
-  vlastni.addEventListener('input', function () { stav.epitaf = vlastni.value; zmena(); });
+  vlastni.addEventListener('input', function () { udaje.epitaf = vlastni.value; zmena(); });
 
   /* --- kreslení --- */
   var W = cv.width, H = cv.height;
@@ -221,12 +271,12 @@
     g.strokeRect(-b.w / 2 - 12, -b.h / 2 - 12, b.w + 24, b.h + 24); g.restore();
   }
   function vyber(c) {
-    if (c === 'orn' && !stav.orn) c = 'txt';
+    if (c === 'orn' && !udaje.orn) c = 'txt';
     cil = c;
     document.querySelectorAll('.lista__cil button').forEach(function (b) {
       var on = b.dataset.cil === cil; b.classList.toggle('is-on', on); b.setAttribute('aria-pressed', on);
     });
-    $('o-rot').textContent = Math.round(stav[cil + 'Rot'] || 0) + '°';
+    $('o-rot').textContent = Math.round(udaje[cil + 'Rot'] || 0) + '°';
   }
   function bod(e) {
     var r = cv.getBoundingClientRect();
@@ -244,13 +294,30 @@
     if (zasah(p, posledni.txtBox)) return 'txt';
     return null;
   }
-  function otevri(id) { var d = $('sek-' + id); if (d && !d.open) d.open = true; }
+  function otevriKrok(id, posun) {
+    var d = $(id); if (!d) return;
+    document.querySelectorAll('details.sekce[data-krok]').forEach(function (o) { o.open = o === d; });
+    if (posun) {
+      var hlavicka = d.querySelector('summary');
+      hlavicka.focus({ preventScroll: true });
+      var nav = document.querySelector('.nav');
+      var offset = nav ? nav.getBoundingClientRect().height : 0;
+      if (window.matchMedia('(max-width: 899px)').matches) {
+        offset += cv.closest('.stage').getBoundingClientRect().height;
+      }
+      window.scrollTo({ top: Math.max(0, window.scrollY + d.getBoundingClientRect().top - offset - 14), behavior: 'smooth' });
+    }
+  }
+  function otevri(id) { otevriKrok('sek-' + id, false); }
+  document.querySelectorAll('[data-dalsi]').forEach(function (b) {
+    b.addEventListener('click', function () { otevriKrok(b.dataset.dalsi, true); });
+  });
   cv.addEventListener('pointerdown', function (e) {
     var p = bod(e), co = coPodBodem(p);
     if (!co) return;
     vyber(co); // sekci akordeonu neotvírat — změna výšky panelu by posunula stránku pod kurzorem
     var b = posledni[co + 'Box'];
-    tah = { x: p.x, y: p.y, dx: stav[co + 'Dx'], dy: stav[co + 'Dy'], cx: b.cx, cy: b.cy };
+    tah = { x: p.x, y: p.y, dx: udaje[co + 'Dx'], dy: udaje[co + 'Dy'], cx: b.cx, cy: b.cy };
     cv.setPointerCapture(e.pointerId); cv.classList.add('is-tah');
     e.preventDefault(); kresli();
   });
@@ -260,8 +327,8 @@
     // střed objektu zůstane na desce
     var mx = Math.max(PX, Math.min(PX + PW, tah.cx + p.x - tah.x)) - tah.cx;
     var my = Math.max(PY, Math.min(PY + PH, tah.cy + p.y - tah.y)) - tah.cy;
-    stav[cil + 'Dx'] = Math.round(tah.dx + mx / PXMM);
-    stav[cil + 'Dy'] = Math.round(tah.dy + my / PXMM);
+    udaje[cil + 'Dx'] = Math.round(tah.dx + mx / PXMM);
+    udaje[cil + 'Dy'] = Math.round(tah.dy + my / PXMM);
     zmena();
   });
   function konecTahu() { if (tah) { tah = null; cv.classList.remove('is-tah'); } }
@@ -270,25 +337,25 @@
 
   document.querySelectorAll('.lista__cil button').forEach(function (b) {
     b.addEventListener('click', function () {
-      if (b.dataset.cil === 'orn' && !stav.orn) { otevri('orn'); KP.toast('Nejdřív vyberte ornament.'); return; }
+      if (b.dataset.cil === 'orn' && !udaje.orn) { otevri('kamen'); KP.toast('Nejdřív vyberte ornament.'); return; }
       vyber(b.dataset.cil); kresli();
     });
   });
   document.querySelectorAll('.lista [data-akce]').forEach(function (b) {
     b.addEventListener('click', function () {
       var a = b.dataset.akce, k = cil;
-      if (a === 'nahoru') stav[k + 'Dy'] -= KROK;
-      else if (a === 'dolu') stav[k + 'Dy'] += KROK;
-      else if (a === 'vlevo') stav[k + 'Dx'] -= KROK;
-      else if (a === 'vpravo') stav[k + 'Dx'] += KROK;
-      else if (a === 'rotL') stav[k + 'Rot'] = Math.max(-180, stav[k + 'Rot'] - KROK_ROT);
-      else if (a === 'rotP') stav[k + 'Rot'] = Math.min(180, stav[k + 'Rot'] + KROK_ROT);
-      else if (a === 'reset') stav[k + 'Dx'] = stav[k + 'Dy'] = stav[k + 'Rot'] = 0;
+      if (a === 'nahoru') udaje[k + 'Dy'] -= KROK;
+      else if (a === 'dolu') udaje[k + 'Dy'] += KROK;
+      else if (a === 'vlevo') udaje[k + 'Dx'] -= KROK;
+      else if (a === 'vpravo') udaje[k + 'Dx'] += KROK;
+      else if (a === 'rotL') udaje[k + 'Rot'] = Math.max(-180, udaje[k + 'Rot'] - KROK_ROT);
+      else if (a === 'rotP') udaje[k + 'Rot'] = Math.min(180, udaje[k + 'Rot'] + KROK_ROT);
+      else if (a === 'reset') udaje[k + 'Dx'] = udaje[k + 'Dy'] = udaje[k + 'Rot'] = 0;
       else if (a === 'stred') { // vodorovně na osu desky
         var bx = posledni && posledni[k + 'Box'];
-        if (bx) stav[k + 'Dx'] = Math.round(stav[k + 'Dx'] + (PX + PW / 2 - bx.cx) / PXMM);
+        if (bx) udaje[k + 'Dx'] = Math.round(udaje[k + 'Dx'] + (PX + PW / 2 - bx.cx) / PXMM);
       }
-      $('o-rot').textContent = Math.round(stav[k + 'Rot']) + '°';
+      $('o-rot').textContent = Math.round(udaje[k + 'Rot']) + '°';
       zmena();
     });
   });
@@ -309,26 +376,28 @@
     $('st-deska').textContent = stav.deskaS + ' × ' + stav.deskaV + ' cm · ' + ({ obdelnik: 'obdélník', oblouk: 'oblouk', vlna: 'vlna' }[stav.tvar] || '');
   }
   // otevřená sekce zůstane jediná i v prohlížečích bez <details name>
-  document.querySelectorAll('details.sekce').forEach(function (d) {
+  document.querySelectorAll('details.sekce[data-krok]').forEach(function (d) {
     d.addEventListener('toggle', function () {
       if (!d.open) return;
-      document.querySelectorAll('details.sekce').forEach(function (o) { if (o !== d) o.open = false; });
-      if (d.id === 'sek-orn' && stav.orn) vyber('orn'); else if (d.id === 'sek-text') vyber('txt');
+      document.querySelectorAll('details.sekce[data-krok]').forEach(function (o) { if (o !== d) o.open = false; });
+      if (d.id === 'sek-kamen' && udaje.orn) vyber('orn'); else if (d.id === 'sek-text') vyber('txt');
       kresli();
     });
   });
 
   var ulozT;
   function zmena() {
+    stav = stavProNahled();
+    rozmerVolby();
     ornVolby();
     souhrny();
     kresli();
     clearTimeout(ulozT); ulozT = setTimeout(uloz, 300);
   }
   function uloz() {
-    KP.uloz('localStorage', 'kp_napis', stav);
+    KP.uloz('localStorage', 'kp_napis', udaje);
     var p = KP.nacti('localStorage', 'kp_pomnik2'); // rozměr desky předej konfigurátoru pomníku
-    if (p) { p.stelaS = stav.deskaS; p.stelaV = stav.deskaV; KP.uloz('localStorage', 'kp_pomnik2', p); }
+    if (p) { p.stelaS = udaje.deskaS; p.stelaV = udaje.deskaV; KP.uloz('localStorage', 'kp_pomnik2', p); }
   }
 
   function shrnuti() {
@@ -356,6 +425,8 @@
   }
 
   $('poslatPoptavku').addEventListener('click', function () { uloz(); KP.doPoptavky(shrnuti()); });
+  $('dokoncitNapis').addEventListener('click', function () { $('poslatPoptavku').click(); });
+  $('napisForm').addEventListener('submit', function (e) { e.preventDefault(); });
   $('doPomniku').addEventListener('click', uloz);
   $('stahnout').addEventListener('click', function () {
     bezVyberu = true; kresli(); KP.stahni(cv, 'napis-kamenictvi-prochazka.png'); bezVyberu = false; setTimeout(kresli, 100); KP.toast('Obrázek se stahuje — můžete ho přiložit k e-mailu.'); });

@@ -200,3 +200,236 @@
 }
 .sekce__pod { font-family: 'Manrope', sans-serif; font-weight: 600; font-size: .7rem; letter-spacing: .14em; text-transform: uppercase; color: var(--text-muted); margin: 22px 0 10px; padding-top: 14px; border-top: 1px solid rgba(194,154,100,.12); }
 .sekce__obsah > .sekce__pod:first-child { margin-top: 6px; padding-top: 0; border-top: 0; }
+
+/* ===== Generátor nápisu — vedený tok ve 3 krocích (1015n) ===== */
+.tool--napis,
+.tool--napis * { box-sizing: border-box; }
+.tool--napis .tool__grid,
+.tool--napis .panel,
+.tool--napis .stage { min-width: 0; }
+
+.tool--napis .sekce__krok {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--text-muted);
+  font: 500 .64rem/1.2 'Manrope', sans-serif;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
+.tool--napis .sekce[open] .sekce__krok { color: var(--gold-2); }
+
+/* Segment „Kdo bude na desce“ */
+.tool--napis .napis-typ,
+.tool--napis #n-tvar + .chips,
+.tool--napis .chips--tvar {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.tool--napis .napis-typ {
+  gap: 0;
+  overflow: hidden;
+  border: 1px solid rgba(194,154,100,.28);
+  border-radius: var(--radius);
+}
+.tool--napis .napis-typ .chip label {
+  min-height: 48px;
+  height: 100%;
+  padding: 8px 5px;
+  border: 0;
+  border-right: 1px solid rgba(194,154,100,.22);
+  border-radius: 0;
+  line-height: 1.25;
+}
+.tool--napis .napis-typ .chip:last-child label { border-right: 0; }
+.tool--napis .napis-typ .chip input:checked + label {
+  background: var(--gold);
+  color: #1a1712;
+  box-shadow: none;
+}
+
+.tool--napis .napis-pokracovat {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 22px;
+}
+
+/* Rozměry desky a odkaz pro vlastní hodnoty */
+.tool--napis .napis-rozmery {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  align-items: stretch;
+}
+.tool--napis .napis-rozmery .btn {
+  min-width: 0;
+  padding: 9px 5px;
+  letter-spacing: .04em;
+  white-space: nowrap;
+}
+.tool--napis .napis-rozmery .btn[aria-pressed="true"] {
+  border-color: var(--gold);
+  background: rgba(194,154,100,.14);
+  color: var(--gold-2);
+  box-shadow: inset 0 0 0 1px var(--gold);
+}
+.tool--napis #jinyRozmer {
+  display: block;
+  grid-column: 1 / -1;
+  justify-self: start;
+  margin-top: 2px;
+  padding: 3px 0;
+  border: 0;
+  background: none;
+  color: var(--gold);
+  font: inherit;
+  font-size: .82rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.tool--napis #jinyRozmer:focus-visible {
+  outline: 2px solid var(--gold-2);
+  outline-offset: 3px;
+}
+.tool--napis #vlastniRozmer {
+  grid-column: 1 / -1;
+  min-width: 0;
+}
+.tool--napis #vlastniRozmer[hidden] { display: none !important; }
+
+/* Pokročilé ovladače jsou součástí samostatného sbaleného details. */
+.tool--napis .sekce--doladeni {
+  margin-top: 10px;
+  border-top: 1px solid rgba(194,154,100,.2);
+}
+.tool--napis .sekce--doladeni > summary { padding-top: 17px; padding-bottom: 17px; }
+.tool--napis .sekce--doladeni .lista {
+  flex: none;
+  width: 100%;
+  margin-top: 18px;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.tool--napis .sekce--doladeni .lista__cil { grid-template-columns: 1fr 1fr; }
+.tool--napis .sekce--doladeni .lista__tip { flex-basis: 100%; }
+
+/* Jedna hlavní akce, dvě vedlejší textové akce v jednom řádku. */
+.tool--napis .napis-akce {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+  padding: 22px 20px 20px;
+  border-top: 1px solid rgba(194,154,100,.18);
+}
+.tool--napis .napis-akce > .btn,
+.tool--napis .napis-akce > #poslatPoptavku { width: 100%; }
+.tool--napis .napis-akce > .btn--gold,
+.tool--napis #dokoncitNapis {
+  border-color: var(--gold);
+  background: var(--gold);
+  color: #1a1712;
+}
+.tool--napis .napis-akce > .btn--gold:hover,
+.tool--napis #dokoncitNapis:hover {
+  border-color: var(--gold-2);
+  background: var(--gold-2);
+  color: #1a1712;
+}
+.tool--napis .napis-akce__vedlejsi {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-width: 0;
+  white-space: nowrap;
+}
+.tool--napis .napis-akce__vedlejsi #doPomniku,
+.tool--napis .napis-akce__vedlejsi #stahnout {
+  min-width: 0;
+  padding: 2px 0;
+  border: 0;
+  background: none;
+  color: var(--gold);
+  font: inherit;
+  font-size: .8rem;
+  letter-spacing: 0;
+  line-height: 1.35;
+  text-transform: none;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  box-shadow: none;
+  cursor: pointer;
+}
+.tool--napis .napis-akce__vedlejsi #doPomniku:hover,
+.tool--napis .napis-akce__vedlejsi #stahnout:hover { color: var(--gold-2); }
+
+/* Lista už není vedle plátna; náhled využije celou šířku pravého sloupce. */
+.tool--napis .stage__wrap { display: block; }
+.tool--napis .stage__wrap .stage__frame { width: 100%; }
+
+/* Přesný desktopový práh specifikace je 900 px. */
+@media (min-width: 900px) {
+  .tool--napis .tool__grid--napis {
+    grid-template-columns: minmax(300px, 360px) minmax(0, 1fr);
+    gap: 32px;
+  }
+  .tool--napis .stage { position: sticky; top: 90px; order: initial; }
+  .tool--napis .stage__frame { padding: 14px; }
+  .tool--napis .stage__frame canvas {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: calc(100vh - 150px);
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 899px) {
+  .tool--napis { --napis-nav-height: 68px; }
+  .nav.scrolled ~ .tool--napis { --napis-nav-height: 64px; }
+
+  .tool--napis .tool__grid--napis {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+  .tool--napis .stage {
+    position: sticky;
+    top: var(--napis-nav-height);
+    z-index: 20;
+    order: -1;
+    width: 100%;
+    padding: 8px 0;
+    background: var(--bg);
+  }
+  .tool--napis .stage__frame {
+    width: 100%;
+    padding: 8px;
+    box-shadow: 0 8px 20px rgba(0,0,0,.28);
+  }
+  .tool--napis .stage__frame canvas {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: 34vh;
+    margin: 0 auto;
+  }
+  .tool--napis .panel--sekce { width: 100%; }
+  .tool--napis .ctl-row > *,
+  .tool--napis .chips > *,
+  .tool--napis .lista > * { min-width: 0; }
+}
+
+@media (max-width: 420px) {
+  /* Obecné pravidlo návrháře skládá chips do 2 sloupců; tyto volby musí zůstat po třech. */
+  .tool--napis .napis-typ,
+  .tool--napis .napis-rozmery,
+  .tool--napis .chips--tvar { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .tool--napis .napis-typ .chip label { font-size: .66rem; }
+  .tool--napis .napis-akce__vedlejsi { gap: 8px; }
+  .tool--napis .napis-akce__vedlejsi #doPomniku,
+  .tool--napis .napis-akce__vedlejsi #stahnout { font-size: .74rem; }
+}

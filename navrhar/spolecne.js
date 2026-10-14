@@ -135,8 +135,9 @@ window.KP = (function () {
   }
 
   function vychoziNapis() {
+    // výchozí = jedna osoba (nejčastější případ); rodinná deska se volí v generátoru nápisu
     // deska 55 × 75 cm = nápisová deska typového hrobu UH; písmo 40 mm ≈ medián jmen ve výrobních podkladech
-    return { titul: 'Rodina', rodina: 'Novákova', osoby: [{ jmeno: 'Jan Novák', narozen: '12. 3. 1935', umrti: '4. 6. 2024' }], dolni: 'z Českého Brodu', datum: 'znaky', epitaf: '', font: 'gloucester', technika: 'zlato', kamen: 'regal', verzalky: true, vyska: 40, deskaS: 55, deskaV: 75, zarovnani: 'center', tvar: 'obdelnik' };
+    return { typ: 'jedna', titul: '', rodina: '', osoby: [{ jmeno: 'Jan Novák', narozen: '12. 3. 1935', umrti: '4. 6. 2024' }], dolni: '', datum: 'znaky', epitaf: '', font: 'gloucester', technika: 'zlato', kamen: 'regal', verzalky: true, vyska: 40, deskaS: 55, deskaV: 75, zarovnani: 'center', tvar: 'obdelnik' };
   }
 
   return { KAMENY: KAMENY, kamen: kamen, textura: textura, fotoUrl: fotoUrl, fotoMm: fotoMm, fotoRozmer: fotoRozmer, fotka: fotka, kamenId: kamenId, nactiFotky: nactiFotky, prng: prng, hexA: hexA, uloz: uloz, nacti: nacti, toast: toast, doPoptavky: doPoptavky, stahni: stahni, datumText: datumText, vychoziNapis: vychoziNapis };

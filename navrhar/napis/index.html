@@ -17,7 +17,7 @@
   <link rel="preload" href="/fonty/manrope-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonty/instrument-serif-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/styl.css?v=1014zi">
-  <link rel="stylesheet" href="/navrhar/navrhar.css?v=1014u">
+  <link rel="stylesheet" href="/navrhar/navrhar.css?v=1015n">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Domů", "item": "https://kamenictviprochazka.cz/"}, {"@type": "ListItem", "position": 2, "name": "Návrhář", "item": "https://kamenictviprochazka.cz/navrhar/"}, {"@type": "ListItem", "position": 3, "name": "Nápis", "item": "https://kamenictviprochazka.cz/navrhar/napis/"}]}</script>
 </head>
 <body>
@@ -48,30 +48,29 @@
   </div>
 </section>
 
-<main class="tool">
+<main class="tool tool--napis">
   <div class="container">
-    <p class="tool__intro">Postupujte ve třech krocích: napište text a vyberte písmo, potom tvar desky, ornament a rozvržení, nakonec kámen a barvu písma. Náhled je orientační — přesné rozvržení písma, velikost liter a cenu vám připravíme v nezávazné nabídce.</p>
+    <p class="tool__intro">Napište nápis, vyberte písmo a barvu, potom kámen a desku. Návrh můžete připojit k nezávazné poptávce.</p>
 
     <div class="tool__grid tool__grid--napis">
       <form class="panel panel--sekce" id="napisForm" autocomplete="off">
-        <details class="sekce" name="sekce" id="sek-text" open>
-          <summary><span class="sekce__nazev">1 · Text a písmo</span><span class="sekce__stav"><span id="st-text"></span> · <span id="st-pismo"></span></span></summary>
+        <details class="sekce" name="sekce" id="sek-text" data-krok="1" open>
+          <summary><span class="sekce__nazev"><span class="sekce__krok">Krok 1 ze 3</span>Nápis</span><span class="sekce__stav" id="st-text"></span></summary>
           <div class="sekce__obsah">
-          <h3 class="sekce__pod">Text nápisu a epitaf</h3>
-          <div class="ctl-row">
-            <label class="ctl"><span>Záhlaví</span>
-              <input type="text" id="n-titul" maxlength="30" placeholder="např. Rodina">
-            </label>
-            <label class="ctl"><span>Příjmení rodiny</span>
-              <input type="text" id="n-rodina" maxlength="30" placeholder="např. Novákova">
-            </label>
-          </div>
-          <div id="osoby"></div>
-          <button type="button" class="btn btn--outline btn--small" id="pridatOsobu">+ Přidat osobu</button>
-          <label class="ctl" style="margin-top:12px"><span>Dolní řádek (nepovinné)</span>
-            <input type="text" id="n-dolni" maxlength="40" placeholder="např. z Českého Brodu">
-          </label>
-          <p class="hint">Obvyklá rodinná deska: RODINA / NOVÁKOVA / Z ČESKÉHO BRODU. Jména a data osob můžete doplnit, nebo nechat místo na pozdější přípis.</p>
+            <div class="ctl"><span id="typPopisek">Kdo bude na desce</span>
+              <div class="chips chips--seg napis-typ" role="radiogroup" aria-labelledby="typPopisek">
+                <div class="chip"><input type="radio" name="typ" id="typ-jedna" value="jedna" checked><label for="typ-jedna">Jedna osoba</label></div>
+                <div class="chip"><input type="radio" name="typ" id="typ-manzele" value="manzele"><label for="typ-manzele">Manželé</label></div>
+                <div class="chip"><input type="radio" name="typ" id="typ-rodina" value="rodina"><label for="typ-rodina">Rodinná deska</label></div>
+              </div>
+            </div>
+            <div class="ctl-row" id="rodinneZahlavi" hidden>
+              <label class="ctl"><span>Záhlaví</span><input type="text" id="n-titul" maxlength="30" placeholder="např. Rodina"></label>
+              <label class="ctl"><span>Příjmení rodiny</span><input type="text" id="n-rodina" maxlength="30" placeholder="např. Novákova"></label>
+            </div>
+            <div id="osoby"></div>
+            <button type="button" class="btn btn--outline btn--small" id="pridatOsobu" hidden>+ Přidat osobu</button>
+            <label class="ctl" id="rodinnyDolni" style="margin-top:12px" hidden><span>Dolní řádek (nepovinné)</span><input type="text" id="n-dolni" maxlength="40" placeholder="např. z Českého Brodu"></label>
           <label class="ctl" style="margin-top:14px"><span>Epitaf</span>
             <select id="n-epitafPreset">
               <option value="">— bez epitafu —</option>
@@ -86,6 +85,12 @@
           <label class="ctl" id="epitafVlastni" hidden><span>Vlastní epitaf</span>
             <input type="text" id="n-epitaf" maxlength="70">
           </label>
+            <button type="button" class="btn btn--outline napis-pokracovat" data-dalsi="sek-pismo">Pokračovat: písmo a barva →</button>
+          </div>
+        </details>
+        <details class="sekce" name="sekce" id="sek-pismo" data-krok="2">
+          <summary><span class="sekce__nazev"><span class="sekce__krok">Krok 2 ze 3</span>Písmo a barva</span><span class="sekce__stav"><span id="st-pismo"></span> · <span id="st-provedeni"></span></span></summary>
+          <div class="sekce__obsah">
           <h3 class="sekce__pod">Písmo</h3>
           <div class="chips" role="radiogroup" aria-label="Písmo">
             <div class="chip"><input type="radio" name="font" id="f1" value="gloucester" checked><label for="f1"><span class="fontdemo" style="font-family:'Gloucester MT Pro','Gloucester MT Pro Bold ExtCond','Gloucester MT Extra Condensed','Sorts Mill Goudy',serif">Aa</span>Gloucester</label></div>
@@ -95,37 +100,62 @@
           </div>
           <p class="hint">Písma, kterými nápisy skutečně sázíme. Nemáte-li je v počítači, náhled použije nejbližší volné písmo — nápis na kameni vysázíme v originále.</p>
           <label class="ctl-check" style="margin-top:12px"><input type="checkbox" id="n-verzalky" checked> Velkými písmeny (verzálky)</label>
+
+          <h3 class="sekce__pod">Barva a provedení písma</h3>
+          <div class="chips">
+            <div class="chip"><input type="radio" name="technika" id="t1" value="zlato" checked><label for="t1"><span class="swatch" style="background:linear-gradient(135deg,#8a6a2c,#f3d98c,#a07a32)"></span>Pískované, zlacené</label></div>
+            <div class="chip"><input type="radio" name="technika" id="t2" value="stribro"><label for="t2"><span class="swatch" style="background:linear-gradient(135deg,#7d8186,#eef0f2,#8c9095)"></span>Pískované, stříbřené</label></div>
+            <div class="chip"><input type="radio" name="technika" id="t3" value="bila"><label for="t3"><span class="swatch" style="background:#e9e7e2"></span>Pískované, bílá barva</label></div>
+            <div class="chip"><input type="radio" name="technika" id="t4" value="hloubene"><label for="t4"><span class="swatch" style="background:#2b2b2b"></span>Pískované bez barvy</label></div>
+          </div>
+            <button type="button" class="btn btn--outline napis-pokracovat" data-dalsi="sek-kamen">Pokračovat: kámen a deska →</button>
           </div>
         </details>
-        <details class="sekce" name="sekce" id="sek-orn">
-          <summary><span class="sekce__nazev">2 · Tvar, ornament a rozvržení</span><span class="sekce__stav"><span id="st-deska"></span> · <span id="st-orn"></span></span></summary>
+        <details class="sekce" name="sekce" id="sek-kamen" data-krok="3">
+          <summary><span class="sekce__nazev"><span class="sekce__krok">Krok 3 ze 3</span>Kámen a deska</span><span class="sekce__stav"><span id="st-kamen"></span> · <span id="st-deska"></span> · <span id="st-orn"></span></span></summary>
           <div class="sekce__obsah">
-          <h3 class="sekce__pod">Rozměr a tvar desky</h3>
-          <div class="ctl-row">
-            <label class="ctl"><span>Šířka (cm)</span>
-              <input type="number" id="n-deskaS" min="30" max="200" step="1" inputmode="numeric">
-            </label>
-            <label class="ctl"><span>Výška (cm)</span>
-              <input type="number" id="n-deskaV" min="30" max="200" step="1" inputmode="numeric">
-            </label>
+            <h3 class="sekce__pod">Kámen</h3>
+            <div class="chips" id="kameny" role="radiogroup" aria-label="Kámen"></div>
+            <h3 class="sekce__pod">Rozměr desky (cm)</h3>
+            <div class="chips chips--small napis-rozmery" id="deskyTyp" role="group" aria-label="Rozměr desky v centimetrech">
+              <button type="button" class="btn btn--outline btn--small" data-s="55" data-v="75" aria-pressed="false">55 × 75</button>
+              <button type="button" class="btn btn--outline btn--small" data-s="70" data-v="90" aria-pressed="false">70 × 90</button>
+              <button type="button" class="btn btn--outline btn--small" data-s="100" data-v="100" aria-pressed="false">100 × 100</button>
+            </div>
+            <button type="button" class="napis-odkaz" id="jinyRozmer" aria-expanded="false" aria-controls="vlastniRozmer">Jiný rozměr</button>
+            <div class="ctl-row" id="vlastniRozmer" hidden>
+              <label class="ctl"><span>Šířka (cm)</span><input type="number" id="n-deskaS" min="30" max="200" step="1" inputmode="numeric"></label>
+              <label class="ctl"><span>Výška (cm)</span><input type="number" id="n-deskaV" min="30" max="200" step="1" inputmode="numeric"></label>
+            </div>
+            <p class="hint" id="deskaHint">Rozměr se propojí s konfigurátorem pomníku.</p>
+            <h3 class="sekce__pod">Tvar desky</h3>
+            <input type="hidden" id="n-tvar" value="obdelnik">
+            <div class="chips chips--seg" role="radiogroup" aria-label="Tvar desky">
+              <div class="chip"><input type="radio" name="tvar" id="tv-obdelnik" value="obdelnik" checked><label for="tv-obdelnik">Obdélník</label></div>
+              <div class="chip"><input type="radio" name="tvar" id="tv-oblouk" value="oblouk"><label for="tv-oblouk">Oblouk</label></div>
+              <div class="chip"><input type="radio" name="tvar" id="tv-vlna" value="vlna"><label for="tv-vlna">Vlna</label></div>
+            </div>
+            <h3 class="sekce__pod">Ornament</h3>
+            <div class="chips orns" id="ornamenty" role="radiogroup" aria-label="Ornament"></div>
+            <button type="button" class="btn btn--gold napis-pokracovat" id="dokoncitNapis">Hotovo — poslat v poptávce</button>
           </div>
-          <div class="chips chips--small" id="deskyTyp">
-            <button type="button" class="btn btn--outline btn--small" data-s="55" data-v="75">55 × 75</button>
-            <button type="button" class="btn btn--outline btn--small" data-s="70" data-v="90">70 × 90</button>
-            <button type="button" class="btn btn--outline btn--small" data-s="100" data-v="100">100 × 100</button>
-          </div>
-          <p class="hint" id="deskaHint">Nejčastější rozměry nápisových desek z naší výroby. Rozměr se propojí s konfigurátorem pomníku.</p>
-          <div class="ctl-row">
-            <label class="ctl"><span>Tvar desky</span>
-              <select id="n-tvar">
-                <option value="obdelnik">Obdélník</option>
-                <option value="oblouk">Oblouk</option>
-                <option value="vlna">Vlna</option>
-              </select>
-            </label>
-          </div>
-          <h3 class="sekce__pod">Ornament</h3>
-          <div class="chips orns" id="ornamenty"></div>
+        </details>
+        <details class="sekce sekce--doladeni" id="sek-doladeni">
+          <summary><span class="sekce__nazev">Doladit rozvržení (nepovinné)</span></summary>
+          <div class="sekce__obsah">
+          <h3 class="sekce__pod">Velikost a poloha písma</h3>
+          <label class="ctl" style="margin-top:8px"><span>Výška písma hlavního řádku: <output id="o-vyska">40</output> mm</span>
+            <input type="range" id="n-vyska" min="25" max="90" step="1" value="40">
+          </label>
+          <div class="sizeinfo" id="vyskaInfo" aria-live="polite"></div>
+          <p class="hint" style="margin-bottom:12px">Z naší výroby: jména obvykle 40–50 mm, data 25–30 mm, RODINA kolem 45–50 mm, dolní řádek „Z …“ kolem 30 mm. Na rodinné desce volte písmo tak, aby pod nápisem zůstalo místo na přípis dalších jmen <em>stejnou velikostí</em> — menší přípis na stejné desce nevypadá dobře.</p>
+          <label class="ctl"><span>Zarovnání</span>
+            <select id="n-zarovnani">
+              <option value="center">Na střed</option>
+              <option value="left">Vlevo</option>
+            </select>
+          </label>
+
           <div id="ornVolby">
             <div class="ctl"><span>Umístění</span>
               <div class="chips chips--seg" role="radiogroup" aria-label="Umístění ornamentu">
@@ -140,42 +170,7 @@
               <input type="range" id="n-ornV" min="60" max="500" step="5" value="220">
             </label>
           </div>
-          <p class="hint">Předlohy z naší knihovny pro pískování — provádí se stejnou technikou a barvou jako písmo. Máte-li vlastní motiv, pošlete ho s poptávkou.</p>
-          <h3 class="sekce__pod">Velikost a poloha písma</h3>
-          <label class="ctl" style="margin-top:8px"><span>Výška písma hlavního řádku: <output id="o-vyska">40</output> mm</span>
-            <input type="range" id="n-vyska" min="25" max="90" step="1" value="40">
-          </label>
-          <div class="sizeinfo" id="vyskaInfo" aria-live="polite"></div>
-          <p class="hint" style="margin-bottom:12px">Z naší výroby: jména obvykle 40–50 mm, data 25–30 mm, RODINA kolem 45–50 mm, dolní řádek „Z …“ kolem 30 mm. Na rodinné desce volte písmo tak, aby pod nápisem zůstalo místo na přípis dalších jmen <em>stejnou velikostí</em> — menší přípis na stejné desce nevypadá dobře.</p>
-          <label class="ctl"><span>Zarovnání</span>
-            <select id="n-zarovnani">
-              <option value="center">Na střed</option>
-              <option value="left">Vlevo</option>
-            </select>
-          </label>
-          </div>
-        </details>
-        <details class="sekce" name="sekce" id="sek-kamen">
-          <summary><span class="sekce__nazev">3 · Kámen a barva písma</span><span class="sekce__stav"><span id="st-kamen"></span> · <span id="st-provedeni"></span></span></summary>
-          <div class="sekce__obsah">
-          <h3 class="sekce__pod">Kámen</h3>
-          <div class="chips" id="kameny"></div>
-          <h3 class="sekce__pod">Barva a provedení písma</h3>
-          <div class="chips">
-            <div class="chip"><input type="radio" name="technika" id="t1" value="zlato" checked><label for="t1"><span class="swatch" style="background:linear-gradient(135deg,#8a6a2c,#f3d98c,#a07a32)"></span>Pískované, zlacené</label></div>
-            <div class="chip"><input type="radio" name="technika" id="t2" value="stribro"><label for="t2"><span class="swatch" style="background:linear-gradient(135deg,#7d8186,#eef0f2,#8c9095)"></span>Pískované, stříbřené</label></div>
-            <div class="chip"><input type="radio" name="technika" id="t3" value="bila"><label for="t3"><span class="swatch" style="background:#e9e7e2"></span>Pískované, bílá barva</label></div>
-            <div class="chip"><input type="radio" name="technika" id="t4" value="hloubene"><label for="t4"><span class="swatch" style="background:#2b2b2b"></span>Pískované bez barvy</label></div>
-          </div>
-          </div>
-        </details>
-      </form>
 
-      <div class="stage">
-        <div class="stage__wrap">
-          <div class="stage__frame">
-            <canvas id="napisCanvas" width="1200" height="1500" role="img" aria-label="Náhled nápisu na náhrobní desce"></canvas>
-          </div>
           <div class="lista" id="lista" role="toolbar" aria-label="Posun a otočení">
             <div class="lista__cil" role="radiogroup" aria-label="Co upravit">
               <button type="button" class="lista__btn is-on" data-cil="txt" aria-pressed="true">Nápis</button>
@@ -194,13 +189,24 @@
             <button type="button" class="lista__btn lista__btn--ghost" data-akce="reset" title="Vrátit do výchozí polohy">Výchozí</button>
             <p class="lista__tip">Nápis i ornament můžete chytit myší a posunout přímo na desce.</p>
           </div>
-        </div>
-        <div class="stage__actions">
+
+          </div>
+        </details>
+        <div class="napis-akce">
           <button type="button" class="btn btn--gold" id="poslatPoptavku">Poslat v poptávce</button>
-          <a class="btn btn--outline" href="/navrhar/pomnik/" id="doPomniku">Použít na pomníku</a>
-          <button type="button" class="btn btn--outline" id="stahnout">Stáhnout obrázek</button>
+          <div class="napis-akce__vedlejsi">
+            <a href="/navrhar/pomnik/" id="doPomniku">Použít na pomníku</a><span aria-hidden="true">·</span><button type="button" id="stahnout">Stáhnout obrázek</button>
+          </div>
         </div>
-        <p class="stage__note"><strong>Orientační náhled.</strong> Kámen je zobrazen podle fotografie vzorku, skutečná deska má vlastní kresbu. Nápis zůstává jen ve vašem prohlížeči — nikam se neodesílá, dokud sami nepošlete poptávku.</p>
+      </form>
+
+      <div class="stage">
+        <div class="stage__wrap">
+          <div class="stage__frame">
+            <canvas id="napisCanvas" width="1200" height="1500" role="img" aria-label="Náhled nápisu na náhrobní desce"></canvas>
+          </div>
+        </div>
+        <p class="stage__note"><strong>Orientační náhled.</strong> Kámen má vlastní kresbu. Nápis zůstává ve vašem prohlížeči, dokud sami nepošlete poptávku.</p>
       </div>
     </div>
   </div>
@@ -224,10 +230,10 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script src="/skript.js?v=1014zi"></script>
-<script src="/navrhar/spolecne.js?v=1014u"></script>
+<script src="/navrhar/spolecne.js?v=1015n"></script>
 <script src="/navrhar/ornamenty.js?v=1014u"></script>
-<script src="/navrhar/pismo.js?v=1014u"></script>
-<script src="/navrhar/napis.js?v=1014u"></script>
+<script src="/navrhar/pismo.js?v=1015n"></script>
+<script src="/navrhar/napis.js?v=1015n"></script>
 <div class="mbar" aria-label="Rychlý kontakt"><a class="mbar__call" href="tel:+420602108793">Zavolat</a><a class="mbar__form" href="/#kontakt">Poptávka</a></div>
 </body>
 </html>

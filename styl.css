@@ -92,6 +92,15 @@ em { font-style: italic; color: var(--accent); }
 .nav__cta { padding: 11px 18px; font-size: 14px; }
 .nav__toggle { display: none; background: none; border: 0; cursor: pointer; padding: 8px; }
 .nav__toggle span { display: block; width: 26px; height: 2px; background: var(--ink); margin: 5px 0; transition: .3s; }
+.lang { position: relative; flex: 0 0 auto; margin-left: auto; font-size: 13px; font-weight: 600; letter-spacing: .04em; }
+.lang summary { display: flex; align-items: center; gap: 7px; min-height: 44px; padding: 0 6px; cursor: pointer; list-style: none; color: var(--ink); }
+.lang summary::-webkit-details-marker { display: none; }
+.lang summary::after { content: ""; width: 6px; height: 6px; border: solid var(--ink); border-width: 0 1.5px 1.5px 0; transform: translateY(-2px) rotate(45deg); opacity: .7; }
+.lang img { width: 21px; height: 14px; display: block; border-radius: 2px; box-shadow: 0 0 0 1px rgba(255,255,255,.2); }
+.lang__menu { position: absolute; right: 0; top: 100%; z-index: 120; min-width: 168px; margin: 0; padding: 6px; list-style: none; background: var(--bg-2); border: 1px solid var(--line); box-shadow: 0 12px 32px rgba(0,0,0,.45); }
+.lang__menu a { display: flex; align-items: center; gap: 10px; padding: 10px 12px; font-size: 14px; font-weight: 500; letter-spacing: 0; color: var(--ink); opacity: .85; }
+.lang__menu a:hover, .lang__menu a:focus-visible { background: var(--bg-3); opacity: 1; }
+.lang__menu a[aria-current] { opacity: 1; color: var(--accent-2); }
 
 /* ============================================================
    HERO (homepage)

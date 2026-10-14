@@ -2,8 +2,15 @@
    Kamenictví Procházka — interakce
    Mobilní menu, navbar scroll, galerie (lightbox), validace formuláře.
    ============================================================ */
+/* Překlad textů skriptu na jazykových verzích (/jazyky.js); čeština = výchozí. */
+var kpT = (function () {
+  var tr = (window.KP_I18N || {})[document.documentElement.lang] || {};
+  return function (s) { return tr[s] || s; };
+})();
+
 (function () {
   'use strict';
+  var t = kpT;
 
   /* ---------- Navbar: tmavé pozadí po odscrollování ---------- */
   var nav = document.querySelector('.nav');
@@ -110,14 +117,14 @@
 
     /* Okamžitá kontrola: po opuštění pole a pak při psaní. Prázdné nepovinné pole je v pořádku. */
     var pravidla = {
-      jmeno: function (v) { return v.length >= 2 ? '' : 'Napište prosím jméno.'; },
-      email: function (v) { return !v || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? '' : 'E-mail nevypadá úplně — chybí @ nebo doména?'; },
+      jmeno: function (v) { return v.length >= 2 ? '' : t('Napište prosím jméno.'); },
+      email: function (v) { return !v || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? '' : t('E-mail nevypadá úplně — chybí @ nebo doména?'); },
       telefon: function (v) {
         if (!v) return '';
         var d = v.replace(/\D/g, '');
-        return (d.length === 9 || (d.length === 12 && d.indexOf('420') === 0)) ? '' : 'Telefon má mít 9 číslic (případně s +420).';
+        return (d.length === 9 || (d.length === 12 && d.indexOf('420') === 0)) ? '' : t('Telefon má mít 9 číslic (případně s +420).');
       },
-      zprava: function (v) { return v.length >= 3 ? '' : 'Napište prosím, s čím vám můžeme pomoci.'; }
+      zprava: function (v) { return v.length >= 3 ? '' : t('Napište prosím, s čím vám můžeme pomoci.'); }
     };
     Object.keys(pravidla).forEach(function (name) {
       var input = form.elements[name];
@@ -162,14 +169,14 @@
 
       [jmeno, email, zprava].forEach(function (i) { if (i) setInvalid(i, false); });
 
-      if (!jmeno.value.trim()) { problems.push('jméno'); setInvalid(jmeno, true); }
-      if (!zprava.value.trim()) { problems.push('zprávu'); setInvalid(zprava, true); }
+      if (!jmeno.value.trim()) { problems.push(t('Napište prosím jméno.')); setInvalid(jmeno, true); }
+      if (!zprava.value.trim()) { problems.push(t('Napište prosím, s čím vám můžeme pomoci.')); setInvalid(zprava, true); }
       if (email.value.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) {
-        problems.push('platný e-mail'); setInvalid(email, true);
+        problems.push(t('E-mail nevypadá úplně — chybí @ nebo doména?')); setInvalid(email, true);
       }
 
       if (problems.length) {
-        if (errEl) errEl.textContent = 'Vyplňte prosím ' + problems.join(' a ') + '.';
+        if (errEl) errEl.textContent = problems.join(' ');
         return;
       }
 
@@ -182,7 +189,7 @@
       var endpoint = form.getAttribute('data-endpoint');
 
       if (netlify || endpoint) {
-        if (btn) { btn.disabled = true; btn.textContent = 'Odesílám…'; }
+        if (btn) { btn.disabled = true; btn.textContent = t('Odesílám…'); }
         var url, opts;
         if (netlify) {
           url = form.getAttribute('action') || '/';
@@ -198,9 +205,9 @@
         fetch(url, opts).then(function (r) {
           if (!r.ok) throw new Error('bad status');
           form.reset();
-          if (okEl) { okEl.textContent = 'Děkujeme, poptávku jsme přijali. Brzy se ozveme.'; okEl.style.display = 'block'; }
+          if (okEl) { okEl.textContent = t('Děkujeme, poptávku jsme přijali. Brzy se ozveme.'); okEl.style.display = 'block'; }
         }).catch(function () {
-          if (errEl) errEl.textContent = 'Odeslání se nezdařilo. Zavolejte prosím na +420 602 108 793.';
+          if (errEl) errEl.textContent = t('Odeslání se nezdařilo. Zavolejte prosím na +420 602 108 793.');
         }).finally(function () {
           if (btn) { btn.disabled = false; btn.textContent = origText; }
         });
@@ -214,7 +221,7 @@
           '\n\nZpráva:\n' + zprava.value.trim()
         );
         window.location.href = 'mailto:pomniky@kamenictviprochazka.cz?subject=' + subj + '&body=' + body;
-        if (okEl) { okEl.textContent = 'Otevíráme váš e-mailový klient s předvyplněnou poptávkou…'; okEl.style.display = 'block'; }
+        if (okEl) { okEl.textContent = t('Otevíráme váš e-mailový klient s předvyplněnou poptávkou…'); okEl.style.display = 'block'; }
       }
     });
   }
@@ -327,8 +334,8 @@
         el.addEventListener('click', function () { ruka = performance.now(); ukaz(i); });
         ovl.appendChild(el); return el;
       });
-      var pb = document.createElement('button'); pb.type = 'button'; pb.textContent = 'Zastavit';
-      pb.addEventListener('click', function () { pauza = !pauza; pb.textContent = pauza ? 'Spustit' : 'Zastavit'; t0 = null; });
+      var pb = document.createElement('button'); pb.type = 'button'; pb.textContent = t('Zastavit');
+      pb.addEventListener('click', function () { pauza = !pauza; pb.textContent = pauza ? t('Spustit') : t('Zastavit'); t0 = null; });
       ovl.appendChild(pb);
       ba.parentNode.insertBefore(ovl, ba.nextSibling);
       var ukaz = function (i) {
@@ -336,7 +343,7 @@
         ba.classList.add('is-swap');
         setTimeout(function () {
           idx = i; pred.src = pary[i][0]; po.src = pary[i][1]; cap.textContent = pary[i][2];
-          pred.alt = pary[i][2] + ' před obnovou'; po.alt = pary[i][2] + ' po obnově';
+          pred.alt = pary[i][2] + t(' před obnovou'); po.alt = pary[i][2] + t(' po obnově');
           tecky.forEach(function (t, j) { t.setAttribute('aria-pressed', j === i ? 'true' : 'false'); });
           ba.classList.remove('is-swap'); t0 = null;
         }, 450);
@@ -379,7 +386,7 @@
     // Tlačítka „jen před / půl / jen po" — na mobilu se jezdcem hůř trefuje.
     var btns = document.createElement('div');
     btns.className = 'ba-btns';
-    [['Jen před', 100], ['Půl na půl', 50], ['Jen po', 0]].forEach(function (b) {
+    [[t('Jen před'), 100], [t('Půl na půl'), 50], [t('Jen po'), 0]].forEach(function (b) {
       var el = document.createElement('button');
       el.type = 'button'; el.textContent = b[0]; el.setAttribute('aria-pressed', 'false');
       el.addEventListener('click', function () {
@@ -426,7 +433,7 @@
   v.addEventListener("timeupdate",function(){if(v.duration&&v.duration-v.currentTime<0.9)v.classList.add("is-fading");});
   v.addEventListener("ended",function(){setTimeout(function(){v.currentTime=0;v.classList.remove("is-fading");play();},400);});
   if(b){b.hidden=false;b.addEventListener("click",function(){stopped=!stopped;if(stopped){v.pause();}else{play();}
-    b.classList.toggle("is-paused",stopped);b.setAttribute("aria-label",stopped?"Spustit video":"Pozastavit video");});}
+    b.classList.toggle("is-paused",stopped);b.setAttribute("aria-label",stopped?kpT("Spustit video"):kpT("Pozastavit video"));});}
   if("IntersectionObserver" in window){new IntersectionObserver(function(e){visible=e[0].isIntersecting;if(visible)play();else v.pause();}).observe(v);}
   document.addEventListener("visibilitychange",function(){if(document.hidden)v.pause();else play();});
   play();
@@ -575,4 +582,12 @@
     });
     if ("IntersectionObserver" in window) new IntersectionObserver(function(en){ if (!en[0].isIntersecting && aktivni) vypni(true); }, { threshold: 0 }).observe(sek);
   });
+})();
+
+/* Přepínač jazyka: zavřít po kliknutí mimo nebo Escape */
+(function () {
+  var d = document.querySelector('details.lang');
+  if (!d) return;
+  document.addEventListener('click', function (e) { if (d.open && !d.contains(e.target)) d.open = false; });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && d.open) { d.open = false; d.querySelector('summary').focus(); } });
 })();

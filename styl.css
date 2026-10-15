@@ -662,11 +662,14 @@ section.is-ref > .ref-bg { opacity: 1; }
 @media (hover: hover) and (min-width: 901px) {
   .stavby-refs li { transition: transform .45s cubic-bezier(.22,.8,.24,1), box-shadow .5s, opacity .45s ease; }
   section.is-ref .stavby-refs:has(li:hover) li:not(:hover) { opacity: 0; }
+  /* najeti = vetsi fotka pres temer celou sekci, text ustoupi (AP 15. 10. vecer, kolo 4 N1) */
+  .panel__inner > .label, .panel__inner > h2, .panel__inner > p, .panel__inner > .hero__actions { transition: opacity .5s ease; }
+  section.is-ref:has(.stavby-refs li:hover) .panel__inner > :is(.label, h2, p, .hero__actions) { opacity: .08; }
+  .ref-bg img:not(.ref-bg__fill) { transition: opacity .9s ease, transform 2.6s cubic-bezier(.2,.7,.25,1), inset .6s cubic-bezier(.22,.8,.24,1), width .6s cubic-bezier(.22,.8,.24,1), height .6s cubic-bezier(.22,.8,.24,1); }
+  section.is-ref:has(.stavby-refs li:hover) .ref-bg img:not(.ref-bg__fill) { inset: 4% auto auto 3%; width: 94%; height: calc(96% - 230px); object-position: 50% 50%; }
+  section.is-ref:has(.stavby-refs li:hover) .ref-bg::after { background: linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(20,20,20,.75)); }
 }
 /* Obce: karta, na kterou postava prave ukazuje (skica na desce) */
 #obce .stavby-refs li.is-ukazuje { outline: 2px solid rgba(255,255,255,.55); outline-offset: -2px; }
 
-/* krb v sekci Interier: po najeti mysi se rozhori ohen (dotyk = hori rovnou) */
-.panel__bg img.panel__ohen { position: absolute; inset: 0; opacity: 0; transition: opacity 2.4s cubic-bezier(.45,0,.55,1) .3s; }
-#interier:hover .panel__bg img.panel__ohen { opacity: 1; }
-@media (hover: none) { .panel__bg img.panel__ohen { opacity: 1; } }
+/* krb v sekci Interier: ohen hori od zacatku a jen se hybe - animovany webp (AP 15. 10. vecer, kolo 4 O1) */

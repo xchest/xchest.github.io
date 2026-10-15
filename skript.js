@@ -478,10 +478,10 @@ var kpT = (function () {
   var karty = document.querySelectorAll(".stavby-refs li");
   if (!karty.length) return;
   var lang = (document.documentElement.lang || "cs").slice(0, 2);
-  var T = { cs: ["Galerie", "Zavřít", "Předchozí", "Další", "Před", "Po"], en: ["Gallery", "Close", "Previous", "Next", "Before", "After"],
-            de: ["Galerie", "Schließen", "Zurück", "Weiter", "Vorher", "Nachher"], pl: ["Galeria", "Zamknij", "Poprzednie", "Następne", "Przed", "Po"],
-            uk: ["Галерея", "Закрити", "Попереднє", "Наступне", "До", "Після"], sk: ["Galéria", "Zavrieť", "Predchádzajúce", "Ďalšie", "Pred", "Po"] }[lang] ||
-          ["Galerie", "Zavřít", "Předchozí", "Další", "Před", "Po"];
+  var T = { cs: ["Galerie", "Zavřít", "Předchozí", "Další", "Před", "Po", "Fotky z realizace"], en: ["Gallery", "Close", "Previous", "Next", "Before", "After", "Photos from the job"],
+            de: ["Galerie", "Schließen", "Zurück", "Weiter", "Vorher", "Nachher", "Fotos von der Ausführung"], pl: ["Galeria", "Zamknij", "Poprzednie", "Następne", "Przed", "Po", "Zdjęcia z realizacji"],
+            uk: ["Галерея", "Закрити", "Попереднє", "Наступне", "До", "Після", "Фото з реалізації"], sk: ["Galéria", "Zavrieť", "Predchádzajúce", "Ďalšie", "Pred", "Po", "Fotky z realizácie"] }[lang] ||
+          ["Galerie", "Zavřít", "Předchozí", "Další", "Před", "Po", "Fotky z realizace"];
   var lb = document.createElement("div");
   lb.className = "lightbox lightbox--ref"; lb.setAttribute("role", "dialog"); lb.setAttribute("aria-modal", "true"); lb.setAttribute("aria-label", T[0]);
   lb.innerHTML = '<button class="lightbox__close" aria-label="' + T[1] + '">&times;</button><button class="lightbox__nav prev" aria-label="' + T[2] + '">&#8249;</button>' +
@@ -491,6 +491,8 @@ var kpT = (function () {
   var seznam = [], i = 0, odkud = null;
   function fotky(li){
     var nazev = (li.querySelector("span") || li).textContent.trim().replace(/\s+/g, " ");
+    /* klik = neupravene skutecne fotky z realizace (AP 15. 10. vecer, kolo 4 Q1); bez nich dosavadni sekvence */
+    if (li.dataset.raw) return li.dataset.raw.split("|").map(function(u){ return { u: u, t: T[6] + " – " + nazev }; });
     if (li.dataset.seq) { var st = (li.dataset.seqStitky || "").split("|"); return li.dataset.seq.split("|").map(function(u, k){ return { u: u, t: st[k] ? nazev + " – " + st[k] : nazev }; }); }
     var f = [];
     if (li.dataset.bg) f.push({ u: li.dataset.bg, t: li.dataset.po ? nazev + " – " + (li.dataset.predStitek || T[4]) : nazev });

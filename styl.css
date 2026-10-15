@@ -661,13 +661,14 @@ section.is-ref > .ref-bg { opacity: 1; }
 /* najeti na kartu: ostatni karty zmizi, aby bylo videt okoli fotky (AP 13. 10.) */
 @media (hover: hover) and (min-width: 901px) {
   .stavby-refs li { transition: transform .45s cubic-bezier(.22,.8,.24,1), box-shadow .5s, opacity .45s ease; }
-  section.is-ref .stavby-refs:has(li:hover) li:not(:hover) { opacity: 0; }
+  /* stav ridi JS trida is-akt s prodlevou 250 ms - mezera mezi kartami uz nebliká a fotka neskace (AP 16. 10. 2026: "preskakuje, klepe se") */
+  section.is-ref .stavby-refs li:not(.is-akt) { opacity: 0; }
   /* najeti = vetsi fotka pres temer celou sekci, text ustoupi (AP 15. 10. vecer, kolo 4 N1) */
   .panel__inner > .label, .panel__inner > h2, .panel__inner > p, .panel__inner > .hero__actions { transition: opacity .5s ease; }
-  section.is-ref:has(.stavby-refs li:hover) .panel__inner > :is(.label, h2, p, .hero__actions) { opacity: .08; }
-  .ref-bg img:not(.ref-bg__fill) { transition: opacity .9s ease, transform 2.6s cubic-bezier(.2,.7,.25,1), inset .6s cubic-bezier(.22,.8,.24,1), width .6s cubic-bezier(.22,.8,.24,1), height .6s cubic-bezier(.22,.8,.24,1); }
-  section.is-ref:has(.stavby-refs li:hover) .ref-bg img:not(.ref-bg__fill) { inset: 4% auto auto 3%; width: 94%; height: calc(96% - 230px); object-position: 50% 50%; }
-  section.is-ref:has(.stavby-refs li:hover) .ref-bg::after { background: linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(20,20,20,.75)); }
+  section.is-ref .panel__inner > :is(.label, h2, p, .hero__actions) { opacity: .08; }
+  /* pevna poloha, animuje se jen pruhlednost a oddaleni (zadne inset/width/height ani drop-shadow - zatezovalo renderer) */
+  .ref-bg img:not(.ref-bg__fill) { inset: 4% auto auto 3%; width: 94%; height: calc(96% - 230px); object-position: 50% 50%; filter: none; }
+  section.is-ref .ref-bg::after { background: linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(20,20,20,.75)); }
 }
 /* Obce: karta, na kterou postava prave ukazuje (skica na desce) */
 #obce .stavby-refs li.is-ukazuje { outline: 2px solid rgba(255,255,255,.55); outline-offset: -2px; }

@@ -598,7 +598,8 @@ var kpT = (function () {
     function zapni(li){
       clearTimeout(skryt);
       if (aktivni === li) return;
-      aktivni = li; clearTimeout(seqT);
+      if (aktivni) aktivni.classList.remove("is-akt");
+      aktivni = li; clearTimeout(seqT); li.classList.add("is-akt");
       sek.classList.add("is-ref");
       var f = fotky(li), k = 0;
       var krok = function(){
@@ -612,6 +613,7 @@ var kpT = (function () {
       clearTimeout(skryt);
       skryt = setTimeout(function(){
         if (!hned && sek.querySelector(".stavby-refs li.is-on, .stavby-refs li:hover, .stavby-refs li:focus")) return;
+        if (aktivni) aktivni.classList.remove("is-akt");
         aktivni = null; clearTimeout(seqT); sek.classList.remove("is-ref");
         vrstvy.forEach(function(i){ i.classList.remove("is-vidim"); i.fill.classList.remove("is-vidim"); }); zhasni();
       }, hned ? 0 : 250);

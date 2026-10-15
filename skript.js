@@ -491,9 +491,11 @@ var kpT = (function () {
   var seznam = [], i = 0, odkud = null;
   function fotky(li){
     var nazev = (li.querySelector("span") || li).textContent.trim().replace(/\s+/g, " ");
-    /* klik = neupravene skutecne fotky z realizace (AP 15. 10. vecer, kolo 4 Q1); bez nich dosavadni sekvence */
-    if (li.dataset.raw) return li.dataset.raw.split("|").map(function(u){ return { u: u, t: T[6] + " – " + nazev }; });
-    if (li.dataset.seq) { var st = (li.dataset.seqStitky || "").split("|"); return li.dataset.seq.split("|").map(function(u, k){ return { u: u, t: st[k] ? nazev + " – " + st[k] : nazev }; }); }
+    /* klik = vsechny fotky zakazky: hotove (seq) + skutecne z realizace (raw); najeti mysi ukazuje jen fotku karty (AP 16. 10. 2026) */
+    var vse = [];
+    if (li.dataset.seq) { var st = (li.dataset.seqStitky || "").split("|"); li.dataset.seq.split("|").forEach(function(u, k){ vse.push({ u: u, t: st[k] ? nazev + " – " + st[k] : nazev }); }); }
+    if (li.dataset.raw) li.dataset.raw.split("|").forEach(function(u){ vse.push({ u: u, t: T[6] + " – " + nazev }); });
+    if (vse.length) return vse;
     var f = [];
     if (li.dataset.bg) f.push({ u: li.dataset.bg, t: li.dataset.po ? nazev + " – " + (li.dataset.predStitek || T[4]) : nazev });
     if (li.dataset.po) f.push({ u: li.dataset.po, t: nazev + " – " + T[5] });
@@ -547,20 +549,6 @@ var kpT = (function () {
     new MutationObserver(function(){ if (li.classList.contains("is-on")) start(); else if (!li.matches(":hover")) stop(); }).observe(li, { attributes: true, attributeFilter: ["class"] });
   });
 })();
-/* Stavby: karta se jemne nakloni za mysi (12. 10. 2026) */
-(function(){
-  if (!window.matchMedia("(hover: hover)").matches) return;
-  document.querySelectorAll(".stavby-refs li").forEach(function(li){
-    var r = null;
-    li.addEventListener("mouseenter", function(){ r = li.getBoundingClientRect(); });
-    li.addEventListener("mousemove", function(e){
-      if (!r) r = li.getBoundingClientRect();
-      var x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
-      li.classList.add("is-tilt"); li.style.setProperty("--ry", (x * 8).toFixed(1) + "deg"); li.style.setProperty("--rx", (-y * 6).toFixed(1) + "deg");
-    });
-    li.addEventListener("mouseleave", function(){ r = null; li.classList.remove("is-tilt"); li.style.removeProperty("--rx"); li.style.removeProperty("--ry"); });
-  });
-})();
 /* Reference: karta = jeji fotka pres celou sekci, jen oddalovani, zadne pred/po ani video na hlavni strance (AP 13. 10. 2026: "nepribliznuj, oddaluj", "pres celou obrazovku") */
 (function(){
   var klid = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -579,7 +567,13 @@ var kpT = (function () {
     /* mobil: misto 1600px fotek 800px varianty (rychlost) */
     var uzke = window.matchMedia("(max-width: 900px)").matches;
     function zm(u){ return uzke && u ? u.replace(/-1600\.webp$/, "-800.webp") : u; }
-    function fotky(li){ return (li.dataset.seq ? li.dataset.seq.split("|") : [li.dataset.po || li.dataset.bg]).map(zm); }
+    /* najeti = zvetsena TATAZ fotka, jakou ma karta; zadna sekvence (AP 16. 10. 2026: "koukam na uplne neco jineho", "preskakuje") */
+    function fotky(li){
+      if (li.dataset.glow) return [zm(li.dataset.bg)];
+      if (li.dataset.hover) return [zm(li.dataset.hover)];
+      var im = li.querySelector("img"), u = im ? im.getAttribute("src") : li.dataset.bg;
+      return [zm(u.replace(/-800\.webp$/, "-1600.webp"))];
+    }
     if ("IntersectionObserver" in window) {
       var pred = new IntersectionObserver(function(en){
         if (!en[0].isIntersecting) return; pred.disconnect();
@@ -611,7 +605,6 @@ var kpT = (function () {
         if (aktivni !== li) return;
         var gl = k === 0 && !!li.dataset.glow;
         ukaz(f[k], li, gl);
-        if (++k < f.length && !klid) seqT = setTimeout(krok, gl ? 5000 : 2200);
       };
       krok();
     }

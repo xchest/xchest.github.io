@@ -665,3 +665,8 @@ section.is-ref > .ref-bg { opacity: 1; }
 }
 /* Obce: karta, na kterou postava prave ukazuje (skica na desce) */
 #obce .stavby-refs li.is-ukazuje { outline: 2px solid rgba(255,255,255,.55); outline-offset: -2px; }
+
+/* krb v sekci Interier: po najeti mysi se rozhori ohen (dotyk = hori rovnou) */
+.panel__bg img.panel__ohen { position: absolute; inset: 0; opacity: 0; transition: opacity 2.4s cubic-bezier(.45,0,.55,1) .3s; }
+#interier:hover .panel__bg img.panel__ohen { opacity: 1; }
+@media (hover: none) { .panel__bg img.panel__ohen { opacity: 1; } }

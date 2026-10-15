@@ -586,14 +586,14 @@ var kpT = (function () {
       pred.observe(sek);
     }
     /* nova fotka nabehne vzadu: prolnuti + oddaleni 1.08 -> 1 */
-    function ukaz(u, li){
+    function ukaz(u, li, gl){
       var nova = vrstvy[1 - hore], stara = vrstvy[hore];
       nova.classList.remove("is-vidim", "is-oddal"); nova.fill.classList.remove("is-vidim"); nova.src = u; nova.fill.src = u;
-      zhasni(); if (li.dataset.glow) zare.src = zm(li.dataset.glow);
+      zhasni(); if (gl) zare.src = zm(li.dataset.glow);
       var hotovo = function(){
         if (aktivni !== li) return;
         void nova.offsetWidth; nova.classList.add("is-vidim", "is-oddal"); nova.fill.classList.add("is-vidim");
-        if (li.dataset.glow) { zare.classList.add("is-vidim", "is-oddal"); zareT = setTimeout(function(){ if (aktivni === li) zare.classList.add("is-sviti"); }, 1500); }
+        if (gl) { zare.classList.add("is-vidim", "is-oddal"); zareT = setTimeout(function(){ if (aktivni === li) zare.classList.add("is-sviti"); }, 1500); }
         stara.classList.remove("is-vidim"); stara.fill.classList.remove("is-vidim");
         hore = 1 - hore;
       };
@@ -607,8 +607,9 @@ var kpT = (function () {
       var f = fotky(li), k = 0;
       var krok = function(){
         if (aktivni !== li) return;
-        ukaz(f[k], li);
-        if (++k < f.length && !klid) seqT = setTimeout(krok, 2200);
+        var gl = k === 0 && !!li.dataset.glow;
+        ukaz(f[k], li, gl);
+        if (++k < f.length && !klid) seqT = setTimeout(krok, gl ? 5000 : 2200);
       };
       krok();
     }

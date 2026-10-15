@@ -8,7 +8,7 @@
     interier: { src: "/obrazky/postava-interier.webp?v=1014ze", w: 545, h: 900 },
     stavby: { src: "/obrazky/postava-stavby.webp?v=1015a", w: 385, h: 901 },
     obce: { src: "/obrazky/postava-obce.webp?v=1014ze", w: 399, h: 900,
-      skici: ["/obrazky/postava-obce-tgm.webp?v=1014ze", "/obrazky/postava-obce-valecny.webp?v=1014ze", "/obrazky/postava-obce-hrobka.webp?v=1014ze", "/obrazky/postava-obce-kriz.webp?v=1014ze"] }
+      skici: ["/obrazky/postava-obce-tgm.webp?v=1015f6", "/obrazky/postava-obce-valecny.webp?v=1015f6", "/obrazky/postava-obce-hrobka.webp?v=1015f6", "/obrazky/postava-obce-kriz.webp?v=1015f6", "/obrazky/postava-obce-kolumbarium.webp?v=1015f6"] }
   };
   /* Tradice: globalni postava odejde, do sceny schodu dopadne Ales na sve puvodni misto (13. 10. 2026) */
   /* 14. 10. 2026: pojistka scrollem - kdyz IntersectionObserver nevystreli, Ales na schodech nesmi chybet */
@@ -47,7 +47,7 @@
   ids.forEach(function(id){ var p = new Image(); p.src = POSTAVY[id].src; });
 
   /* Obce: na desce je vzdy nakreslen pamatnik, na ktery Ales prave ukazuje (vytka AP 14. 10. 2026).
-     Priorita: karta pod mysi / s fokusem > rozkliknuta karta > samo se stridaji 4 karty se skicou;
+     Priorita: karta pod mysi / s fokusem > rozkliknuta karta > samo se stridaji karty se skicou (kazda karta ma svou);
      ukazovana karta dostane jemny ramecek .is-ukazuje. Vychozi obelisk se uz nepouziva. */
   var obceKarty = [].slice.call(document.querySelectorAll("#obce .stavby-refs > li"));
   var skici = POSTAVY.obce ? POSTAVY.obce.skici : [], krok = 0, kolo = null;
